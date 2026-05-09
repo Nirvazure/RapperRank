@@ -17,6 +17,7 @@ describe("rating utils", () => {
         technique: 5,
         melody: 3,
         stage: 4,
+        ph: -3,
       }),
     ).toBe(4.2);
   });
@@ -41,6 +42,7 @@ describe("rating utils", () => {
         technique: 4,
         melody: 4,
         stage: 4,
+        ph: 0,
       },
     };
 
@@ -52,6 +54,7 @@ describe("rating utils", () => {
         technique: 5,
         melody: 5,
         stage: 5,
+        ph: 2,
       }),
     ).toEqual({
       flow: 4.1,
@@ -60,6 +63,7 @@ describe("rating utils", () => {
       technique: 4.1,
       melody: 4.1,
       stage: 4.1,
+      ph: 0.2,
     });
   });
 
@@ -74,6 +78,7 @@ describe("rating utils", () => {
         technique: 4,
         melody: 4,
         stage: 4,
+        ph: -1,
       },
       createdAt: "2026-05-08T00:00:00.000Z",
       updatedAt: "2026-05-08T00:00:00.000Z",
@@ -104,6 +109,7 @@ describe("rating utils", () => {
           technique: 4,
           melody: 4,
           stage: 4,
+          ph: 0,
         },
       },
       {
@@ -125,6 +131,7 @@ describe("rating utils", () => {
           technique: 3,
           melody: 3,
           stage: 3,
+          ph: -1,
         },
       },
     ];
@@ -140,6 +147,7 @@ describe("rating utils", () => {
           technique: 5,
           melody: 5,
           stage: 5,
+          ph: 2,
         },
         createdAt: "2026-05-08T00:00:00.000Z",
         updatedAt: "2026-05-08T00:00:00.000Z",
@@ -154,6 +162,7 @@ describe("rating utils", () => {
       technique: 4.1,
       melody: 4.1,
       stage: 4.1,
+      ph: 0.2,
     });
     expect(merged[1]).toBe(rappers[1]);
   });

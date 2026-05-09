@@ -1,4 +1,4 @@
-import type { RatingKey } from "@/features/ratings/rating.types";
+import type { RadarRatingKey } from "@/features/ratings/rating.types";
 
 export const RATING_KEYS = [
   "flow",
@@ -7,9 +7,9 @@ export const RATING_KEYS = [
   "technique",
   "melody",
   "stage",
-] as const satisfies readonly RatingKey[];
+] as const satisfies readonly RadarRatingKey[];
 
-export const RATING_LABELS: Record<RatingKey, string> = {
+export const RATING_LABELS: Record<RadarRatingKey, string> = {
   flow: "Flow律动",
   lyrics: "词作深度",
   voice: "声线特色",
@@ -18,7 +18,7 @@ export const RATING_LABELS: Record<RatingKey, string> = {
   stage: "舞台表现力",
 };
 
-export const RATING_DESCRIPTIONS: Record<RatingKey, string> = {
+export const RATING_DESCRIPTIONS: Record<RadarRatingKey, string> = {
   flow: "切分、卡拍、变速、layback、节奏变化和个人律动风格。",
   lyrics: "歌词立意、叙事、隐喻、真实度和思想深度。",
   voice: "嗓音独特性、音色质感、唱腔风格和记忆点。",
@@ -29,4 +29,6 @@ export const RATING_DESCRIPTIONS: Record<RatingKey, string> = {
 
 export const MAX_RATING = 5;
 export const MIN_RATING = 1;
+export const MAX_PH_RATING = 3;
+export const MIN_PH_RATING = -3;
 export const MOCK_USER_ID = "local-user-001";

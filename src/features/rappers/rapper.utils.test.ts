@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { rappers } from "@/data/rappers";
-import { sortRappersByScore } from "@/features/rappers/rapper.utils";
+import { getRandomRapper, sortRappersByScore } from "@/features/rappers/rapper.utils";
 import { calculateOverallScore } from "@/features/ratings/rating.utils";
 
 describe("rapper utils", () => {
@@ -10,5 +10,16 @@ describe("rapper utils", () => {
 
     expect(scores).toEqual([...scores].sort((first, second) => second - first));
     expect(sorted[0]?.id).toBe("kendrick-lamar");
+  });
+
+  it("returns undefined when selecting a random rapper from an empty list", () => {
+    expect(getRandomRapper([])).toBeUndefined();
+  });
+
+  it("returns a random rapper from the provided list", () => {
+    const selected = getRandomRapper(rappers);
+
+    expect(selected).toBeDefined();
+    expect(rappers.map((rapper) => rapper.id)).toContain(selected?.id);
   });
 });

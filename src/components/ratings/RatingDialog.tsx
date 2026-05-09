@@ -21,10 +21,12 @@ export function RatingDialog({
   rapper,
   value,
   onChange,
+  triggerLabel = "我要评分",
 }: {
   rapper: Rapper;
   value?: RatingDimension;
   onChange: (ratings: RatingDimension) => void;
+  triggerLabel?: string;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +55,7 @@ export function RatingDialog({
           className="h-11 bg-lime-200 px-4 text-sm font-black uppercase text-black hover:bg-lime-100"
         >
           <Star className="size-4 fill-current" />
-          我要评分
+          {triggerLabel}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[88vh] overflow-y-auto border-white/15 bg-zinc-950 text-white sm:max-w-3xl">

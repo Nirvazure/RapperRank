@@ -1,13 +1,17 @@
 import { z } from "zod";
 import { ratingDimensionSchema } from "@/features/ratings/rating.schema";
 
+const imagePathSchema = z.union([z.url(), z.string().regex(/^\/.+/)]);
+
 export const rapperSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  chineseName: z.string().min(1).optional(),
   alias: z.string().optional(),
+  labels: z.array(z.string().min(1)).optional(),
   region: z.string().min(1),
-  avatarUrl: z.url(),
-  mediaUrl: z.url(),
+  avatarUrl: imagePathSchema,
+  mediaUrl: imagePathSchema,
   mediaType: z.enum(["image", "gif", "video"]),
   bio: z.string().min(1),
   shortReview: z.string().min(1),
@@ -17,4 +21,4 @@ export const rapperSchema = z.object({
   averageRatings: ratingDimensionSchema,
 });
 
-export const rappersSchema = z.array(rapperSchema).length(10);
+export const rappersSchema = z.array(rapperSchema).min(1);

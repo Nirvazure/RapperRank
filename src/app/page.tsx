@@ -1,16 +1,11 @@
-import { Suspense } from "react";
-import { AppShell } from "@/components/layout/AppShell";
+import { redirect } from "next/navigation";
+import { rappers } from "@/data/rappers";
+import { getRandomRapper } from "@/features/rappers/rapper.utils";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
-  return (
-    <Suspense
-      fallback={
-        <main className="min-h-screen bg-black px-5 py-8 text-white">
-          正在加载 RapperRank...
-        </main>
-      }
-    >
-      <AppShell />
-    </Suspense>
-  );
+  const rapper = getRandomRapper(rappers);
+
+  redirect(`/rank/${rapper?.id ?? "kendrick-lamar"}`);
 }

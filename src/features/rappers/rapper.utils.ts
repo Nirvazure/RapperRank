@@ -12,3 +12,13 @@ export function sortRappersByScore(rappers: Rapper[]): Rapper[] {
       calculateOverallScore(first.averageRatings),
   );
 }
+
+export function getRandomRapper(rappers: Rapper[]): Rapper | undefined {
+  if (rappers.length === 0) {
+    return undefined;
+  }
+
+  const index = Math.floor(Math.random() * rappers.length);
+
+  return rappers[index];
+}

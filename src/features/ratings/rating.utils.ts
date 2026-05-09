@@ -16,12 +16,19 @@ export function mergeUserRatingIntoAverage(
   userRating: RatingDimension,
 ): RatingDimension {
   const nextCount = rapper.ratingCount + 1;
-  return RATING_KEYS.reduce((merged, key) => {
-    merged[key] = roundScore(
+  const merged = RATING_KEYS.reduce((nextRatings, key) => {
+    nextRatings[key] = roundScore(
       (rapper.averageRatings[key] * rapper.ratingCount + userRating[key]) / nextCount,
     );
-    return merged;
+    return nextRatings;
   }, {} as RatingDimension);
+
+  merged.ph = roundScore(
+    (getPhRating(rapper.averageRatings) * rapper.ratingCount + getPhRating(userRating)) /
+      nextCount,
+  );
+
+  return merged;
 }
 
 export function mergeUserRatingsIntoRappers(
@@ -52,4 +59,8 @@ export function getUserRatingForRapper(
 
 export function formatScore(value: number): string {
   return value.toFixed(1);
+}
+
+export function getPhRating(ratings: RatingDimension): number {
+  return ratings.ph ?? 0;
 }

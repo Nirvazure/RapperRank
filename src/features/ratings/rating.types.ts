@@ -1,4 +1,4 @@
-export type RatingKey =
+export type RadarRatingKey =
   | "flow"
   | "lyrics"
   | "voice"
@@ -6,7 +6,9 @@ export type RatingKey =
   | "melody"
   | "stage";
 
-export type RatingDimension = Record<RatingKey, number>;
+export type PhRatingKey = "ph";
+export type RatingKey = RadarRatingKey | PhRatingKey;
+export type RatingDimension = Record<RadarRatingKey, number> & Partial<Record<PhRatingKey, number>>;
 
 export type UserRating = {
   userId: string;

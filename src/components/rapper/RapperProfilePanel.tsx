@@ -3,7 +3,7 @@ import type { Rapper } from "@/features/rappers/rapper.types";
 
 export function RapperProfilePanel({ rapper }: { rapper: Rapper }) {
   return (
-    <section className="space-y-4 rounded-lg border border-white/10 bg-zinc-950/85 p-4 text-white shadow-2xl shadow-black/30">
+    <section className="h-full min-h-0 space-y-4 overflow-hidden rounded-lg border border-white/10 bg-zinc-950/85 p-4 text-white shadow-2xl shadow-black/30">
       <div>
         <p className="font-mono text-xs font-bold uppercase tracking-[0.26em] text-red-300">
           artist notes

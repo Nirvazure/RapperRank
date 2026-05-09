@@ -1,8 +1,15 @@
 "use client";
 
 import { Star } from "lucide-react";
-import type { RatingDimension, RatingKey } from "@/features/ratings/rating.types";
-import { RATING_DESCRIPTIONS, RATING_KEYS, RATING_LABELS } from "@/lib/constants";
+import type { RadarRatingKey, RatingDimension } from "@/features/ratings/rating.types";
+import { getPhRating } from "@/features/ratings/rating.utils";
+import {
+  MAX_PH_RATING,
+  MIN_PH_RATING,
+  RATING_DESCRIPTIONS,
+  RATING_KEYS,
+  RATING_LABELS,
+} from "@/lib/constants";
 
 export function RapperRatingPanel({
   value,
@@ -20,10 +27,18 @@ export function RapperRatingPanel({
       technique: 3,
       melody: 3,
       stage: 3,
+      ph: 0,
     } satisfies RatingDimension);
 
-  function updateRating(key: RatingKey, score: number) {
+  const phValue = getPhRating(current);
+  const phPosition = ((phValue - MIN_PH_RATING) / (MAX_PH_RATING - MIN_PH_RATING)) * 100;
+
+  function updateRating(key: RadarRatingKey, score: number) {
     onChange({ ...current, [key]: score });
+  }
+
+  function updatePhRating(score: number) {
+    onChange({ ...current, ph: score });
   }
 
   return (
@@ -73,6 +88,47 @@ export function RapperRatingPanel({
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-5 border-t border-white/10 pt-4">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-sm font-black">PH值坐标</h3>
+            <p className="mt-1 text-xs leading-5 text-white/45">
+              左侧偏地下，右侧偏商业，独立于六维雷达图和总分。
+            </p>
+          </div>
+          <span className="font-mono text-xl font-black text-red-300">
+            {phValue.toFixed(1)}
+          </span>
+        </div>
+        <div className="mt-4">
+          <div className="relative h-3 rounded-full bg-gradient-to-r from-red-400 via-white/35 to-lime-200">
+            <span
+              className="absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-black bg-white shadow-lg shadow-black/40"
+              style={{ left: `${phPosition}%` }}
+            />
+          </div>
+          <input
+            type="range"
+            min={MIN_PH_RATING}
+            max={MAX_PH_RATING}
+            step={0.5}
+            value={phValue}
+            aria-label="PH值，左侧地下，右侧商业"
+            onChange={(event) => updatePhRating(Number(event.target.value))}
+            className="mt-3 h-8 w-full cursor-pointer accent-lime-200"
+          />
+          <div className="mt-1 grid grid-cols-7 text-center font-mono text-[10px] font-black text-white/45">
+            {[-3, -2, -1, 0, 1, 2, 3].map((value) => (
+              <span key={value}>{value}</span>
+            ))}
+          </div>
+          <div className="mt-2 flex items-center justify-between text-xs font-bold text-white/55">
+            <span>Underground</span>
+            <span>Commercial</span>
+          </div>
+        </div>
       </div>
     </section>
   );
