@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ratingDimensionSchema } from "@/features/ratings/rating.schema";
 
 describe("rating schema", () => {
-  it("accepts six valid 1-5 ratings and an independent -3 to 3 PH rating", () => {
+  it("accepts six valid 1-5 ratings and a three-bucket orientation rating", () => {
     expect(() =>
       ratingDimensionSchema.parse({
         flow: 5,
@@ -11,9 +11,25 @@ describe("rating schema", () => {
         technique: 2,
         melody: 1,
         stage: 4.5,
-        ph: -2,
+        ph: -1,
       }),
     ).not.toThrow();
+  });
+
+  it("accepts all three orientation values", () => {
+    for (const ph of [-1, 0, 1]) {
+      expect(() =>
+        ratingDimensionSchema.parse({
+          flow: 5,
+          lyrics: 4,
+          voice: 3,
+          technique: 2,
+          melody: 1,
+          stage: 4,
+          ph,
+        }),
+      ).not.toThrow();
+    }
   });
 
   it("rejects a rating above five", () => {
@@ -30,7 +46,7 @@ describe("rating schema", () => {
     ).toThrow();
   });
 
-  it("rejects a PH rating outside the underground to commercial range", () => {
+  it("rejects a PH rating outside the three-bucket range", () => {
     expect(() =>
       ratingDimensionSchema.parse({
         flow: 5,
@@ -39,7 +55,7 @@ describe("rating schema", () => {
         technique: 2,
         melody: 1,
         stage: 4,
-        ph: 4,
+        ph: 2,
       }),
     ).toThrow();
   });

@@ -53,17 +53,17 @@ export function RankingPageClient() {
   return (
     <main
       ref={pageRef}
-      className="min-h-screen bg-[#050505] px-4 py-8 text-white sm:px-6 lg:px-8"
+      className="min-h-screen bg-[#050505] px-4 py-5 text-white sm:px-6 lg:px-8"
     >
-      <div className="mx-auto flex max-w-[1600px] flex-col gap-7">
+      <div className="mx-auto flex max-w-[1600px] flex-col gap-5">
         <div className="ranking-title">
           <PageHeader
             eyebrow="community roster"
-            title="Rapper Community"
+            title="Community"
             description="浏览完整 Rapper 列表，比较六维表现，并从右侧排行榜快速进入评分页。"
           />
         </div>
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
           <RapperGallery
             rappers={displayRappers}
             compact

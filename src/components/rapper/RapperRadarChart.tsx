@@ -7,8 +7,14 @@ import {
   calculateOverallScore,
   formatScore,
   getPhRating,
+  normalizePhOrientation,
 } from "@/features/ratings/rating.utils";
-import { MAX_PH_RATING, MIN_PH_RATING, RATING_KEYS, RATING_LABELS } from "@/lib/constants";
+import {
+  PH_ORIENTATION_DESCRIPTIONS,
+  PH_ORIENTATION_LABELS,
+  RATING_KEYS,
+  RATING_LABELS,
+} from "@/lib/constants";
 
 export function RapperRadarChart({
   rapper,
@@ -18,7 +24,7 @@ export function RapperRadarChart({
   actionSlot?: ReactNode;
 }) {
   const phValue = getPhRating(rapper.averageRatings);
-  const phPosition = ((phValue - MIN_PH_RATING) / (MAX_PH_RATING - MIN_PH_RATING)) * 100;
+  const orientation = normalizePhOrientation(phValue);
   const option = {
     backgroundColor: "transparent",
     color: ["#d9ff00"],
@@ -55,7 +61,7 @@ export function RapperRadarChart({
         data: [
           {
             value: RATING_KEYS.map((key) => rapper.averageRatings[key]),
-            name: "全网平均",
+            name: "network average",
             areaStyle: { color: "rgba(217,255,0,0.28)" },
             lineStyle: { width: 3, color: "#d9ff00" },
             symbol: "circle",
@@ -67,59 +73,49 @@ export function RapperRadarChart({
   };
 
   return (
-    <section className="flex h-full min-h-0 flex-col rounded-lg border border-white/10 bg-black/70 p-4">
-      <div className="mb-2 flex items-start justify-between gap-4">
-        <h2 className="text-xl font-black uppercase text-white">Power Radar</h2>
-        <div className="flex shrink-0 items-start gap-3">
+    <section className="flex h-full min-h-0 flex-col rounded-lg border border-white/10 bg-black/70 p-3">
+      <div className="mb-2 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="text-lg font-black uppercase text-white">Power Radar</h2>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <span className="rounded-md border border-lime-200/20 bg-lime-200/10 px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-lime-200">
+              {PH_ORIENTATION_LABELS[orientation]}
+            </span>
+            <span className="line-clamp-1 text-[10px] font-bold leading-4 text-white/45">
+              {PH_ORIENTATION_DESCRIPTIONS[orientation]}
+            </span>
+          </div>
+        </div>
+        <div className="flex shrink-0 items-start gap-2">
           <div className="text-right">
-            <div className="font-mono text-5xl font-black leading-none text-lime-200">
-              {formatScore(calculateOverallScore(rapper.averageRatings))}
+            <div className="flex items-end justify-end gap-1">
+              <span className="font-mono text-4xl font-black leading-none text-lime-200">
+                {formatScore(calculateOverallScore(rapper.averageRatings))}
+              </span>
+              <span className="pb-1 font-mono text-xs font-black text-white/45">
+                /5.0
+              </span>
             </div>
-            <div className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/55">
-              / 5.0 · {rapper.ratingCount.toLocaleString()} ratings · 1-5
+            <div className="mt-1 flex justify-end gap-1.5">
+              <span className="rounded-md border border-white/10 bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] font-black uppercase text-white/55">
+                {rapper.ratingCount.toLocaleString()} ratings
+              </span>
+              <span className="rounded-md border border-white/10 bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] font-black uppercase text-white/55">
+                scale 1-5
+              </span>
             </div>
           </div>
           {actionSlot}
         </div>
       </div>
-      <div className="grid min-h-[280px] flex-1 grid-cols-[74px_minmax(0,1fr)] gap-2">
-        <div className="flex min-h-0 flex-col items-center py-2">
-          <span className="text-[9px] font-black uppercase tracking-[0.08em] text-lime-200">
-            Commercial
-          </span>
-          <span className="font-mono text-[9px] font-black uppercase tracking-[0.12em] text-lime-200">
-            +3
-          </span>
-          <div className="relative my-2 w-2 flex-1 rounded-full bg-gradient-to-t from-red-400 via-white/25 to-lime-200">
-            <span
-              className="absolute left-1/2 size-4 -translate-x-1/2 translate-y-1/2 rounded-full border-2 border-black bg-white shadow-lg shadow-black/40"
-              style={{ bottom: `${phPosition}%` }}
-            />
-          </div>
-          <span className="font-mono text-[9px] font-black uppercase tracking-[0.12em] text-red-300">
-            -3
-          </span>
-          <span className="text-[9px] font-black uppercase tracking-[0.08em] text-red-300">
-            Underground
-          </span>
-          <div className="mt-2 text-center">
-            <div className="font-mono text-sm font-black text-red-300">
-              {phValue.toFixed(1)}
-            </div>
-            <div className="mt-1 text-[9px] font-black uppercase tracking-[0.14em] text-white/45">
-              PH
-            </div>
-          </div>
-        </div>
-        <div className="min-h-0">
-          <ReactECharts
-            key={rapper.id}
-            option={option}
-            notMerge
-            lazyUpdate
-            style={{ height: "100%", width: "100%" }}
-          />
-        </div>
+      <div className="min-h-[250px] flex-1">
+        <ReactECharts
+          key={rapper.id}
+          option={option}
+          notMerge
+          lazyUpdate
+          style={{ height: "100%", minHeight: 250, width: "100%" }}
+        />
       </div>
     </section>
   );

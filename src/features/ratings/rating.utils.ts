@@ -1,10 +1,20 @@
 import type { Rapper } from "@/features/rappers/rapper.types";
-import type { RatingDimension, UserRating } from "@/features/ratings/rating.types";
-import { RATING_KEYS } from "@/lib/constants";
+import type {
+  PhOrientation,
+  RatingDimension,
+  UserRating,
+} from "@/features/ratings/rating.types";
+import {
+  PH_ORIENTATION_LABELS,
+  RATING_KEYS,
+  RATING_SCORE_WEIGHTS,
+} from "@/lib/constants";
 
 export function calculateOverallScore(ratings: RatingDimension): number {
-  const total = RATING_KEYS.reduce((sum, key) => sum + ratings[key], 0);
-  return roundScore(total / RATING_KEYS.length);
+  const orientation = normalizePhOrientation(getPhRating(ratings));
+  const weights = RATING_SCORE_WEIGHTS[orientation];
+  const total = RATING_KEYS.reduce((sum, key) => sum + ratings[key] * weights[key], 0);
+  return roundScore(total);
 }
 
 export function roundScore(value: number): number {
@@ -63,4 +73,36 @@ export function formatScore(value: number): string {
 
 export function getPhRating(ratings: RatingDimension): number {
   return ratings.ph ?? 0;
+}
+
+export function normalizePhOrientation(ph?: number): PhOrientation {
+  if ((ph ?? 0) <= -0.33) {
+    return -1;
+  }
+
+  if ((ph ?? 0) >= 0.33) {
+    return 1;
+  }
+
+  return 0;
+}
+
+export function inferPhOrientationFromRatings(ratings: RatingDimension): PhOrientation {
+  const hardcoreAverage = (ratings.technique + ratings.flow + ratings.lyrics) / 3;
+  const mainstreamAverage = (ratings.melody + ratings.voice + ratings.stage) / 3;
+  const difference = hardcoreAverage - mainstreamAverage;
+
+  if (difference >= 0.4) {
+    return -1;
+  }
+
+  if (difference <= -0.4) {
+    return 1;
+  }
+
+  return 0;
+}
+
+export function getPhOrientationLabel(ph?: number): string {
+  return PH_ORIENTATION_LABELS[normalizePhOrientation(ph)];
 }

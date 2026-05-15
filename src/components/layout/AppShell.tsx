@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { Shuffle } from "lucide-react";
@@ -19,7 +24,10 @@ import {
 import { useUserStore } from "@/features/user/user-store";
 
 export function AppShell({ initialRapperId }: { initialRapperId: string }) {
-  const shellRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLElement>(null);
+  const heroIntroContextRef = useRef<ReturnType<typeof gsap.context> | null>(
+    null,
+  );
   const router = useRouter();
   const { data: rappers = [] } = useRappersQuery();
   const selectedRapperId = useUserStore((state) => state.selectedRapperId);
@@ -58,41 +66,113 @@ export function AppShell({ initialRapperId }: { initialRapperId: string }) {
     router.push(`/rank/${nextRapper.id}`);
   }
 
-  useEffect(() => {
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        ".hero-enter",
-        { opacity: 0, y: 34 },
-        { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: "power3.out" },
-      );
-    }, shellRef);
-
-    return () => context.revert();
+  useLayoutEffect(() => {
+    return () => {
+      heroIntroContextRef.current?.revert();
+      heroIntroContextRef.current = null;
+    };
   }, []);
 
-  useEffect(() => {
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        [".rapper-visual", ".score-panel"],
-        { opacity: 0.45, scale: 1.03, y: 18 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.72,
-          stagger: 0.06,
-          ease: "power3.out",
-        },
-      );
-    }, shellRef);
+  useLayoutEffect(() => {
+    const rapperId = selectedRapper?.id;
+    if (!rapperId || heroIntroContextRef.current) return;
 
-    return () => context.revert();
-  }, [selectedRapperId]);
+    let cancelled = false;
+    const rafId = requestAnimationFrame(() => {
+      if (cancelled) return;
+      const root = shellRef.current;
+      if (!root) return;
+      const heroes = gsap.utils.toArray<Element>(
+        root.querySelectorAll(".hero-enter"),
+      );
+      if (heroes.length === 0) return;
+      heroIntroContextRef.current = gsap.context(() => {
+        gsap.fromTo(
+          heroes,
+          { opacity: 0, y: 34 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            stagger: 0.08,
+            ease: "power3.out",
+          },
+        );
+      }, shellRef);
+    });
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+    };
+  }, [selectedRapper?.id]);
+
+  useLayoutEffect(() => {
+    if (!selectedRapper) return;
+
+    let dead = false;
+    let panelContext: ReturnType<typeof gsap.context> | null = null;
+
+    const rafId = requestAnimationFrame(() => {
+      if (dead) return;
+      const root = shellRef.current;
+      if (!root) return;
+      const panelTargets = gsap.utils.toArray<Element>(
+        root.querySelectorAll(".rapper-visual, .score-panel"),
+      );
+      if (panelTargets.length === 0) return;
+      panelContext = gsap.context(() => {
+        gsap.fromTo(
+          panelTargets,
+          { opacity: 0.45, scale: 1.03, y: 18 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.72,
+            stagger: 0.06,
+            ease: "power3.out",
+          },
+        );
+      }, shellRef);
+    });
+
+    return () => {
+      dead = true;
+      cancelAnimationFrame(rafId);
+      panelContext?.revert();
+    };
+  }, [selectedRapperId, selectedRapper]);
 
   if (!selectedRapper) {
     return (
-      <main className="min-h-screen bg-black px-5 py-8 text-white">
-        正在加载 RapperRank...
+      <main
+        ref={shellRef}
+        className="min-h-screen overflow-hidden bg-[#050505] px-4 py-4 text-white sm:px-6 lg:px-8"
+      >
+        <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px]" />
+        <div className="relative mx-auto flex max-w-[1600px] animate-pulse flex-col gap-4">
+          <div className="flex flex-col gap-3 border-b border-white/10 pb-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-4">
+              <div className="h-10 w-28 rounded-md bg-white/10" />
+              <div className="space-y-2">
+                <div className="h-3 w-36 rounded bg-lime-200/20" />
+                <div className="h-8 w-56 rounded bg-white/10" />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <div className="h-8 w-24 rounded-md bg-white/10" />
+              <div className="h-8 w-32 rounded-md bg-white/10" />
+            </div>
+          </div>
+          <div className="grid gap-4 xl:min-h-[calc(100vh-140px)] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)]">
+            <div className="min-h-[360px] rounded-lg border border-white/10 bg-white/[0.06]" />
+            <div className="grid gap-4 xl:grid-rows-[minmax(0,1fr)_minmax(0,0.62fr)]">
+              <div className="min-h-[260px] rounded-lg border border-white/10 bg-white/[0.06]" />
+              <div className="min-h-[180px] rounded-lg border border-white/10 bg-white/[0.06]" />
+            </div>
+          </div>
+        </div>
       </main>
     );
   }
@@ -100,17 +180,17 @@ export function AppShell({ initialRapperId }: { initialRapperId: string }) {
   return (
     <main
       ref={shellRef}
-      className="min-h-[calc(100vh-57px)] overflow-hidden bg-[#050505] px-4 py-5 text-white sm:px-6 lg:px-8"
+      className="min-h-screen overflow-hidden bg-[#050505] px-4 py-4 text-white sm:px-6 lg:px-8"
     >
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px]" />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(217,255,0,0.14),transparent_26%),radial-gradient(circle_at_82%_12%,rgba(255,46,91,0.16),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(0,190,255,0.12),transparent_32%)]" />
 
-      <div className="relative mx-auto flex max-w-[1600px] flex-col gap-5">
+      <div className="relative mx-auto flex max-w-[1600px] flex-col gap-4">
         <div className="hero-enter">
           <HeroHeader />
         </div>
 
-        <div className="grid items-stretch gap-6 xl:min-h-[calc(100vh-220px)] xl:grid-cols-[minmax(420px,0.9fr)_minmax(560px,1.1fr)]">
+        <div className="grid items-stretch gap-4 xl:min-h-[calc(100vh-140px)] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)]">
           <div className="hero-enter h-full">
             <RapperMediaPanel
               rapper={selectedRapper}
@@ -121,7 +201,7 @@ export function AppShell({ initialRapperId }: { initialRapperId: string }) {
                   type="button"
                   variant="outline"
                   aria-label="换一个"
-                  className="h-11 border-white/20 bg-black/35 px-3 text-sm font-black text-white backdrop-blur hover:bg-white/15 hover:text-white"
+                  className="h-10 border-white/20 bg-black/35 px-3 text-xs font-black text-white backdrop-blur hover:bg-white/15 hover:text-white"
                   onClick={openRandomRapper}
                 >
                   <Shuffle className="size-4" />
@@ -130,7 +210,7 @@ export function AppShell({ initialRapperId }: { initialRapperId: string }) {
               }
             />
           </div>
-          <div className="hero-enter score-panel grid h-full grid-rows-[minmax(0,1fr)_minmax(0,0.75fr)] gap-4">
+          <div className="hero-enter score-panel grid h-full grid-rows-[minmax(0,1fr)_minmax(0,0.62fr)] gap-4">
             <RapperRadarChart
               rapper={selectedRapper}
               actionSlot={

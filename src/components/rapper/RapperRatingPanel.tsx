@@ -1,14 +1,25 @@
 "use client";
 
-import { Star } from "lucide-react";
-import type { RadarRatingKey, RatingDimension } from "@/features/ratings/rating.types";
-import { getPhRating } from "@/features/ratings/rating.utils";
+import { useState } from "react";
+import { Info, Star } from "lucide-react";
+import type {
+  PhOrientation,
+  RadarRatingKey,
+  RatingDimension,
+} from "@/features/ratings/rating.types";
 import {
-  MAX_PH_RATING,
-  MIN_PH_RATING,
+  getPhRating,
+  inferPhOrientationFromRatings,
+  normalizePhOrientation,
+} from "@/features/ratings/rating.utils";
+import {
+  PH_ORIENTATION_DESCRIPTIONS,
+  PH_ORIENTATION_LABELS,
+  PH_ORIENTATION_VALUES,
   RATING_DESCRIPTIONS,
   RATING_KEYS,
   RATING_LABELS,
+  RATING_LEVEL_DESCRIPTIONS,
 } from "@/lib/constants";
 
 export function RapperRatingPanel({
@@ -18,6 +29,8 @@ export function RapperRatingPanel({
   value?: RatingDimension;
   onChange: (ratings: RatingDimension) => void;
 }) {
+  const [activeInfoKey, setActiveInfoKey] = useState<RadarRatingKey | null>(null);
+  const [hasManualOrientation, setHasManualOrientation] = useState(false);
   const current =
     value ??
     ({
@@ -31,13 +44,18 @@ export function RapperRatingPanel({
     } satisfies RatingDimension);
 
   const phValue = getPhRating(current);
-  const phPosition = ((phValue - MIN_PH_RATING) / (MAX_PH_RATING - MIN_PH_RATING)) * 100;
+  const orientation = normalizePhOrientation(phValue);
 
   function updateRating(key: RadarRatingKey, score: number) {
-    onChange({ ...current, [key]: score });
+    const next = { ...current, [key]: score };
+    onChange({
+      ...next,
+      ph: hasManualOrientation ? current.ph : inferPhOrientationFromRatings(next),
+    });
   }
 
-  function updatePhRating(score: number) {
+  function updatePhRating(score: PhOrientation) {
+    setHasManualOrientation(true);
     onChange({ ...current, ph: score });
   }
 
@@ -58,7 +76,36 @@ export function RapperRatingPanel({
           <div key={key} className="space-y-2 border-t border-white/10 pt-3">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-black">{RATING_LABELS[key]}</h3>
+                <div className="relative flex items-center gap-2">
+                  <h3 className="text-sm font-black">{RATING_LABELS[key]}</h3>
+                  <button
+                    type="button"
+                    aria-label={`查看${RATING_LABELS[key]}评分说明`}
+                    onClick={() => setActiveInfoKey(activeInfoKey === key ? null : key)}
+                    className="flex size-5 items-center justify-center rounded-full border border-white/10 bg-black/35 text-white/55 transition hover:border-lime-200 hover:text-lime-200"
+                  >
+                    <Info className="size-3" />
+                  </button>
+                  {activeInfoKey === key && (
+                    <div className="absolute left-0 top-7 z-20 w-72 rounded-md border border-lime-200/20 bg-zinc-950 p-3 shadow-xl shadow-black/40">
+                      <div className="mb-2 text-xs font-black text-lime-200">
+                        {RATING_LABELS[key]}评分档位
+                      </div>
+                      <div className="grid gap-2">
+                        {[1, 2, 3, 4, 5].map((level) => (
+                          <div key={level} className="grid grid-cols-[24px_minmax(0,1fr)] gap-2">
+                            <span className="font-mono text-xs font-black text-white">
+                              {level}
+                            </span>
+                            <span className="text-xs leading-5 text-white/65">
+                              {RATING_LEVEL_DESCRIPTIONS[key][level]}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <p className="mt-1 text-xs leading-5 text-white/45">
                   {RATING_DESCRIPTIONS[key]}
                 </p>
@@ -69,21 +116,25 @@ export function RapperRatingPanel({
             </div>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((score) => (
-                <button
-                  key={score}
-                  type="button"
-                  aria-label={`${RATING_LABELS[key]} ${score}分`}
-                  onClick={() => updateRating(key, score)}
-                  className="flex size-8 items-center justify-center rounded-md border border-white/10 bg-black/40 text-white transition hover:border-lime-200 hover:text-lime-200"
-                >
-                  <Star
-                    className={
-                      score <= current[key]
-                        ? "size-4 fill-lime-200 text-lime-200"
-                        : "size-4 text-white/35"
-                    }
-                  />
-                </button>
+                <span key={score} className="group relative">
+                  <button
+                    type="button"
+                    aria-label={`${RATING_LABELS[key]} ${score}分`}
+                    onClick={() => updateRating(key, score)}
+                    className="flex size-8 items-center justify-center rounded-md border border-white/10 bg-black/40 text-white transition hover:border-lime-200 hover:text-lime-200 focus-visible:border-lime-200 focus-visible:text-lime-200 focus-visible:outline-none"
+                  >
+                    <Star
+                      className={
+                        score <= current[key]
+                          ? "size-4 fill-lime-200 text-lime-200"
+                          : "size-4 text-white/35"
+                      }
+                    />
+                  </button>
+                  <span className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-2 w-56 -translate-x-1/2 rounded-md border border-white/10 bg-zinc-950 px-3 py-2 text-xs leading-5 text-white/75 opacity-0 shadow-xl shadow-black/40 transition group-focus-within:opacity-100 group-hover:opacity-100">
+                    {RATING_LEVEL_DESCRIPTIONS[key][score]}
+                  </span>
+                </span>
               ))}
             </div>
           </div>
@@ -93,41 +144,41 @@ export function RapperRatingPanel({
       <div className="mt-5 border-t border-white/10 pt-4">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-sm font-black">PH值坐标</h3>
+            <h3 className="text-sm font-black">Rapper定位</h3>
             <p className="mt-1 text-xs leading-5 text-white/45">
-              左侧偏地下，右侧偏商业，独立于六维雷达图和总分。
+              根据六维评分自动推荐，可手动调整。
             </p>
           </div>
-          <span className="font-mono text-xl font-black text-red-300">
-            {phValue.toFixed(1)}
+          <span className="text-sm font-black text-red-300">
+            {hasManualOrientation ? "已手动调整" : "自动推荐"}
           </span>
         </div>
-        <div className="mt-4">
-          <div className="relative h-3 rounded-full bg-gradient-to-r from-red-400 via-white/35 to-lime-200">
-            <span
-              className="absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-black bg-white shadow-lg shadow-black/40"
-              style={{ left: `${phPosition}%` }}
-            />
-          </div>
-          <input
-            type="range"
-            min={MIN_PH_RATING}
-            max={MAX_PH_RATING}
-            step={0.5}
-            value={phValue}
-            aria-label="PH值，左侧地下，右侧商业"
-            onChange={(event) => updatePhRating(Number(event.target.value))}
-            className="mt-3 h-8 w-full cursor-pointer accent-lime-200"
-          />
-          <div className="mt-1 grid grid-cols-7 text-center font-mono text-[10px] font-black text-white/45">
-            {[-3, -2, -1, 0, 1, 2, 3].map((value) => (
-              <span key={value}>{value}</span>
-            ))}
-          </div>
-          <div className="mt-2 flex items-center justify-between text-xs font-bold text-white/55">
-            <span>Underground</span>
-            <span>Commercial</span>
-          </div>
+        <div className="mt-4 grid gap-2 sm:grid-cols-3">
+          {PH_ORIENTATION_VALUES.map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => updatePhRating(option)}
+              className={
+                orientation === option
+                  ? "rounded-md border border-lime-200 bg-lime-200 px-3 py-3 text-left text-black transition"
+                  : "rounded-md border border-white/10 bg-black/35 px-3 py-3 text-left text-white transition hover:border-white/35"
+              }
+            >
+              <span className="block text-sm font-black">
+                {PH_ORIENTATION_LABELS[option]}
+              </span>
+              <span
+                className={
+                  orientation === option
+                    ? "mt-1 block text-xs leading-5 text-black/70"
+                    : "mt-1 block text-xs leading-5 text-white/45"
+                }
+              >
+                {PH_ORIENTATION_DESCRIPTIONS[option]}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
     </section>

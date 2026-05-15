@@ -12,6 +12,8 @@ export type Rapper = {
   avatarUrl: string;
   mediaUrl: string;
   mediaType: RapperMediaType;
+  /** 可选：艺人详情页后台循环播放的音频（跨域资源需在存储端配置 CORS） */
+  backgroundAudioUrl?: string;
   bio: string;
   shortReview: string;
   tags: string[];
