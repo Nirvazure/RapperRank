@@ -6,7 +6,7 @@ const now = "2026-05-08T00:00:00.000Z";
 
 const rawMockUser: MockUser = {
   id: MOCK_USER_ID,
-  displayName: "Local Head",
+  displayName: "Nirvazure",
   avatarUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=240&q=80",
   favoriteRapperIds: ["kendrick-lamar", "nicki-minaj", "travis-scott"],
   ratings: [
