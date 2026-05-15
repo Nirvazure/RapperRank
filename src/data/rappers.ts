@@ -1,9 +1,6 @@
 import { rappersSchema } from "@/features/rappers/rapper.schema";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import { chineseRappers } from "@/data/chinese-rappers";
-import curationOverrides from "@/data/curation-overrides.json";
-import { curationOverridesSchema } from "@/features/curation/curation.schema";
-import { applyCurationOverrides } from "@/features/curation/curation.utils";
 
 export const rawRappers: Rapper[] = [
   {
@@ -198,7 +195,4 @@ export const rawRappers: Rapper[] = [
   ...chineseRappers,
 ];
 
-const parsedCurationOverrides = curationOverridesSchema.parse(curationOverrides);
-const curatedRappers = applyCurationOverrides(rawRappers, parsedCurationOverrides);
-
-export const rappers = rappersSchema.parse(curatedRappers);
+export const rappers = rappersSchema.parse(rawRappers);
