@@ -7,6 +7,7 @@ export type RadarRatingKey =
   | "stage";
 
 export type PhRatingKey = "ph";
+export type PhOrientation = -1 | 0 | 1;
 export type RatingKey = RadarRatingKey | PhRatingKey;
 export type RatingDimension = Record<RadarRatingKey, number> & Partial<Record<PhRatingKey, number>>;
 

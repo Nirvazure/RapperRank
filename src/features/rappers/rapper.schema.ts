@@ -13,6 +13,7 @@ export const rapperSchema = z.object({
   avatarUrl: imagePathSchema,
   mediaUrl: imagePathSchema,
   mediaType: z.enum(["image", "gif", "video"]),
+  backgroundAudioUrl: z.string().url().optional(),
   bio: z.string().min(1),
   shortReview: z.string().min(1),
   tags: z.array(z.string().min(1)).min(1),

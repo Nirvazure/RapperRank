@@ -1,8 +1,11 @@
 import { rappersSchema } from "@/features/rappers/rapper.schema";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import { chineseRappers } from "@/data/chinese-rappers";
+import curationOverrides from "@/data/curation-overrides.json";
+import { curationOverridesSchema } from "@/features/curation/curation.schema";
+import { applyCurationOverrides } from "@/features/curation/curation.utils";
 
-const rawRappers: Rapper[] = [
+export const rawRappers: Rapper[] = [
   {
     id: "kendrick-lamar",
     name: "Kendrick Lamar",
@@ -153,6 +156,8 @@ const rawRappers: Rapper[] = [
     avatarUrl: "/rapper/dt.jpg",
     mediaUrl: "/rapper/dt.jpg",
     mediaType: "image",
+    backgroundAudioUrl:
+      "https://nirvazure-next.oss-cn-hangzhou.aliyuncs.com/album/%E6%97%85%E8%A1%8C.mp3",
     bio: "来自西安的双人说唱组合，以鲜明的街头叙事、默契配合和强烈地域气质建立辨识度。",
     shortReview: "双人段落衔接紧密，现场能量直接，兼具西安说唱的硬朗表达和旋律记忆点。",
     tags: ["Xi'an", "Chinese Rap", "Duo", "Street"],
@@ -193,4 +198,7 @@ const rawRappers: Rapper[] = [
   ...chineseRappers,
 ];
 
-export const rappers = rappersSchema.parse(rawRappers);
+const parsedCurationOverrides = curationOverridesSchema.parse(curationOverrides);
+const curatedRappers = applyCurationOverrides(rawRappers, parsedCurationOverrides);
+
+export const rappers = rappersSchema.parse(curatedRappers);

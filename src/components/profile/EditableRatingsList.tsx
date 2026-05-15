@@ -26,47 +26,45 @@ export function EditableRatingsList({
     );
 
   return (
-    <section className="rounded-lg border border-white/10 bg-white/[0.06] p-4">
-      <div className="mb-4 flex items-end justify-between gap-4">
+    <section className="rounded-lg border border-white/10 bg-white/[0.06] p-3">
+      <div className="mb-3 flex items-end justify-between gap-4">
         <div>
-          <p className="font-mono text-xs font-black uppercase tracking-[0.28em] text-lime-200">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-lime-200">
             rating records
           </p>
-          <h2 className="mt-2 text-2xl font-black uppercase">我的评分记录</h2>
+          <h2 className="mt-1 text-xl font-black uppercase">我的评分记录</h2>
         </div>
       </div>
       {records.length === 0 ? (
-        <div className="rounded-lg border border-white/10 bg-black/30 p-5">
-          <p className="text-sm font-bold text-white/60">
-            还没有本地评分记录。
-          </p>
+        <div className="rounded-lg border border-white/10 bg-black/30 p-4">
+          <p className="text-sm font-bold text-white/60">还没有本地评分记录。</p>
           <Button asChild className="mt-4 bg-lime-200 text-black hover:bg-lime-100">
             <Link href="/">去评分</Link>
           </Button>
         </div>
       ) : (
-        <div className="grid gap-3">
+        <div className="grid gap-2">
           {records.map(({ rating, rapper }) => (
             <article
               key={rating.rapperId}
-              className="grid gap-3 rounded-lg border border-white/10 bg-black/35 p-3 sm:grid-cols-[1fr_auto] sm:items-center"
+              className="grid gap-2 rounded-lg border border-white/10 bg-black/35 p-2 sm:grid-cols-[1fr_auto] sm:items-center"
             >
-              <div className="flex min-w-0 items-center gap-3">
+              <div className="flex min-w-0 items-center gap-2.5">
                 <img
                   src={rapper.avatarUrl}
                   alt={rapper.name}
-                  className="size-12 rounded-md object-cover grayscale"
+                  className="size-10 rounded-md object-cover grayscale"
                 />
                 <div className="min-w-0">
-                  <div className="flex items-center gap-3">
-                    <h3 className="truncate text-base font-black uppercase text-white">
+                  <div className="flex items-center gap-2">
+                    <h3 className="truncate text-sm font-black uppercase text-white">
                       {rapper.name}
                     </h3>
-                    <span className="font-mono text-lg font-black text-lime-200">
+                    <span className="font-mono text-base font-black text-lime-200">
                       {formatScore(calculateOverallScore(rating.ratings))}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-white/45">
+                  <p className="mt-0.5 text-[11px] text-white/45">
                     更新于 {new Date(rating.updatedAt).toLocaleDateString("zh-CN")}
                   </p>
                 </div>

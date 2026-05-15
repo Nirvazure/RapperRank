@@ -3,12 +3,14 @@ import type { Rapper } from "@/features/rappers/rapper.types";
 import {
   calculateOverallScore,
   getUserRatingForRapper,
+  inferPhOrientationFromRatings,
   mergeUserRatingIntoAverage,
   mergeUserRatingsIntoRappers,
+  normalizePhOrientation,
 } from "@/features/ratings/rating.utils";
 
 describe("rating utils", () => {
-  it("calculates the overall score from six dimensions", () => {
+  it("calculates the overall score with underground weights", () => {
     expect(
       calculateOverallScore({
         flow: 5,
@@ -17,9 +19,65 @@ describe("rating utils", () => {
         technique: 5,
         melody: 3,
         stage: 4,
-        ph: -3,
+        ph: -1,
       }),
-    ).toBe(4.2);
+    ).toBe(4.4);
+  });
+
+  it("calculates the overall score with mainstream weights", () => {
+    expect(
+      calculateOverallScore({
+        flow: 3,
+        lyrics: 3,
+        voice: 5,
+        technique: 3,
+        melody: 5,
+        stage: 4,
+        ph: 1,
+      }),
+    ).toBe(4.1);
+  });
+
+  it("normalizes averaged orientation values into three display buckets", () => {
+    expect(normalizePhOrientation(-0.34)).toBe(-1);
+    expect(normalizePhOrientation(-0.32)).toBe(0);
+    expect(normalizePhOrientation(0.32)).toBe(0);
+    expect(normalizePhOrientation(0.33)).toBe(1);
+  });
+
+  it("infers the rapper orientation from six dimension ratings", () => {
+    expect(
+      inferPhOrientationFromRatings({
+        flow: 5,
+        lyrics: 5,
+        voice: 3,
+        technique: 5,
+        melody: 3,
+        stage: 3,
+      }),
+    ).toBe(-1);
+
+    expect(
+      inferPhOrientationFromRatings({
+        flow: 3,
+        lyrics: 3,
+        voice: 5,
+        technique: 3,
+        melody: 5,
+        stage: 5,
+      }),
+    ).toBe(1);
+
+    expect(
+      inferPhOrientationFromRatings({
+        flow: 4,
+        lyrics: 4,
+        voice: 4,
+        technique: 4,
+        melody: 4,
+        stage: 4,
+      }),
+    ).toBe(0);
   });
 
   it("merges a local user rating into displayed averages", () => {
@@ -54,7 +112,7 @@ describe("rating utils", () => {
         technique: 5,
         melody: 5,
         stage: 5,
-        ph: 2,
+        ph: 1,
       }),
     ).toEqual({
       flow: 4.1,
@@ -63,8 +121,46 @@ describe("rating utils", () => {
       technique: 4.1,
       melody: 4.1,
       stage: 4.1,
-      ph: 0.2,
+      ph: 0.1,
     });
+  });
+
+  it("keeps averaged orientation values compatible with three bucket mapping", () => {
+    const rapper: Rapper = {
+      id: "test",
+      name: "Test",
+      region: "Nowhere",
+      avatarUrl: "https://example.com/a.jpg",
+      mediaUrl: "https://example.com/b.jpg",
+      mediaType: "image",
+      bio: "bio",
+      shortReview: "review",
+      tags: ["tag"],
+      representativeWorks: ["song"],
+      ratingCount: 1,
+      averageRatings: {
+        flow: 4,
+        lyrics: 4,
+        voice: 4,
+        technique: 4,
+        melody: 4,
+        stage: 4,
+        ph: -1,
+      },
+    };
+
+    const merged = mergeUserRatingIntoAverage(rapper, {
+      flow: 4,
+      lyrics: 4,
+      voice: 4,
+      technique: 4,
+      melody: 4,
+      stage: 4,
+      ph: 1,
+    });
+
+    expect(merged.ph).toBe(0);
+    expect(normalizePhOrientation(merged.ph)).toBe(0);
   });
 
   it("finds the local user's rating for a rapper", () => {
@@ -147,7 +243,7 @@ describe("rating utils", () => {
           technique: 5,
           melody: 5,
           stage: 5,
-          ph: 2,
+          ph: 1,
         },
         createdAt: "2026-05-08T00:00:00.000Z",
         updatedAt: "2026-05-08T00:00:00.000Z",
@@ -162,7 +258,7 @@ describe("rating utils", () => {
       technique: 4.1,
       melody: 4.1,
       stage: 4.1,
-      ph: 0.2,
+      ph: 0.1,
     });
     expect(merged[1]).toBe(rappers[1]);
   });
