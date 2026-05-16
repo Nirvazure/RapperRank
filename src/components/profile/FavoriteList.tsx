@@ -1,4 +1,8 @@
 import type { Rapper } from "@/features/rappers/rapper.types";
+import {
+  RAPPER_IMAGE_PLACEHOLDER_LABEL,
+  resolveRapperAvatar,
+} from "@/features/rappers/rapper.media";
 
 export function FavoriteList({ rappers }: { rappers: Rapper[] }) {
   return (
@@ -13,11 +17,23 @@ export function FavoriteList({ rappers }: { rappers: Rapper[] }) {
               key={rapper.id}
               className="flex items-center gap-3 rounded-lg border border-white/10 bg-black/35 p-2"
             >
-              <img
-                src={rapper.avatarUrl}
-                alt={rapper.name}
-                className="size-10 rounded-md object-cover grayscale"
-              />
+              {(() => {
+                const avatar = resolveRapperAvatar(rapper);
+
+                return avatar.src ? (
+                  <img
+                    src={avatar.src}
+                    alt={avatar.alt}
+                    className="size-10 rounded-md object-cover grayscale"
+                  />
+                ) : (
+                  <div className="flex size-10 items-center justify-center rounded-md bg-black/35 text-center">
+                    <span className="px-1 font-mono text-[8px] font-black uppercase leading-tight text-white/45">
+                      {RAPPER_IMAGE_PLACEHOLDER_LABEL}
+                    </span>
+                  </div>
+                );
+              })()}
               <div>
                 <p className="text-sm font-black text-white">{rapper.name}</p>
                 <p className="text-xs text-white/45">{rapper.region}</p>

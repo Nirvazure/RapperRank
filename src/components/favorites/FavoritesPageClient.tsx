@@ -7,6 +7,10 @@ import { HeartOff } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { EditableRatingsList } from "@/components/profile/EditableRatingsList";
 import { Button } from "@/components/ui/button";
+import {
+  RAPPER_IMAGE_PLACEHOLDER_LABEL,
+  resolveRapperMedia,
+} from "@/features/rappers/rapper.media";
 import { useRappersQuery } from "@/features/rappers/rapper.queries";
 import {
   calculateOverallScore,
@@ -113,7 +117,10 @@ export function FavoritesPageClient() {
               </section>
             ) : (
               <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {favoriteRappers.map((rapper) => (
+                {favoriteRappers.map((rapper) => {
+                  const media = resolveRapperMedia(rapper);
+
+                  return (
                   <article
                     key={rapper.id}
                     data-favorite-id={rapper.id}
@@ -121,11 +128,24 @@ export function FavoritesPageClient() {
                   >
                     <div className="flex h-full flex-col">
                       <Link href={`/rank/${rapper.id}`} className="relative block flex-1">
-                        <img
-                          src={rapper.mediaUrl}
-                          alt={rapper.name}
-                          className="absolute inset-0 h-full w-full object-cover grayscale transition duration-300 hover:grayscale-0"
-                        />
+                        {media.src ? (
+                          <img
+                            src={media.src}
+                            alt={media.alt}
+                            className="absolute inset-0 h-full w-full object-cover grayscale transition duration-300 hover:grayscale-0"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center bg-neutral-900 px-4 text-center">
+                            <div>
+                              <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-lime-200/70">
+                                {RAPPER_IMAGE_PLACEHOLDER_LABEL}
+                              </p>
+                              <p className="mt-2 text-xs font-black uppercase text-white/50">
+                                {rapper.name}
+                              </p>
+                            </div>
+                          </div>
+                        )}
                         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.18)_50%,rgba(0,0,0,0.9)_100%)]" />
                       </Link>
                       <div className="space-y-2 p-3">
@@ -163,7 +183,8 @@ export function FavoritesPageClient() {
                       </div>
                     </div>
                   </article>
-                ))}
+                  );
+                })}
               </section>
             )}
           </div>

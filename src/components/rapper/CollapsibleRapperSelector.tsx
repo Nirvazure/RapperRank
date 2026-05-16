@@ -4,6 +4,10 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RapperSelector } from "@/components/rapper/RapperSelector";
+import {
+  RAPPER_IMAGE_PLACEHOLDER_LABEL,
+  resolveRapperAvatar,
+} from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
 
@@ -17,6 +21,7 @@ export function CollapsibleRapperSelector({
   onSelect: (rapperId: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const avatar = resolveRapperAvatar(selectedRapper);
 
   function selectAndCollapse(rapperId: string) {
     onSelect(rapperId);
@@ -27,11 +32,19 @@ export function CollapsibleRapperSelector({
     <section className="rounded-lg border border-white/10 bg-white/[0.06] p-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex min-w-0 items-center gap-3">
-          <img
-            src={selectedRapper.avatarUrl}
-            alt={selectedRapper.name}
-            className="size-11 rounded-md object-cover grayscale"
-          />
+          {avatar.src ? (
+            <img
+              src={avatar.src}
+              alt={avatar.alt}
+              className="size-11 rounded-md object-cover grayscale"
+            />
+          ) : (
+            <div className="flex size-11 items-center justify-center rounded-md bg-black/35 text-center">
+              <span className="px-1 font-mono text-[8px] font-black uppercase leading-tight text-white/45">
+                {RAPPER_IMAGE_PLACEHOLDER_LABEL}
+              </span>
+            </div>
+          )}
           <div className="min-w-0">
             <p className="truncate text-sm font-black uppercase text-white">
               {selectedRapper.name}

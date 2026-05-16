@@ -1,6 +1,10 @@
 import { Heart } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  RAPPER_IMAGE_PLACEHOLDER_LABEL,
+  resolveRapperMedia,
+} from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
 
 export function RapperMediaPanel({
@@ -14,14 +18,29 @@ export function RapperMediaPanel({
   onToggleFavorite: () => void;
   actionSlot?: ReactNode;
 }) {
+  const media = resolveRapperMedia(rapper);
+
   return (
     <section className="relative aspect-[3/4] h-full min-h-[360px] overflow-hidden rounded-lg border border-white/10 bg-black md:min-h-[460px] xl:aspect-auto xl:min-h-0">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(217,255,0,0.24),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(255,46,91,0.22),transparent_28%)]" />
-      <img
-        src={rapper.mediaUrl}
-        alt={`${rapper.name} visual`}
-        className="rapper-visual absolute inset-0 h-full w-full object-cover opacity-80 mix-blend-luminosity"
-      />
+      {media.src ? (
+        <img
+          src={media.src}
+          alt={media.alt}
+          className="rapper-visual absolute inset-0 h-full w-full object-cover opacity-80 mix-blend-luminosity"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center bg-neutral-900 text-center">
+          <div className="space-y-2 px-6">
+            <p className="font-mono text-[11px] font-black uppercase tracking-[0.24em] text-lime-200/70">
+              {RAPPER_IMAGE_PLACEHOLDER_LABEL}
+            </p>
+            <p className="text-sm font-black uppercase text-white/55">
+              {rapper.name}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.18)_34%,rgba(0,0,0,0.08)_54%,rgba(0,0,0,0.92)_100%)]" />
       <div className="absolute left-4 top-4 rounded-md bg-lime-300 px-2.5 py-1 font-mono text-[11px] font-black uppercase text-black shadow-lg shadow-black/30">
         {rapper.region}
