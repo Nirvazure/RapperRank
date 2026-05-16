@@ -1,4 +1,5 @@
-import { rappersSchema } from "@/features/rappers/rapper.schema";
+﻿import { rappersSchema } from "@/features/rappers/rapper.schema";
+import { normalizeRapperImages } from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import { chineseRappers } from "@/data/chinese-rappers";
 
@@ -139,4 +140,4 @@ export const rawRappers: Rapper[] = [
   ...chineseRappers,
 ];
 
-export const rappers = rappersSchema.parse(rawRappers);
+export const rappers = rappersSchema.parse(rawRappers.map(normalizeRapperImages));

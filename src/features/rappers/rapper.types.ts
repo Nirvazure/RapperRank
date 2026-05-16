@@ -9,8 +9,8 @@ export type Rapper = {
   alias?: string;
   labels?: string[];
   region: string;
-  avatarUrl: string;
-  mediaUrl: string;
+  avatarUrl?: string;
+  mediaUrl?: string;
   mediaType: RapperMediaType;
   /** 可选：艺人详情页后台循环播放的音频（跨域资源需在存储端配置 CORS） */
   backgroundAudioUrl?: string;
