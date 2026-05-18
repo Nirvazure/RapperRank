@@ -90,7 +90,7 @@ export function RapperRadarChart({
           <div className="text-right">
             <div className="flex items-end justify-end gap-1">
               <span className="font-mono text-4xl font-black leading-none text-lime-200">
-                {formatScore(calculateOverallScore(rapper.averageRatings))}
+                {formatScore(rapper.overallScore ?? calculateOverallScore(rapper.averageRatings))}
               </span>
               <span className="pb-1 font-mono text-xs font-black text-white/45">
                 /5.0

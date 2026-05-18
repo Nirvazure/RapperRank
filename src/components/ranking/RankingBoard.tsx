@@ -12,7 +12,7 @@ export function RankingBoard({
   onSelect,
 }: {
   rappers: Rapper[];
-  selectedRapperId: string;
+  selectedRapperId?: string;
   compact?: boolean;
   onSelect: (rapperId: string) => void;
 }) {
@@ -29,10 +29,6 @@ export function RankingBoard({
           duration: 0.55,
           stagger: 0.055,
           ease: "power3.out",
-          scrollTrigger: {
-            trigger: boardRef.current,
-            start: "top 78%",
-          },
         },
       );
     }, boardRef);
@@ -56,9 +52,7 @@ export function RankingBoard({
             Ranking Board
           </h2>
         </div>
-        {!compact && (
-          <span className="font-mono text-xs text-white/45">global average</span>
-        )}
+        {!compact ? <span className="font-mono text-xs text-white/45">global average</span> : null}
       </div>
       <div className="grid gap-2">
         {rappers.map((rapper, index) => (
@@ -66,7 +60,7 @@ export function RankingBoard({
             key={rapper.id}
             rapper={rapper}
             rank={index + 1}
-            active={rapper.id === selectedRapperId}
+            active={selectedRapperId ? rapper.id === selectedRapperId : false}
             compact={compact}
             onSelect={() => onSelect(rapper.id)}
           />

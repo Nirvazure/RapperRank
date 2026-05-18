@@ -3,24 +3,31 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageCircle, Shuffle } from "lucide-react";
-import { mockUser } from "@/data/mock-user";
+import { MessageCircle, Shuffle, User } from "lucide-react";
+import { RapperAvatar } from "@/components/rapper/RapperAvatar";
+import type { Rapper } from "@/features/rappers/rapper.types";
 import { cn } from "@/lib/utils";
+
+type ViewerSummary = {
+  displayName: string;
+  avatarRapper?: Rapper;
+};
 
 export function PageHeader({
   eyebrow,
   title,
   description,
+  user,
 }: {
   eyebrow: string;
   title: string;
   description?: string;
+  user: ViewerSummary;
 }) {
   const pathname = usePathname();
   const ratingActive = pathname === "/" || pathname.startsWith("/rank/");
   const communityActive = pathname === "/ranking";
   const profileActive = pathname === "/favorites";
-  const fallbackInitial = mockUser.displayName.slice(0, 1).toUpperCase();
 
   return (
     <header className="flex flex-col gap-3 border-b border-white/10 pb-3 text-white lg:flex-row lg:items-center lg:justify-between">
@@ -39,17 +46,17 @@ export function PageHeader({
           />
         </Link>
         <div className="min-w-0 flex-1">
-        <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-lime-200">
-          {eyebrow}
-        </p>
-        <h1 className="mt-1 text-2xl font-black uppercase leading-[0.9] sm:text-3xl lg:text-4xl">
-          {title}
-        </h1>
-        {description ? (
-          <p className="mt-2 line-clamp-2 max-w-2xl text-xs font-bold leading-5 text-white/60">
-            {description}
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-lime-200">
+            {eyebrow}
           </p>
-        ) : null}
+          <h1 className="mt-1 text-2xl font-black uppercase leading-[0.9] sm:text-3xl lg:text-4xl">
+            {title}
+          </h1>
+          {description ? (
+            <p className="mt-2 line-clamp-2 max-w-2xl text-xs font-bold leading-5 text-white/60">
+              {description}
+            </p>
+          ) : null}
         </div>
       </div>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center lg:justify-end">
@@ -88,33 +95,27 @@ export function PageHeader({
               : "border-white/10 bg-white/[0.06] text-white hover:border-white/25 hover:bg-white/10",
           )}
         >
-          {mockUser.avatarUrl ? (
-            <img
-              src={mockUser.avatarUrl}
-              alt={mockUser.displayName}
-              className="size-8 rounded-md object-cover"
-            />
+          {user.avatarRapper ? (
+            <RapperAvatar rapper={user.avatarRapper} sizeClass="size-8" />
           ) : (
             <div
               className={cn(
-                "grid size-8 place-items-center rounded-md font-mono text-xs font-black",
+                "grid size-8 place-items-center rounded-md",
                 profileActive ? "bg-black text-lime-200" : "bg-lime-200 text-black",
               )}
             >
-              {fallbackInitial}
+              <User className="size-4" />
             </div>
           )}
           <div className="min-w-0">
-            <p className="truncate text-xs font-black uppercase">
-              {mockUser.displayName}
-            </p>
+            <p className="truncate text-xs font-black uppercase">{user.displayName}</p>
             <p
               className={cn(
                 "font-mono text-[9px] font-bold uppercase tracking-[0.14em]",
                 profileActive ? "text-black/55" : "text-white/40",
               )}
             >
-              local profile
+              local session
             </p>
           </div>
         </Link>

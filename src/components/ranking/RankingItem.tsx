@@ -49,7 +49,7 @@ export function RankingItem({
         )}
       </div>
       <span className={`font-mono font-black ${compact ? "text-base" : "text-xl"}`}>
-        {formatScore(calculateOverallScore(rapper.averageRatings))}
+        {formatScore(rapper.overallScore ?? calculateOverallScore(rapper.averageRatings))}
       </span>
     </button>
   );

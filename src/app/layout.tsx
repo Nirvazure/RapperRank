@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { RapperBackgroundAudio } from "@/components/audio/RapperBackgroundAudio";
 import { MotionProvider } from "@/components/motion/MotionProvider";
-import { QueryProvider } from "@/lib/query-client";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "RapperRank | Global Rap Ratings",
-  description: "欧美街头音乐风格的 Rapper 六维评分展示应用。",
+  description: "全球说唱歌手六维评分与排行榜应用。",
   icons: {
     icon: [{ url: "/logo.png", type: "image/png" }],
     apple: [{ url: "/logo.png", type: "image/png" }],
@@ -37,10 +35,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
       <body className="min-h-full bg-background font-sans text-foreground">
-        <QueryProvider>
-          <RapperBackgroundAudio />
-          <MotionProvider>{children}</MotionProvider>
-        </QueryProvider>
+        <MotionProvider>{children}</MotionProvider>
         <Analytics />
       </body>
     </html>

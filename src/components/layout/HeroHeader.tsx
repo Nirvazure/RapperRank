@@ -5,7 +5,10 @@ export function HeroHeader() {
     <PageHeader
       eyebrow="choose / inspect / rate"
       title="RapperRank"
-      description="评分页聚焦当前 Rapper 的视觉、能力画像和六维评分；完整浏览和排行榜放在社区页面。"
+      description="在详情页查看当前 Rapper 的视觉信息、能力画像和六维评分，在社区页浏览完整排行榜。"
+      user={{
+        displayName: "匿名用户",
+      }}
     />
   );
 }

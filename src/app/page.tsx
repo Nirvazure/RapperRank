@@ -1,11 +1,9 @@
 import { redirect } from "next/navigation";
-import { rappers } from "@/data/rappers";
-import { getRandomRapper } from "@/features/rappers/rapper.utils";
+import { getRandomRapperSlugFromDb } from "@/features/rappers/rapper.server";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const rapper = getRandomRapper(rappers);
-
-  redirect(`/rank/${rapper?.id ?? "kendrick-lamar"}`);
+export default async function Home() {
+  const slug = await getRandomRapperSlugFromDb();
+  redirect(`/rank/${slug}`);
 }

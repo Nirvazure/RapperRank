@@ -1,37 +1,30 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { RankingBoard } from "@/components/ranking/RankingBoard";
 import { RapperGallery } from "@/components/rapper/RapperGallery";
-import { useRappersQuery } from "@/features/rappers/rapper.queries";
-import {
-  calculateOverallScore,
-  mergeUserRatingsIntoRappers,
-} from "@/features/ratings/rating.utils";
-import { useUserStore } from "@/features/user/user-store";
+import type { Rapper } from "@/features/rappers/rapper.types";
+import type { UserRating } from "@/features/ratings/rating.types";
 
-export function RankingPageClient() {
+export function RankingPageClient({
+  rappers,
+  ranking,
+  favoriteIds,
+  ratings,
+  viewerDisplayName,
+}: {
+  rappers: Rapper[];
+  ranking: Rapper[];
+  favoriteIds: string[];
+  ratings: UserRating[];
+  viewerDisplayName: string;
+}) {
   const pageRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { data: rappers = [] } = useRappersQuery();
-  const selectedRapperId = useUserStore((state) => state.selectedRapperId);
-  const myRatings = useUserStore((state) => state.myRatings);
-  const selectRapper = useUserStore((state) => state.selectRapper);
-
-  const displayRappers = useMemo(() => {
-    return mergeUserRatingsIntoRappers(rappers, myRatings);
-  }, [rappers, myRatings]);
-
-  const displayRanking = useMemo(() => {
-    return [...displayRappers].sort(
-      (first, second) =>
-        calculateOverallScore(second.averageRatings) -
-        calculateOverallScore(first.averageRatings),
-    ).slice(0, 10);
-  }, [displayRappers]);
+  const avatarRapper = rappers.find((rapper) => favoriteIds.includes(rapper.id)) ?? rappers[0];
 
   useEffect(() => {
     const context = gsap.context(() => {
@@ -45,9 +38,8 @@ export function RankingPageClient() {
     return () => context.revert();
   }, []);
 
-  function selectAndOpenRapper(rapperId: string) {
-    selectRapper(rapperId);
-    router.push(`/rank/${rapperId}`);
+  function openRapper(rapperSlug: string) {
+    router.push(`/rank/${rapperSlug}`);
   }
 
   return (
@@ -60,21 +52,25 @@ export function RankingPageClient() {
           <PageHeader
             eyebrow="community roster"
             title="Community"
-            description="浏览完整 Rapper 列表，比较六维表现，并从右侧排行榜快速进入评分页。"
+            description={`浏览全量 Rapper 列表、排行榜，以及当前会话的 ${ratings.length} 条评分记录。`}
+            user={{
+              displayName: viewerDisplayName,
+              avatarRapper,
+            }}
           />
         </div>
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
-          <RapperGallery
-            rappers={displayRappers}
-            compact
-            onSelect={selectAndOpenRapper}
-          />
+          <RapperGallery rappers={rappers} compact onSelect={openRapper} />
           <aside className="lg:sticky lg:top-5 lg:self-start">
             <RankingBoard
-              rappers={displayRanking}
-              selectedRapperId={selectedRapperId}
+              rappers={ranking}
               compact
-              onSelect={selectAndOpenRapper}
+              onSelect={(rapperId) => {
+                const rapper = ranking.find((item) => item.id === rapperId);
+                if (rapper?.slug) {
+                  openRapper(rapper.slug);
+                }
+              }}
             />
           </aside>
         </div>

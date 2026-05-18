@@ -1,6 +1,6 @@
 # RapperRank
 
-RapperRank 是一个欧美街头音乐风格的 Rapper 六维评分展示应用。首版使用静态数据和本地模拟用户，支持 Rapper 切换、雷达图、六维 5 分制评分、Top 10 排行榜和本地收藏。
+RapperRank 是一个基于 Next.js 16 的说唱歌手评分应用。当前版本已经从“静态数据 + 浏览器本地持久化”切换到“Prisma + PostgreSQL + 匿名 session + Route Handlers”架构。
 
 ## Tech Stack
 
@@ -8,23 +8,42 @@ RapperRank 是一个欧美街头音乐风格的 Rapper 六维评分展示应用�
 - React 19
 - TypeScript
 - Tailwind CSS 4
-- shadcn/ui
-- ECharts
-- GSAP + ScrollTrigger
-- Zustand
-- TanStack Query
+- Prisma
+- PostgreSQL
 - Zod
+- ECharts
+- GSAP
 - Vitest + Testing Library
-- Vercel Analytics
 
 ## Local Development
 
+1. 安装依赖
+
 ```bash
 npm install
+```
+
+2. 配置环境变量
+
+```powershell
+Copy-Item .env.example .env
+```
+
+3. 准备数据库
+
+```bash
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+```
+
+4. 启动开发服务器
+
+```bash
 npm run dev
 ```
 
-Open http://localhost:3000.
+浏览器打开 [http://localhost:3000](http://localhost:3000)。
 
 ## Scripts
 
@@ -33,26 +52,14 @@ npm run lint
 npm run typecheck
 npm test
 npm run build
+npm run db:generate
+npm run db:migrate
+npm run db:seed
 ```
 
-## Pages
+## Runtime Notes
 
-- `/`: Rapper 主视觉、详情、雷达图、评分弹窗和 Rapper 选择器。
-- `/ranking`: Top 10 排行榜。
-- `/favorites`: 本地用户收藏。
-
-## Vercel Deployment
-
-This project is ready for Vercel deployment without required environment variables.
-
-1. Import the repository into Vercel.
-2. Keep the default framework preset as Next.js.
-3. Use the default install command: `npm install`.
-4. Use the default build command: `npm run build`.
-5. Deploy.
-
-Vercel Analytics is already mounted in `src/app/layout.tsx`.
-
-## Supabase Later
-
-The MVP does not require Supabase. Future migration notes are tracked in `docs/supabase-migration-todo.md`.
+- 用户体系当前为匿名 session。
+- 同一匿名用户对同一 Rapper 只保留一条最新评分。
+- 排行榜和详情页分数读取 `Rapper` 聚合字段，评分写入时会同步重算。
+- 种子数据来自现有 rapper 数据集，缺失文案会在 seed 清洗时替换为明确占位文本。

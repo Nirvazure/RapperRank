@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,22 +17,38 @@ import type { Rapper } from "@/features/rappers/rapper.types";
 import type { RatingDimension } from "@/features/ratings/rating.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
 
+const DEFAULT_RATINGS: RatingDimension = {
+  flow: 3,
+  lyrics: 3,
+  voice: 3,
+  technique: 3,
+  melody: 3,
+  stage: 3,
+  ph: 0,
+};
+
 export function RatingDialog({
   rapper,
   value,
-  onChange,
+  onSubmit,
   triggerLabel = "我要评分",
+  viewerDisplayName,
 }: {
   rapper: Rapper;
   value?: RatingDimension;
-  onChange: (ratings: RatingDimension) => void;
+  onSubmit: (ratings: RatingDimension) => Promise<void>;
   triggerLabel?: string;
+  viewerDisplayName: string;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [draft, setDraft] = useState<RatingDimension>(value ?? DEFAULT_RATINGS);
+  const [open, setOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const element = contentRef.current;
-    if (!element) {
+    if (!element || !open) {
       return;
     }
 
@@ -45,10 +61,33 @@ export function RatingDialog({
     return () => {
       animation.kill();
     };
-  }, []);
+  }, [open]);
+
+  function handleOpenChange(nextOpen: boolean) {
+    if (nextOpen) {
+      setDraft(value ?? DEFAULT_RATINGS);
+      setError(null);
+    }
+
+    setOpen(nextOpen);
+  }
+
+  async function handleSubmit() {
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      await onSubmit(draft);
+      setOpen(false);
+    } catch {
+      setError("评分保存失败，请稍后重试。");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
           type="button"
@@ -65,16 +104,28 @@ export function RatingDialog({
               Rate {rapper.name}
             </DialogTitle>
             <DialogDescription className="text-white/55">
-              当前全网平均 {formatScore(calculateOverallScore(rapper.averageRatings))} / 5.0。
-              你的评分会保存到本地身份，后续可迁移到 Supabase。
+              当前综合分 {formatScore(calculateOverallScore(rapper.averageRatings))} / 5.0。
+              当前会话用户：{viewerDisplayName}。
             </DialogDescription>
           </DialogHeader>
           <div className="mt-5">
-            <RapperRatingPanel value={value} onChange={onChange} />
+            <RapperRatingPanel value={draft} onChange={setDraft} />
           </div>
-          <p className="mt-4 rounded-md border border-lime-200/20 bg-lime-200/10 px-3 py-2 text-xs font-bold text-lime-100">
-            已保存到本地身份。排行榜、选择器和雷达图会同步显示模拟后的平均分。
-          </p>
+          {error ? (
+            <p className="mt-4 rounded-md border border-red-400/30 bg-red-500/10 px-3 py-2 text-xs font-bold text-red-100">
+              {error}
+            </p>
+          ) : null}
+          <div className="mt-4 flex justify-end">
+            <Button
+              type="button"
+              disabled={submitting}
+              className="bg-lime-200 text-black hover:bg-lime-100"
+              onClick={handleSubmit}
+            >
+              {submitting ? "保存中..." : "保存评分"}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
