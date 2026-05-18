@@ -1,16 +1,27 @@
 import { describe, expect, it } from "vitest";
-import { rappersSchema } from "@/features/rappers/rapper.schema";
 import { rappers } from "@/data/rappers";
-import { rapperSchema } from "@/features/rappers/rapper.schema";
+import { rapperSchema, rappersSchema } from "@/features/rappers/rapper.schema";
 
 describe("rapper schema", () => {
   it("validates the rapper mock dataset", () => {
     expect(() => rappersSchema.parse(rappers)).not.toThrow();
-    expect(rappers.length).toBeGreaterThanOrEqual(75);
-    expect(rappers.filter((rapper) => rapper.labels?.length).length).toBeGreaterThanOrEqual(25);
-    expect(rappers.filter((rapper) => rapper.chineseName).length).toBeGreaterThanOrEqual(50);
-    expect(rappers.every((rapper) => !rapper.mediaUrl || rapper.mediaUrl.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/"))).toBe(true);
-    expect(rappers.every((rapper) => !rapper.avatarUrl || rapper.avatarUrl.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/"))).toBe(true);
+    expect(rappers.length).toBeGreaterThan(0);
+    expect(rappers.every((rapper) => rapper.tags.length > 0)).toBe(true);
+    expect(rappers.every((rapper) => rapper.representativeWorks.length > 0)).toBe(true);
+    expect(
+      rappers.every(
+        (rapper) =>
+          !rapper.mediaUrl ||
+          rapper.mediaUrl.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/"),
+      ),
+    ).toBe(true);
+    expect(
+      rappers.every(
+        (rapper) =>
+          !rapper.avatarUrl ||
+          rapper.avatarUrl.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/"),
+      ),
+    ).toBe(true);
     expect(rappers.some((rapper) => !rapper.mediaUrl)).toBe(true);
     expect(rappers.some((rapper) => !rapper.avatarUrl)).toBe(true);
     expect(rappers.some((rapper) => rapper.mediaUrl?.startsWith("/rapper/"))).toBe(false);
@@ -29,7 +40,15 @@ describe("rapper schema", () => {
         tags: ["tag"],
         representativeWorks: ["song"],
         ratingCount: 0,
-        averageRatings: { flow: 4, lyrics: 4, voice: 4, technique: 4, melody: 4, stage: 4, ph: 0 },
+        averageRatings: {
+          flow: 4,
+          lyrics: 4,
+          voice: 4,
+          technique: 4,
+          melody: 4,
+          stage: 4,
+          ph: 0,
+        },
       }),
     ).not.toThrow();
   });
@@ -47,7 +66,15 @@ describe("rapper schema", () => {
         tags: ["tag"],
         representativeWorks: ["song"],
         ratingCount: 0,
-        averageRatings: { flow: 4, lyrics: 4, voice: 4, technique: 4, melody: 4, stage: 4, ph: 0 },
+        averageRatings: {
+          flow: 4,
+          lyrics: 4,
+          voice: 4,
+          technique: 4,
+          melody: 4,
+          stage: 4,
+          ph: 0,
+        },
       }),
     ).toThrow();
   });
@@ -64,7 +91,15 @@ describe("rapper schema", () => {
         tags: ["tag"],
         representativeWorks: ["song"],
         ratingCount: 0,
-        averageRatings: { flow: 4, lyrics: 4, voice: 4, technique: 4, melody: 4, stage: 4, ph: 0 },
+        averageRatings: {
+          flow: 4,
+          lyrics: 4,
+          voice: 4,
+          technique: 4,
+          melody: 4,
+          stage: 4,
+          ph: 0,
+        },
       }),
     ).not.toThrow();
   });

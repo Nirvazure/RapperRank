@@ -1,0 +1,67 @@
+import type { Rapper as PrismaRapper, Rating } from "@prisma/client";
+import type { RatingDimension, UserRating } from "@/features/ratings/rating.types";
+import type { Rapper } from "@/features/rappers/rapper.types";
+
+function toNumber(value: { toNumber: () => number } | number | null | undefined): number {
+  if (typeof value === "number") {
+    return value;
+  }
+
+  if (!value) {
+    return 0;
+  }
+
+  return value.toNumber();
+}
+
+export function mapRatingRecordToUserRating(rating: Rating): UserRating {
+  return {
+    userId: rating.userId,
+    rapperId: rating.rapperId,
+    ratings: {
+      flow: toNumber(rating.flow),
+      lyrics: toNumber(rating.lyrics),
+      voice: toNumber(rating.voice),
+      technique: toNumber(rating.technique),
+      melody: toNumber(rating.melody),
+      stage: toNumber(rating.stage),
+      ph: toNumber(rating.ph),
+    },
+    createdAt: rating.createdAt.toISOString(),
+    updatedAt: rating.updatedAt.toISOString(),
+  };
+}
+
+export function mapRapperRecordToViewModel(record: PrismaRapper): Rapper {
+  const averageRatings: RatingDimension = {
+    flow: toNumber(record.avgFlow),
+    lyrics: toNumber(record.avgLyrics),
+    voice: toNumber(record.avgVoice),
+    technique: toNumber(record.avgTechnique),
+    melody: toNumber(record.avgMelody),
+    stage: toNumber(record.avgStage),
+    ph: toNumber(record.avgPh),
+  };
+
+  return {
+    id: record.id,
+    slug: record.slug,
+    name: record.name,
+    chineseName: record.chineseName ?? undefined,
+    alias: record.alias ?? undefined,
+    labels: record.labels.length > 0 ? record.labels : undefined,
+    region: record.region,
+    avatarUrl: record.avatarUrl ?? undefined,
+    mediaUrl: record.mediaUrl ?? undefined,
+    mediaType: record.mediaType,
+    backgroundAudioUrl: record.backgroundAudioUrl ?? undefined,
+    bio: record.bio,
+    shortReview: record.shortReview,
+    tags: record.tags,
+    representativeWorks: record.representativeWorks,
+    ratingCount: record.ratingCount,
+    averageRatings,
+    overallScore: toNumber(record.overallScore),
+    contentStatus: record.contentStatus === "READY" ? "ready" : "incomplete",
+  };
+}

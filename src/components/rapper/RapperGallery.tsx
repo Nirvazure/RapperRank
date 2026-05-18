@@ -1,11 +1,9 @@
 "use client";
 
-import {
-  RAPPER_IMAGE_PLACEHOLDER_LABEL,
-  resolveRapperMedia,
-} from "@/features/rappers/rapper.media";
+import { RapperImage } from "@/components/rapper/RapperImage";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
+import { resolveRapperMedia } from "@/features/rappers/rapper.media";
 import { RATING_KEYS, RATING_LABELS } from "@/lib/constants";
 
 export function RapperGallery({
@@ -15,7 +13,7 @@ export function RapperGallery({
 }: {
   rappers: Rapper[];
   compact?: boolean;
-  onSelect: (rapperId: string) => void;
+  onSelect: (rapperSlug: string) => void;
 }) {
   return (
     <section className={compact ? "grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" : "grid gap-4 sm:grid-cols-2 xl:grid-cols-3"}>
@@ -26,28 +24,15 @@ export function RapperGallery({
           <button
             key={rapper.id}
             type="button"
-            onClick={() => onSelect(rapper.id)}
+            onClick={() => onSelect(rapper.slug ?? rapper.id)}
             className="group overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] text-left text-white transition duration-300 hover:-translate-y-1 hover:border-lime-200/70 hover:bg-white/10"
           >
             <div className={`relative overflow-hidden bg-black ${compact ? "aspect-[4/3]" : "aspect-[3/4]"}`}>
-              {media.src ? (
-                <img
-                  src={media.src}
-                  alt={media.alt}
-                  className="h-full w-full object-cover grayscale transition duration-500 group-hover:scale-105 group-hover:grayscale-0"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center bg-neutral-900 px-4 text-center">
-                  <div>
-                    <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-lime-200/70">
-                      {RAPPER_IMAGE_PLACEHOLDER_LABEL}
-                    </p>
-                    <p className="mt-2 text-xs font-black uppercase text-white/50">
-                      {rapper.name}
-                    </p>
-                  </div>
-                </div>
-              )}
+              <RapperImage
+                src={media.src}
+                alt={media.alt}
+                className="object-cover grayscale transition duration-500 group-hover:scale-105 group-hover:grayscale-0"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
               <span className={`absolute bottom-3 right-3 font-mono font-black text-lime-200 ${compact ? "text-2xl" : "text-3xl"}`}>
                 {formatScore(calculateOverallScore(rapper.averageRatings))}

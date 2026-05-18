@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserKind {
+  ANONYMOUS
+}
+
+enum ContentStatus {
+  READY
+  INCOMPLETE
+}
+
+enum RapperMediaType {
+  image
+  gif
+  video
+}
+
+model User {
+  id        String     @id @default(cuid())
+  kind      UserKind   @default(ANONYMOUS)
+  sessions  Session[]
+  ratings   Rating[]
+  favorites Favorite[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([userId])
+}
+
+model Rapper {
+  id                 String         @id @default(cuid())
+  slug               String         @unique
+  name               String
+  chineseName        String?
+  alias              String?
+  region             String
+  bio                String
+  shortReview        String
+  avatarUrl          String?
+  mediaUrl           String?
+  mediaType          RapperMediaType
+  backgroundAudioUrl String?
+  labels             String[]
+  tags               String[]
+  representativeWorks String[]
+  contentStatus      ContentStatus  @default(READY)
+  ratingCount        Int            @default(0)
+  avgFlow            Decimal        @default(0) @db.Decimal(3, 1)
+  avgLyrics          Decimal        @default(0) @db.Decimal(3, 1)
+  avgVoice           Decimal        @default(0) @db.Decimal(3, 1)
+  avgTechnique       Decimal        @default(0) @db.Decimal(3, 1)
+  avgMelody          Decimal        @default(0) @db.Decimal(3, 1)
+  avgStage           Decimal        @default(0) @db.Decimal(3, 1)
+  avgPh              Decimal        @default(0) @db.Decimal(3, 1)
+  overallScore       Decimal        @default(0) @db.Decimal(3, 1)
+  ratings            Rating[]
+  favorites          Favorite[]
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  userId    String
+  rapperId  String
+  flow      Decimal  @db.Decimal(3, 1)
+  lyrics    Decimal  @db.Decimal(3, 1)
+  voice     Decimal  @db.Decimal(3, 1)
+  technique Decimal  @db.Decimal(3, 1)
+  melody    Decimal  @db.Decimal(3, 1)
+  stage     Decimal  @db.Decimal(3, 1)
+  ph        Decimal  @db.Decimal(3, 1)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rapper    Rapper   @relation(fields: [rapperId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, rapperId])
+  @@index([rapperId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  rapperId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rapper    Rapper   @relation(fields: [rapperId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, rapperId])
+  @@index([rapperId])
+}

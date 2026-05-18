@@ -1,9 +1,11 @@
 import type { RatingDimension } from "@/features/ratings/rating.types";
 
 export type RapperMediaType = "image" | "gif" | "video";
+export type RapperContentStatus = "ready" | "incomplete";
 
 export type Rapper = {
   id: string;
+  slug?: string;
   name: string;
   chineseName?: string;
   alias?: string;
@@ -20,4 +22,6 @@ export type Rapper = {
   representativeWorks: string[];
   ratingCount: number;
   averageRatings: RatingDimension;
+  overallScore?: number;
+  contentStatus?: RapperContentStatus;
 };

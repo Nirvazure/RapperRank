@@ -1,4 +1,8 @@
 import { AppShell } from "@/components/layout/AppShell";
+import { getAnonymousViewer } from "@/lib/server/auth-anonymous";
+import { getRapperPageData } from "@/features/rappers/rapper.server";
+
+export const dynamic = "force-dynamic";
 
 export default async function RankPage({
   params,
@@ -6,6 +10,15 @@ export default async function RankPage({
   params: Promise<{ rapperId: string }>;
 }) {
   const { rapperId } = await params;
+  const viewer = await getAnonymousViewer();
+  const data = await getRapperPageData(rapperId, viewer.userId);
 
-  return <AppShell initialRapperId={rapperId} />;
+  return (
+    <AppShell
+      rapper={data.rapper}
+      isFavorite={data.isFavorite}
+      myRating={data.myRating}
+      viewerDisplayName="匿名用户"
+    />
+  );
 }

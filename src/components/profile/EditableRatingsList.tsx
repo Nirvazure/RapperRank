@@ -1,12 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { RapperAvatar } from "@/components/rapper/RapperAvatar";
 import { RatingDialog } from "@/components/ratings/RatingDialog";
 import { Button } from "@/components/ui/button";
-import {
-  RAPPER_IMAGE_PLACEHOLDER_LABEL,
-  resolveRapperAvatar,
-} from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import type { RatingDimension, UserRating } from "@/features/ratings/rating.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
@@ -15,19 +12,18 @@ export function EditableRatingsList({
   rappers,
   ratings,
   onChangeRating,
+  viewerDisplayName,
 }: {
   rappers: Rapper[];
   ratings: UserRating[];
-  onChangeRating: (rapperId: string, ratings: RatingDimension) => void;
+  onChangeRating: (rapperId: string, ratings: RatingDimension) => Promise<void>;
+  viewerDisplayName: string;
 }) {
-  const records = ratings
-    .map((rating) => {
-      const rapper = rappers.find((item) => item.id === rating.rapperId);
-      return rapper ? { rating, rapper } : undefined;
-    })
-    .filter((record): record is { rating: UserRating; rapper: Rapper } =>
-      Boolean(record),
-    );
+  const rapperMap = new Map(rappers.map((rapper) => [rapper.id, rapper]));
+  const records = ratings.flatMap((rating) => {
+    const rapper = rapperMap.get(rating.rapperId);
+    return rapper ? [{ rating, rapper }] : [];
+  });
 
   return (
     <section className="rounded-lg border border-white/10 bg-white/[0.06] p-3">
@@ -41,7 +37,7 @@ export function EditableRatingsList({
       </div>
       {records.length === 0 ? (
         <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-          <p className="text-sm font-bold text-white/60">还没有本地评分记录。</p>
+          <p className="text-sm font-bold text-white/60">还没有评分记录。</p>
           <Button asChild className="mt-4 bg-lime-200 text-black hover:bg-lime-100">
             <Link href="/">去评分</Link>
           </Button>
@@ -54,23 +50,7 @@ export function EditableRatingsList({
               className="grid gap-2 rounded-lg border border-white/10 bg-black/35 p-2 sm:grid-cols-[1fr_auto] sm:items-center"
             >
               <div className="flex min-w-0 items-center gap-2.5">
-                {(() => {
-                  const avatar = resolveRapperAvatar(rapper);
-
-                  return avatar.src ? (
-                    <img
-                      src={avatar.src}
-                      alt={avatar.alt}
-                      className="size-10 rounded-md object-cover grayscale"
-                    />
-                  ) : (
-                    <div className="flex size-10 items-center justify-center rounded-md bg-black/35 text-center">
-                      <span className="px-1 font-mono text-[8px] font-black uppercase leading-tight text-white/45">
-                        {RAPPER_IMAGE_PLACEHOLDER_LABEL}
-                      </span>
-                    </div>
-                  );
-                })()}
+                <RapperAvatar rapper={rapper} grayscale />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <h3 className="truncate text-sm font-black uppercase text-white">
@@ -88,8 +68,9 @@ export function EditableRatingsList({
               <RatingDialog
                 rapper={rapper}
                 value={rating.ratings}
+                viewerDisplayName={viewerDisplayName}
                 triggerLabel="修改评分"
-                onChange={(nextRatings) => onChangeRating(rapper.id, nextRatings)}
+                onSubmit={(nextRatings) => onChangeRating(rapper.id, nextRatings)}
               />
             </article>
           ))}
