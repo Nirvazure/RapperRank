@@ -24,6 +24,39 @@ describe("session service", () => {
     expect(deps.createSession).toHaveBeenCalledTimes(1);
   });
 
+  it("reuses the incoming token when creating a missing session record", async () => {
+    const deps = {
+      now: () => new Date("2026-05-18T00:00:00.000Z"),
+      createUser: vi.fn(async () => ({ id: "user-1" })),
+      findSessionByToken: vi.fn(async () => null),
+      createSession: vi.fn(
+        async ({
+          userId,
+          expiresAt,
+          token,
+        }: {
+          userId: string;
+          expiresAt: Date;
+          token?: string;
+        }) => ({
+          id: "session-1",
+          token: token ?? "generated-token",
+          userId,
+          expiresAt,
+        }),
+      ),
+    };
+
+    const result = await ensureAnonymousSession(deps, "incoming-token");
+
+    expect(result.userId).toBe("user-1");
+    expect(result.sessionToken).toBe("incoming-token");
+    expect(result.isNew).toBe(true);
+    expect(deps.createSession).toHaveBeenCalledWith(
+      expect.objectContaining({ token: "incoming-token" }),
+    );
+  });
+
   it("reuses an existing active session", async () => {
     const deps = {
       now: () => new Date("2026-05-18T00:00:00.000Z"),
@@ -71,6 +104,9 @@ describe("session service", () => {
     expect(result.isNew).toBe(true);
     expect(deps.createUser).toHaveBeenCalledTimes(1);
     expect(deps.createSession).toHaveBeenCalledTimes(1);
+    expect(deps.createSession).toHaveBeenCalledWith(
+      expect.objectContaining({ token: undefined }),
+    );
   });
 
   it("treats expiresAt before now as expired", () => {

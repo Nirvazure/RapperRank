@@ -11,7 +11,11 @@ export type SessionDeps = {
   now: () => Date;
   createUser: () => Promise<{ id: string }>;
   findSessionByToken: (token: string) => Promise<SessionRecord | null>;
-  createSession: (input: { userId: string; expiresAt: Date }) => Promise<SessionRecord>;
+  createSession: (input: {
+    userId: string;
+    expiresAt: Date;
+    token?: string;
+  }) => Promise<SessionRecord>;
 };
 
 export type AnonymousSession = {
@@ -36,6 +40,7 @@ export async function ensureAnonymousSession(
   token: string | null,
 ): Promise<AnonymousSession> {
   const now = deps.now();
+  let reusableToken: string | undefined;
 
   if (token) {
     const existing = await deps.findSessionByToken(token);
@@ -47,6 +52,10 @@ export async function ensureAnonymousSession(
         isNew: false,
       };
     }
+
+    if (!existing) {
+      reusableToken = token;
+    }
   }
 
   const user = await deps.createUser();
@@ -54,6 +63,7 @@ export async function ensureAnonymousSession(
   const session = await deps.createSession({
     userId: user.id,
     expiresAt,
+    token: reusableToken,
   });
 
   return {

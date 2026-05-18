@@ -2,13 +2,8 @@ import { randomUUID } from "node:crypto";
 import { cookies } from "next/headers";
 import type { SessionRecord } from "@/lib/server/session";
 import { ensureAnonymousSession } from "@/lib/server/session";
+import { SESSION_COOKIE_NAME } from "@/lib/server/session-cookie";
 import { prisma } from "@/lib/prisma";
-
-export const SESSION_COOKIE_NAME = "rapperank-session";
-
-function createSessionToken(): string {
-  return randomUUID();
-}
 
 export async function getAnonymousViewer() {
   const cookieStore = await cookies();
@@ -32,11 +27,11 @@ export async function getAnonymousViewer() {
             expiresAt: true,
           },
         }) as Promise<SessionRecord | null>,
-      createSession: async ({ userId, expiresAt }) =>
+      createSession: async ({ userId, expiresAt, token }) =>
         prisma.session.create({
           data: {
             userId,
-            token: createSessionToken(),
+            token: token ?? randomUUID(),
             expiresAt,
           },
           select: {
@@ -49,16 +44,6 @@ export async function getAnonymousViewer() {
     },
     sessionToken,
   );
-
-  if (session.isNew || sessionToken !== session.sessionToken) {
-    cookieStore.set(SESSION_COOKIE_NAME, session.sessionToken, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      expires: session.expiresAt,
-      path: "/",
-    });
-  }
 
   return {
     userId: session.userId,
