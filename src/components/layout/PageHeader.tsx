@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageCircle, Shuffle, User } from "lucide-react";
+import { Library, MessageCircle, Shuffle, User } from "lucide-react";
 import { RapperAvatar } from "@/components/rapper/RapperAvatar";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,7 @@ export function PageHeader({
   const pathname = usePathname();
   const ratingActive = pathname === "/" || pathname.startsWith("/rank/");
   const communityActive = pathname === "/ranking";
+  const labelActive = pathname === "/label";
   const profileActive = pathname === "/favorites";
 
   return (
@@ -84,6 +85,18 @@ export function PageHeader({
           >
             <MessageCircle className="size-3" />
             社区
+          </Link>
+          <Link
+            href="/label"
+            className={cn(
+              "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[11px] font-black uppercase transition",
+              labelActive
+                ? "bg-lime-200 text-black"
+                : "text-white/65 hover:bg-white/10 hover:text-white",
+            )}
+          >
+            <Library className="size-3" />
+            厂牌
           </Link>
         </div>
         <Link
