@@ -1,5 +1,8 @@
 import Image from "next/image";
-import { RAPPER_IMAGE_PLACEHOLDER_LABEL } from "@/features/rappers/rapper.media";
+import {
+  RAPPER_IMAGE_PLACEHOLDER_LABEL,
+  shouldBypassNextImageOptimization,
+} from "@/features/rappers/rapper.media";
 
 export function RapperImage({
   src,
@@ -31,6 +34,7 @@ export function RapperImage({
       alt={alt}
       fill
       priority={priority}
+      unoptimized={shouldBypassNextImageOptimization(src)}
       className={className}
       sizes="(max-width: 768px) 100vw, 50vw"
     />
