@@ -1,19 +1,19 @@
 -- CreateSchema
-CREATE SCHEMA IF NOT EXISTS "public";
+CREATE SCHEMA IF NOT EXISTS "rapperank";
 
 -- CreateEnum
-CREATE TYPE "UserKind" AS ENUM ('ANONYMOUS');
+CREATE TYPE "rapperank"."UserKind" AS ENUM ('ANONYMOUS');
 
 -- CreateEnum
-CREATE TYPE "ContentStatus" AS ENUM ('READY', 'INCOMPLETE');
+CREATE TYPE "rapperank"."ContentStatus" AS ENUM ('READY', 'INCOMPLETE');
 
 -- CreateEnum
-CREATE TYPE "RapperMediaType" AS ENUM ('image', 'gif', 'video');
+CREATE TYPE "rapperank"."RapperMediaType" AS ENUM ('image', 'gif', 'video');
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "rapperank"."User" (
     "id" TEXT NOT NULL,
-    "kind" "UserKind" NOT NULL DEFAULT 'ANONYMOUS',
+    "kind" "rapperank"."UserKind" NOT NULL DEFAULT 'ANONYMOUS',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -21,7 +21,7 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Session" (
+CREATE TABLE "rapperank"."Session" (
     "id" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE "Session" (
 );
 
 -- CreateTable
-CREATE TABLE "Rapper" (
+CREATE TABLE "rapperank"."Rapper" (
     "id" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -43,12 +43,12 @@ CREATE TABLE "Rapper" (
     "shortReview" TEXT NOT NULL,
     "avatarUrl" TEXT,
     "mediaUrl" TEXT,
-    "mediaType" "RapperMediaType" NOT NULL,
+    "mediaType" "rapperank"."RapperMediaType" NOT NULL,
     "backgroundAudioUrl" TEXT,
     "labels" TEXT[],
     "tags" TEXT[],
     "representativeWorks" TEXT[],
-    "contentStatus" "ContentStatus" NOT NULL DEFAULT 'READY',
+    "contentStatus" "rapperank"."ContentStatus" NOT NULL DEFAULT 'READY',
     "ratingCount" INTEGER NOT NULL DEFAULT 0,
     "avgFlow" DECIMAL(3,1) NOT NULL DEFAULT 0,
     "avgLyrics" DECIMAL(3,1) NOT NULL DEFAULT 0,
@@ -65,7 +65,7 @@ CREATE TABLE "Rapper" (
 );
 
 -- CreateTable
-CREATE TABLE "Rating" (
+CREATE TABLE "rapperank"."Rating" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "rapperId" TEXT NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE "Rating" (
 );
 
 -- CreateTable
-CREATE TABLE "Favorite" (
+CREATE TABLE "rapperank"."Favorite" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "rapperId" TEXT NOT NULL,
@@ -93,38 +93,37 @@ CREATE TABLE "Favorite" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_token_key" ON "Session"("token");
+CREATE UNIQUE INDEX "Session_token_key" ON "rapperank"."Session"("token");
 
 -- CreateIndex
-CREATE INDEX "Session_userId_idx" ON "Session"("userId");
+CREATE INDEX "Session_userId_idx" ON "rapperank"."Session"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Rapper_slug_key" ON "Rapper"("slug");
+CREATE UNIQUE INDEX "Rapper_slug_key" ON "rapperank"."Rapper"("slug");
 
 -- CreateIndex
-CREATE INDEX "Rating_rapperId_idx" ON "Rating"("rapperId");
+CREATE INDEX "Rating_rapperId_idx" ON "rapperank"."Rating"("rapperId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Rating_userId_rapperId_key" ON "Rating"("userId", "rapperId");
+CREATE UNIQUE INDEX "Rating_userId_rapperId_key" ON "rapperank"."Rating"("userId", "rapperId");
 
 -- CreateIndex
-CREATE INDEX "Favorite_rapperId_idx" ON "Favorite"("rapperId");
+CREATE INDEX "Favorite_rapperId_idx" ON "rapperank"."Favorite"("rapperId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Favorite_userId_rapperId_key" ON "Favorite"("userId", "rapperId");
+CREATE UNIQUE INDEX "Favorite_userId_rapperId_key" ON "rapperank"."Favorite"("userId", "rapperId");
 
 -- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "rapperank"."Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "rapperank"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Rating" ADD CONSTRAINT "Rating_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "rapperank"."Rating" ADD CONSTRAINT "Rating_userId_fkey" FOREIGN KEY ("userId") REFERENCES "rapperank"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Rating" ADD CONSTRAINT "Rating_rapperId_fkey" FOREIGN KEY ("rapperId") REFERENCES "Rapper"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "rapperank"."Rating" ADD CONSTRAINT "Rating_rapperId_fkey" FOREIGN KEY ("rapperId") REFERENCES "rapperank"."Rapper"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "rapperank"."Favorite" ADD CONSTRAINT "Favorite_userId_fkey" FOREIGN KEY ("userId") REFERENCES "rapperank"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Favorite" ADD CONSTRAINT "Favorite_rapperId_fkey" FOREIGN KEY ("rapperId") REFERENCES "Rapper"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
+ALTER TABLE "rapperank"."Favorite" ADD CONSTRAINT "Favorite_rapperId_fkey" FOREIGN KEY ("rapperId") REFERENCES "rapperank"."Rapper"("id") ON DELETE CASCADE ON UPDATE CASCADE;

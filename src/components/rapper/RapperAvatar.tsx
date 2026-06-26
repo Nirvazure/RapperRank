@@ -1,5 +1,9 @@
 import Image from "next/image";
-import { RAPPER_IMAGE_PLACEHOLDER_LABEL, resolveRapperAvatar } from "@/features/rappers/rapper.media";
+import {
+  RAPPER_IMAGE_PLACEHOLDER_LABEL,
+  resolveRapperAvatar,
+  shouldBypassNextImageOptimization,
+} from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
 
 export function RapperAvatar({
@@ -29,6 +33,7 @@ export function RapperAvatar({
         src={avatar.src}
         alt={avatar.alt}
         fill
+        unoptimized={shouldBypassNextImageOptimization(avatar.src)}
         className={`object-cover ${grayscale ? "grayscale" : ""}`}
         sizes="64px"
       />

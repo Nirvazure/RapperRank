@@ -3,23 +3,31 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+  schemas   = ["rapperank"]
 }
 
 enum UserKind {
   ANONYMOUS
+
+  @@schema("rapperank")
 }
 
 enum ContentStatus {
   READY
   INCOMPLETE
+
+  @@schema("rapperank")
 }
 
 enum RapperMediaType {
   image
   gif
   video
+
+  @@schema("rapperank")
 }
 
 model User {
@@ -30,6 +38,8 @@ model User {
   favorites Favorite[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+
+  @@schema("rapperank")
 }
 
 model Session {
@@ -41,38 +51,41 @@ model Session {
   expiresAt DateTime
 
   @@index([userId])
+  @@schema("rapperank")
 }
 
 model Rapper {
-  id                 String         @id @default(cuid())
-  slug               String         @unique
-  name               String
-  chineseName        String?
-  alias              String?
-  region             String
-  bio                String
-  shortReview        String
-  avatarUrl          String?
-  mediaUrl           String?
-  mediaType          RapperMediaType
-  backgroundAudioUrl String?
-  labels             String[]
-  tags               String[]
+  id                  String          @id @default(cuid())
+  slug                String          @unique
+  name                String
+  chineseName         String?
+  alias               String?
+  region              String
+  bio                 String
+  shortReview         String
+  avatarUrl           String?
+  mediaUrl            String?
+  mediaType           RapperMediaType
+  backgroundAudioUrl  String?
+  labels              String[]
+  tags                String[]
   representativeWorks String[]
-  contentStatus      ContentStatus  @default(READY)
-  ratingCount        Int            @default(0)
-  avgFlow            Decimal        @default(0) @db.Decimal(3, 1)
-  avgLyrics          Decimal        @default(0) @db.Decimal(3, 1)
-  avgVoice           Decimal        @default(0) @db.Decimal(3, 1)
-  avgTechnique       Decimal        @default(0) @db.Decimal(3, 1)
-  avgMelody          Decimal        @default(0) @db.Decimal(3, 1)
-  avgStage           Decimal        @default(0) @db.Decimal(3, 1)
-  avgPh              Decimal        @default(0) @db.Decimal(3, 1)
-  overallScore       Decimal        @default(0) @db.Decimal(3, 1)
-  ratings            Rating[]
-  favorites          Favorite[]
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
+  contentStatus       ContentStatus   @default(READY)
+  ratingCount         Int             @default(0)
+  avgFlow             Decimal         @default(0) @db.Decimal(3, 1)
+  avgLyrics           Decimal         @default(0) @db.Decimal(3, 1)
+  avgVoice            Decimal         @default(0) @db.Decimal(3, 1)
+  avgTechnique        Decimal         @default(0) @db.Decimal(3, 1)
+  avgMelody           Decimal         @default(0) @db.Decimal(3, 1)
+  avgStage            Decimal         @default(0) @db.Decimal(3, 1)
+  avgPh               Decimal         @default(0) @db.Decimal(3, 1)
+  overallScore        Decimal         @default(0) @db.Decimal(3, 1)
+  ratings             Rating[]
+  favorites           Favorite[]
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  @@schema("rapperank")
 }
 
 model Rating {
@@ -93,6 +106,7 @@ model Rating {
 
   @@unique([userId, rapperId])
   @@index([rapperId])
+  @@schema("rapperank")
 }
 
 model Favorite {
@@ -105,4 +119,5 @@ model Favorite {
 
   @@unique([userId, rapperId])
   @@index([rapperId])
+  @@schema("rapperank")
 }
