@@ -7,13 +7,15 @@ import { LabelCard } from "@/components/labels/LabelCard";
 import type { LabelViewModel } from "@/features/labels/label.types";
 import type { Rapper } from "@/features/rappers/rapper.types";
 
+import type { ViewerPresentation } from "@/features/user/user.types";
+
 export function LabelPageClient({
   labels,
-  viewerDisplayName,
+  viewer,
   avatarRapper,
 }: {
   labels: LabelViewModel[];
-  viewerDisplayName: string;
+  viewer: ViewerPresentation;
   avatarRapper?: Rapper;
 }) {
   const pageRef = useRef<HTMLDivElement>(null);
@@ -41,7 +43,7 @@ export function LabelPageClient({
           title="Labels"
           description="浏览当前收录的中文说唱厂牌图鉴。此页先展示 Logo、地域、简介与已确认成员，后续会继续纳入成员归属与厂牌排名。"
           user={{
-            displayName: viewerDisplayName,
+            ...viewer,
             avatarRapper,
           }}
         />

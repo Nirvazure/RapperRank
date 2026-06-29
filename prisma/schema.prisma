@@ -11,6 +11,7 @@ datasource db {
 
 enum UserKind {
   ANONYMOUS
+  AUTHENTICATED
 
   @@schema("rapperank")
 }
@@ -31,13 +32,16 @@ enum RapperMediaType {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  kind      UserKind   @default(ANONYMOUS)
-  sessions  Session[]
-  ratings   Rating[]
-  favorites Favorite[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id          String     @id @default(cuid())
+  kind        UserKind   @default(ANONYMOUS)
+  authUserId  String?    @unique @map("auth_user_id")
+  displayName String?    @map("display_name")
+  avatarUrl   String?    @map("avatar_url")
+  sessions    Session[]
+  ratings     Rating[]
+  favorites   Favorite[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   @@schema("rapperank")
 }

@@ -9,18 +9,20 @@ import { RapperGallery } from "@/components/rapper/RapperGallery";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import type { UserRating } from "@/features/ratings/rating.types";
 
+import type { ViewerPresentation } from "@/features/user/user.types";
+
 export function RankingPageClient({
   rappers,
   ranking,
   favoriteIds,
   ratings,
-  viewerDisplayName,
+  viewer,
 }: {
   rappers: Rapper[];
   ranking: Rapper[];
   favoriteIds: string[];
   ratings: UserRating[];
-  viewerDisplayName: string;
+  viewer: ViewerPresentation;
 }) {
   const pageRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -54,7 +56,7 @@ export function RankingPageClient({
             title="Community"
             description={`浏览全量 Rapper 列表、排行榜，以及当前会话的 ${ratings.length} 条评分记录。`}
             user={{
-              displayName: viewerDisplayName,
+              ...viewer,
               avatarRapper,
             }}
           />

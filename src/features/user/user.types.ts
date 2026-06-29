@@ -1,5 +1,11 @@
 import type { UserRating } from "@/features/ratings/rating.types";
 
+export type ViewerPresentation = {
+  displayName: string;
+  isAuthenticated: boolean;
+  avatarUrl?: string;
+};
+
 export type ViewerUser = {
   id?: string;
   displayName: string;

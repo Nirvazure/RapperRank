@@ -1,15 +1,12 @@
 # Supabase Migration Todo
 
-RapperRank 首版使用静态数据和本地模拟用户。后续迁移 Supabase 时，保持现有 service/query/store 边界，只替换数据来源和持久化方式。
+RapperRank 已从静态数据迁移到 Prisma + PostgreSQL（`rapperank` schema），并接入 YQYHub 公用 Supabase Auth。
 
 ## Tables
 
-- `profiles`: 真实用户资料，对应 Supabase Auth 用户。
-- `rappers`: Rapper 基础信息、视觉素材、简介、短评、评分人数缓存。
-- `rapper_works`: Rapper 代表作。
-- `rapper_tags`: Rapper 标签。
-- `ratings`: 用户对单个 Rapper 的六维 1-5 分评分。
-- `favorites`: 用户收藏的 Rapper。
+- `User`: 匿名与认证用户（`auth_user_id` 桥接 `auth.users`）
+- `rappers` / `Rating` / `Favorite`: 已实现持久化
+- `rapper_works` / `rapper_tags`: 仍待拆分（可选）
 
 ## Rules
 
@@ -17,12 +14,18 @@ RapperRank 首版使用静态数据和本地模拟用户。后续迁移 Supabase
 - 用户可以更新自己的评分。
 - 收藏需要按用户同步。
 - 全网平均分可以由数据库视图、RPC 或服务端聚合生成。
-- 前端继续通过 `rapper.service.ts` 和 `rapper.queries.ts` 获取数据。
+- 前端继续通过 Route Handler 获取数据。
+
+## Completed
+
+- [x] Supabase Auth 登录（GitHub OAuth）
+- [x] 评分提交到数据库
+- [x] 收藏同步到数据库
+- [x] 排行榜从数据库平均分生成
+- [x] 匿名数据登录后合并
 
 ## Deferred Features
 
-- Supabase Auth 登录/注册。
-- 评分提交到数据库。
-- 收藏同步到数据库。
-- RLS 权限策略。
-- 排行榜从数据库平均分生成。
+- RLS 权限策略（当前 Prisma 服务端鉴权为主）
+- 废弃匿名 session 体系
+- `rapper_works` / `rapper_tags` 表拆分

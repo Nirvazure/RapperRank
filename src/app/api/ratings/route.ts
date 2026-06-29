@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getAnonymousViewer } from "@/lib/server/auth-anonymous";
+import { getViewer } from "@/lib/server/viewer";
 import { badRequest, ok } from "@/lib/server/response";
 import { submitRapperRating } from "@/features/ratings/rating.server";
 import { ratingDimensionSchema } from "@/features/ratings/rating.schema";
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     return badRequest("Invalid rating payload");
   }
 
-  const viewer = await getAnonymousViewer();
+  const viewer = await getViewer();
   const aggregate = await submitRapperRating({
     userId: viewer.userId,
     rapperId: parsed.data.rapperId,

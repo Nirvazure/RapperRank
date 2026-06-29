@@ -1,5 +1,5 @@
 import { FavoritesPageClient } from "@/components/favorites/FavoritesPageClient";
-import { getAnonymousViewer } from "@/lib/server/auth-anonymous";
+import { getViewer } from "@/lib/server/viewer";
 import { getViewerFavorites, getViewerRatings } from "@/features/user/user.server";
 import { listAllRappers } from "@/features/rappers/rapper.repository";
 import { mapRapperRecordToViewModel } from "@/features/rappers/rapper.mapper";
@@ -7,7 +7,7 @@ import { mapRapperRecordToViewModel } from "@/features/rappers/rapper.mapper";
 export const dynamic = "force-dynamic";
 
 export default async function FavoritesPage() {
-  const viewer = await getAnonymousViewer();
+  const viewer = await getViewer();
   const [favorites, ratings, rappers] = await Promise.all([
     getViewerFavorites(viewer.userId),
     getViewerRatings(viewer.userId),
@@ -19,7 +19,7 @@ export default async function FavoritesPage() {
       favoriteRappers={favorites}
       ratings={ratings}
       allRappers={rappers.map(mapRapperRecordToViewModel)}
-      viewerDisplayName="匿名用户"
+      viewer={viewer}
     />
   );
 }

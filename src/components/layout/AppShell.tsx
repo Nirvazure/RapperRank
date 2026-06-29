@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { Shuffle } from "lucide-react";
 import { RapperBackgroundAudio } from "@/components/audio/RapperBackgroundAudio";
-import { HeroHeader } from "@/components/layout/HeroHeader";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { RatingDialog } from "@/components/ratings/RatingDialog";
 import { Button } from "@/components/ui/button";
 import { RapperMediaPanel } from "@/components/rapper/RapperMediaPanel";
@@ -13,17 +13,18 @@ import { RapperProfilePanel } from "@/components/rapper/RapperProfilePanel";
 import { RapperRadarChart } from "@/components/rapper/RapperRadarChart";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import type { UserRating } from "@/features/ratings/rating.types";
+import type { ViewerPresentation } from "@/features/user/user.types";
 
 export function AppShell({
   rapper,
   isFavorite,
   myRating,
-  viewerDisplayName,
+  viewer,
 }: {
   rapper: Rapper;
   isFavorite: boolean;
   myRating: UserRating | null;
-  viewerDisplayName: string;
+  viewer: ViewerPresentation;
 }) {
   const shellRef = useRef<HTMLElement>(null);
   const router = useRouter();
@@ -127,7 +128,12 @@ export function AppShell({
 
       <div className="relative mx-auto flex max-w-[1600px] flex-col gap-4">
         <div className="hero-enter">
-          <HeroHeader />
+          <PageHeader
+            eyebrow="choose / inspect / rate"
+            title="RapperRank"
+            description="在详情页查看当前 Rapper 的视觉信息、能力画像和六维评分，在社区页浏览完整排行榜。"
+            user={viewer}
+          />
         </div>
 
         <div className="grid items-stretch gap-4 xl:min-h-[calc(100vh-140px)] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)]">
@@ -158,7 +164,7 @@ export function AppShell({
                   rapper={rapper}
                   value={pendingRating?.ratings}
                   triggerLabel="评分"
-                  viewerDisplayName={viewerDisplayName}
+                  viewerDisplayName={viewer.displayName}
                   onSubmit={submitRating}
                 />
               }

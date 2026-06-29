@@ -1,4 +1,4 @@
-import { getAnonymousViewer } from "@/lib/server/auth-anonymous";
+import { getViewer } from "@/lib/server/viewer";
 import { notFound, ok } from "@/lib/server/response";
 import { getRapperPageData } from "@/features/rappers/rapper.server";
 
@@ -7,7 +7,7 @@ export async function GET(
   context: { params: Promise<{ rapperId: string }> },
 ) {
   const { rapperId } = await context.params;
-  const viewer = await getAnonymousViewer();
+  const viewer = await getViewer();
 
   try {
     const data = await getRapperPageData(rapperId, viewer.userId);
