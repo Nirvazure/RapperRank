@@ -28,10 +28,6 @@ export async function getViewer(): Promise<Viewer> {
     const user = await ensureAuthenticatedUser(authUser);
     await mergeAnonymousIntoAuthenticated(user.id, anonymousSessionToken);
 
-    if (anonymousSessionToken) {
-      cookieStore.delete(SESSION_COOKIE_NAME);
-    }
-
     return {
       userId: user.id,
       displayName: user.displayName ?? "用户",
