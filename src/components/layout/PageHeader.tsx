@@ -3,13 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Library, MessageCircle, Shuffle, User } from "lucide-react";
-import { RapperAvatar } from "@/components/rapper/RapperAvatar";
+import { Library, MessageCircle, Shuffle } from "lucide-react";
+import { UserMenu } from "@/components/auth/UserMenu";
 import type { Rapper } from "@/features/rappers/rapper.types";
+import type { ViewerPresentation } from "@/features/user/user.types";
 import { cn } from "@/lib/utils";
 
-type ViewerSummary = {
-  displayName: string;
+export type ViewerSummary = ViewerPresentation & {
   avatarRapper?: Rapper;
 };
 
@@ -28,7 +28,6 @@ export function PageHeader({
   const ratingActive = pathname === "/" || pathname.startsWith("/rank/");
   const communityActive = pathname === "/ranking";
   const labelActive = pathname === "/label";
-  const profileActive = pathname === "/favorites";
 
   return (
     <header className="flex flex-col gap-3 border-b border-white/10 pb-3 text-white lg:flex-row lg:items-center lg:justify-between">
@@ -99,39 +98,7 @@ export function PageHeader({
             厂牌
           </Link>
         </div>
-        <Link
-          href="/favorites"
-          className={cn(
-            "flex min-w-0 items-center gap-2 rounded-md border px-2.5 py-1.5 transition",
-            profileActive
-              ? "border-lime-200 bg-lime-200 text-black"
-              : "border-white/10 bg-white/[0.06] text-white hover:border-white/25 hover:bg-white/10",
-          )}
-        >
-          {user.avatarRapper ? (
-            <RapperAvatar rapper={user.avatarRapper} sizeClass="size-8" />
-          ) : (
-            <div
-              className={cn(
-                "grid size-8 place-items-center rounded-md",
-                profileActive ? "bg-black text-lime-200" : "bg-lime-200 text-black",
-              )}
-            >
-              <User className="size-4" />
-            </div>
-          )}
-          <div className="min-w-0">
-            <p className="truncate text-xs font-black uppercase">{user.displayName}</p>
-            <p
-              className={cn(
-                "font-mono text-[9px] font-bold uppercase tracking-[0.14em]",
-                profileActive ? "text-black/55" : "text-white/40",
-              )}
-            >
-              local session
-            </p>
-          </div>
-        </Link>
+        <UserMenu user={user} />
       </div>
     </header>
   );

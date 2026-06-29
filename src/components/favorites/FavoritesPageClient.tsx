@@ -14,16 +14,18 @@ import type { Rapper } from "@/features/rappers/rapper.types";
 import type { RatingDimension, UserRating } from "@/features/ratings/rating.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
 
+import type { ViewerPresentation } from "@/features/user/user.types";
+
 export function FavoritesPageClient({
   favoriteRappers,
   ratings,
   allRappers,
-  viewerDisplayName,
+  viewer,
 }: {
   favoriteRappers: Rapper[];
   ratings: UserRating[];
   allRappers: Rapper[];
-  viewerDisplayName: string;
+  viewer: ViewerPresentation;
 }) {
   const pageRef = useRef<HTMLDivElement>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
@@ -114,7 +116,7 @@ export function FavoritesPageClient({
           title="Personal Center"
           description="查看当前匿名会话的收藏列表与评分记录，所有数据都已持久化到后端。"
           user={{
-            displayName: viewerDisplayName,
+            ...viewer,
             avatarRapper,
           }}
         />
@@ -206,7 +208,7 @@ export function FavoritesPageClient({
           <EditableRatingsList
             rappers={allRappers}
             ratings={ratings}
-            viewerDisplayName={viewerDisplayName}
+            viewerDisplayName={viewer.displayName}
             onChangeRating={submitRating}
           />
         </div>

@@ -1,17 +1,26 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
 import { SESSION_COOKIE_NAME } from "@/lib/server/session-cookie";
 
-export function middleware(request: NextRequest) {
-  if (request.cookies.has(SESSION_COOKIE_NAME)) {
-    return NextResponse.next();
+function hasSupabaseAuthCookie(request: NextRequest) {
+  return request.cookies.getAll().some((cookie) => cookie.name.startsWith("sb-"));
+}
+
+export async function middleware(request: NextRequest) {
+  const supabaseResponse = await updateSession(request);
+
+  if (hasSupabaseAuthCookie(request)) {
+    return supabaseResponse;
   }
 
-  const response = NextResponse.next();
+  if (request.cookies.has(SESSION_COOKIE_NAME)) {
+    return supabaseResponse;
+  }
+
   const expires = new Date();
   expires.setDate(expires.getDate() + 30);
 
-  response.cookies.set(SESSION_COOKIE_NAME, crypto.randomUUID(), {
+  supabaseResponse.cookies.set(SESSION_COOKIE_NAME, crypto.randomUUID(), {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -19,7 +28,7 @@ export function middleware(request: NextRequest) {
     path: "/",
   });
 
-  return response;
+  return supabaseResponse;
 }
 
 export const config = {

@@ -1,9 +1,9 @@
-import { getAnonymousViewer } from "@/lib/server/auth-anonymous";
+import { getViewer } from "@/lib/server/viewer";
 import { ok } from "@/lib/server/response";
 import { getViewerFavorites, getViewerRatings } from "@/features/user/user.server";
 
 export async function GET() {
-  const viewer = await getAnonymousViewer();
+  const viewer = await getViewer();
   const [favorites, ratings] = await Promise.all([
     getViewerFavorites(viewer.userId),
     getViewerRatings(viewer.userId),
@@ -11,7 +11,9 @@ export async function GET() {
 
   return ok({
     user: {
-      displayName: "匿名用户",
+      displayName: viewer.displayName,
+      avatarUrl: viewer.avatarUrl,
+      isAuthenticated: viewer.isAuthenticated,
       favoritesCount: favorites.length,
       ratingsCount: ratings.length,
     },

@@ -4,6 +4,8 @@ RapperRank 是一个基于 Next.js 16 的说唱歌手评分应用。当前版本
 
 数据库托管在公用 Supabase 项目上，RapperRank 使用独立的 `rapperank` schema，与其他应用隔离。
 
+多应用公用 Auth / Schema 规范见 [docs/yqyhub-shared-auth.md](./docs/yqyhub-shared-auth.md)。
+
 ## Tech Stack
 
 - Next.js 16
@@ -35,6 +37,9 @@ Copy-Item .env.example .env
 
 | 变量 | 用途 |
 |------|------|
+| `SUPABASE_URL` | YQYHub 项目 URL（`.env` 中配置；启动时镜像为 `NEXT_PUBLIC_SUPABASE_URL` 供客户端） |
+| `SUPABASE_KEY` | YQYHub anon / publishable key（镜像为 `NEXT_PUBLIC_SUPABASE_KEY`） |
+| `SUPABASE_SERVICE_ROLE_KEY` | 仅服务端（可选脚本） |
 | `DATABASE_URL` | 应用运行时，使用 Transaction Pooler（端口 6543） |
 | `DIRECT_DATABASE_URL` | Prisma migration，使用 Direct connection（端口 5432） |
 
@@ -72,7 +77,8 @@ npm run db:seed
 
 ## Runtime Notes
 
-- 用户体系当前为匿名 session。
-- 同一匿名用户对同一 Rapper 只保留一条最新评分。
+- 用户体系支持 **GitHub OAuth（YQYHub 公用 Auth）** 与 **匿名 session** 并存。
+- 登录后会将当前匿名会话的评分与收藏合并到认证账号。
+- 同一用户对同一 Rapper 只保留一条最新评分。
 - 排行榜和详情页分数读取 `Rapper` 聚合字段，评分写入时会同步重算。
 - 种子数据来自现有 rapper 数据集，缺失文案会在 seed 清洗时替换为明确占位文本。
