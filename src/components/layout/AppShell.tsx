@@ -1,10 +1,10 @@
 "use client";
 
-import { startTransition, useLayoutEffect, useRef, useState } from "react";
+import { startTransition, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { Shuffle } from "lucide-react";
-import { RapperBackgroundAudio } from "@/components/audio/RapperBackgroundAudio";
+import { useRapperPlayer } from "@/contexts/RapperPlayerContext";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { RatingDialog } from "@/components/ratings/RatingDialog";
 import { Button } from "@/components/ui/button";
@@ -28,8 +28,31 @@ export function AppShell({
 }) {
   const shellRef = useRef<HTMLElement>(null);
   const router = useRouter();
+  const { playRapperTrack } = useRapperPlayer();
   const [pendingFavorite, setPendingFavorite] = useState(isFavorite);
   const [pendingRating, setPendingRating] = useState<UserRating | null>(myRating);
+
+  useEffect(() => {
+    if (!rapper.backgroundAudioUrl) {
+      return;
+    }
+
+    playRapperTrack({
+      rapperId: rapper.id,
+      title: rapper.name,
+      subtitle: rapper.region,
+      coverUrl: rapper.avatarUrl ?? rapper.mediaUrl,
+      src: rapper.backgroundAudioUrl,
+    });
+  }, [
+    playRapperTrack,
+    rapper.avatarUrl,
+    rapper.backgroundAudioUrl,
+    rapper.id,
+    rapper.mediaUrl,
+    rapper.name,
+    rapper.region,
+  ]);
 
   async function toggleFavorite() {
     const method = pendingFavorite ? "DELETE" : "POST";
@@ -122,7 +145,6 @@ export function AppShell({
       ref={shellRef}
       className="min-h-screen overflow-hidden bg-[#050505] px-4 py-4 text-white sm:px-6 lg:px-8"
     >
-      <RapperBackgroundAudio src={rapper.backgroundAudioUrl} />
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px]" />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(217,255,0,0.14),transparent_26%),radial-gradient(circle_at_82%_12%,rgba(255,46,91,0.16),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(0,190,255,0.12),transparent_32%)]" />
 

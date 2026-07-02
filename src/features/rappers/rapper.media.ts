@@ -1,11 +1,16 @@
 import type { Rapper } from "@/features/rappers/rapper.types";
 
 export const RAPPER_OSS_BASE_URL = "https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/";
+export const NIRVAZURE_OSS_BASE_URL = "https://nirvazure-next.oss-cn-hangzhou.aliyuncs.com/";
 export const RAPPER_IMAGE_PLACEHOLDER_LABEL = "No OSS Image";
 
 /** OSS 已由 CDN 托管；跳过 Next 图片优化，避免服务端拉取国内 OSS 导致 504。 */
 export function shouldBypassNextImageOptimization(src: string): boolean {
-  return src.startsWith(RAPPER_OSS_BASE_URL);
+  return (
+    src.startsWith(RAPPER_OSS_BASE_URL) ||
+    src.startsWith(NIRVAZURE_OSS_BASE_URL) ||
+    src.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/label/")
+  );
 }
 
 export type ResolvedRapperImage = {

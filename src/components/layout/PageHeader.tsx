@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Library, MessageCircle, Shuffle } from "lucide-react";
+import { Images, Library, MessageCircle, Shuffle } from "lucide-react";
 import { UserMenu } from "@/components/auth/UserMenu";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import type { ViewerPresentation } from "@/features/user/user.types";
@@ -28,6 +28,7 @@ export function PageHeader({
   const ratingActive = pathname === "/" || pathname.startsWith("/rank/");
   const communityActive = pathname === "/ranking";
   const labelActive = pathname === "/label";
+  const artActive = pathname === "/art";
 
   return (
     <header className="flex flex-col gap-3 border-b border-white/10 pb-3 text-white lg:flex-row lg:items-center lg:justify-between">
@@ -96,6 +97,18 @@ export function PageHeader({
           >
             <Library className="size-3" />
             厂牌
+          </Link>
+          <Link
+            href="/art"
+            className={cn(
+              "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[11px] font-black uppercase transition",
+              artActive
+                ? "bg-lime-200 text-black"
+                : "text-white/65 hover:bg-white/10 hover:text-white",
+            )}
+          >
+            <Images className="size-3" />
+            Art
           </Link>
         </div>
         <UserMenu user={user} />

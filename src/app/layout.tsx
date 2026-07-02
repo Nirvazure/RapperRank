@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { GlobalPlayerBar } from "@/components/audio/GlobalPlayerBar";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { RapperPlayerProvider } from "@/contexts/RapperPlayerContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,7 +37,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
       <body className="min-h-full bg-background font-sans text-foreground">
-        <MotionProvider>{children}</MotionProvider>
+        <RapperPlayerProvider>
+          <div className="min-h-full pb-20">
+            <MotionProvider>{children}</MotionProvider>
+          </div>
+          <GlobalPlayerBar />
+        </RapperPlayerProvider>
         <Analytics />
       </body>
     </html>
