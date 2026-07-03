@@ -10,7 +10,7 @@ import { RatingDialog } from "@/components/ratings/RatingDialog";
 import { Button } from "@/components/ui/button";
 import { RapperMediaPanel } from "@/components/rapper/RapperMediaPanel";
 import { RapperProfilePanel } from "@/components/rapper/RapperProfilePanel";
-import { RapperRadarChart } from "@/components/rapper/RapperRadarChart";
+import { RapperRadarChartLazy } from "@/components/rapper/RapperRadarChartLazy";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import type { UserRating } from "@/features/ratings/rating.types";
 import type { ViewerPresentation } from "@/features/user/user.types";
@@ -37,13 +37,25 @@ export function AppShell({
       return;
     }
 
-    playRapperTrack({
+    const track = {
       rapperId: rapper.id,
       title: rapper.name,
       subtitle: rapper.region,
       coverUrl: rapper.avatarUrl ?? rapper.mediaUrl,
       src: rapper.backgroundAudioUrl,
-    });
+    };
+
+    const startPlayback = () => {
+      playRapperTrack(track);
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+      const idleId = window.requestIdleCallback(startPlayback, { timeout: 1500 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = window.setTimeout(startPlayback, 1500);
+    return () => window.clearTimeout(timeoutId);
   }, [
     playRapperTrack,
     rapper.avatarUrl,
@@ -179,7 +191,7 @@ export function AppShell({
             />
           </div>
           <div className="hero-enter score-panel grid h-full grid-rows-[minmax(0,1fr)_minmax(0,0.62fr)] gap-4">
-            <RapperRadarChart
+            <RapperRadarChartLazy
               rapper={rapper}
               actionSlot={
                 <RatingDialog

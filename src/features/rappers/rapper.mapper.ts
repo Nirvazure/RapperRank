@@ -2,16 +2,26 @@ import type { Rapper as PrismaRapper, Rating } from "@prisma/client";
 import type { RatingDimension, UserRating } from "@/features/ratings/rating.types";
 import type { Rapper } from "@/features/rappers/rapper.types";
 
-function toNumber(value: { toNumber: () => number } | number | null | undefined): number {
+function toNumber(value: { toNumber: () => number } | number | string | null | undefined): number {
   if (typeof value === "number") {
-    return value;
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
   }
 
   if (!value) {
     return 0;
   }
 
-  return value.toNumber();
+  if (typeof value.toNumber === "function") {
+    return value.toNumber();
+  }
+
+  const coerced = Number(value);
+  return Number.isFinite(coerced) ? coerced : 0;
 }
 
 export function mapRatingRecordToUserRating(rating: Rating): UserRating {

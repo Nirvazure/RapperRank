@@ -13,6 +13,28 @@ export function shouldBypassNextImageOptimization(src: string): boolean {
   );
 }
 
+function isRapperankOssUrl(url: string): boolean {
+  return (
+    url.startsWith(RAPPER_OSS_BASE_URL) ||
+    url.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/label/")
+  );
+}
+
+/** 为 OSS 图片追加 resize/quality 参数，降低首屏传输体积。非 OSS URL 原样返回。 */
+export function optimizeOssImageUrl(url: string, { width = 1200 }: { width?: number } = {}): string {
+  if (!isRapperankOssUrl(url)) {
+    return url;
+  }
+
+  const processParam = `image/resize,w_${width}/quality,q_85`;
+  if (url.includes("x-oss-process=")) {
+    return url;
+  }
+
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}x-oss-process=${processParam}`;
+}
+
 export type ResolvedRapperImage = {
   src?: string;
   alt: string;

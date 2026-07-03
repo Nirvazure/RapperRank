@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation";
 import {
   findRapperBySlug,
-  listAllRappers,
-  listRapperSlugs,
-  listTopRappers,
+  pickRandomRapperSlug,
   updateRapperAggregate as updateRapperAggregateRecord,
 } from "@/features/rappers/rapper.repository";
 import { mapRapperRecordToViewModel, mapRatingRecordToUserRating } from "@/features/rappers/rapper.mapper";
@@ -46,15 +44,16 @@ export async function getRandomRapperSlug(deps: RandomRapperDeps): Promise<strin
 }
 
 export async function getRandomRapperSlugFromDb() {
-  return getRandomRapperSlug({
-    listRapperSlugs,
-  });
+  return pickRandomRapperSlug();
 }
 
 export async function getRankingPageData() {
+  const { getCachedAllRappers, getCachedTopRappers } = await import(
+    "@/features/rappers/rapper.cache"
+  );
   const [rappers, rankingRecords] = await Promise.all([
-    listAllRappers(),
-    listTopRappers(10),
+    getCachedAllRappers(),
+    getCachedTopRappers(10),
   ]);
 
   return {
@@ -65,10 +64,18 @@ export async function getRankingPageData() {
   };
 }
 
-export async function getRapperPageData(slug: string, userId: string) {
+export async function getRapperPageData(slug: string, userId?: string) {
   const record = await findRapperBySlug(slug);
   if (!record) {
     notFound();
+  }
+
+  if (!userId) {
+    return {
+      rapper: mapRapperRecordToViewModel(record),
+      isFavorite: false,
+      myRating: null,
+    };
   }
 
   const [favorite, rating] = await Promise.all([

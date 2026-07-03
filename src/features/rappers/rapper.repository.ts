@@ -1,5 +1,13 @@
 import { prisma } from "@/lib/prisma";
 
+export async function pickRandomRapperSlug(fallback = "kendrick-lamar"): Promise<string> {
+  const rows = await prisma.$queryRaw<Array<{ slug: string }>>`
+    SELECT slug FROM "rapperank"."Rapper" ORDER BY RANDOM() LIMIT 1
+  `;
+
+  return rows[0]?.slug ?? fallback;
+}
+
 export async function listAllRappers() {
   return prisma.rapper.findMany({
     orderBy: [{ overallScore: "desc" }, { name: "asc" }],
