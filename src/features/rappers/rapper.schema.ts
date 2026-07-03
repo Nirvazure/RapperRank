@@ -8,11 +8,10 @@ const imageUrlSchema = z.url().refine(
   },
 );
 
-export const rapperSchema = z.object({
-  id: z.string().min(1),
+export const rapperSeedSchema = z.object({
+  seedKey: z.string().min(1),
   name: z.string().min(1),
-  chineseName: z.string().min(1).optional(),
-  alias: z.string().optional(),
+  aliases: z.array(z.string().min(1)).default([]),
   labels: z.array(z.string().min(1)).optional(),
   region: z.string().min(1),
   avatarUrl: imageUrlSchema.optional(),
@@ -20,11 +19,15 @@ export const rapperSchema = z.object({
   mediaType: z.enum(["image", "gif", "video"]),
   backgroundAudioUrl: z.string().url().optional(),
   bio: z.string().min(1),
-  shortReview: z.string().min(1),
   tags: z.array(z.string().min(1)).min(1),
   representativeWorks: z.array(z.string().min(1)).min(1),
   ratingCount: z.number().int().nonnegative(),
   averageRatings: ratingDimensionSchema,
 });
 
-export const rappersSchema = z.array(rapperSchema).min(1);
+export const rapperSeedRecordsSchema = z.array(rapperSeedSchema).min(1);
+
+/** @deprecated Use rapperSeedSchema */
+export const rapperSchema = rapperSeedSchema;
+/** @deprecated Use rapperSeedRecordsSchema */
+export const rappersSchema = rapperSeedRecordsSchema;

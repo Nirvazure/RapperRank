@@ -55,10 +55,9 @@ export function mapRapperRecordToViewModel(record: PrismaRapper): Rapper {
 
   return {
     id: record.id,
-    slug: record.slug,
+    seedKey: record.seedKey ?? undefined,
     name: record.name,
-    chineseName: record.chineseName ?? undefined,
-    alias: record.alias ?? undefined,
+    aliases: record.aliases,
     labels: record.labels.length > 0 ? record.labels : undefined,
     region: record.region,
     avatarUrl: record.avatarUrl ?? undefined,
@@ -66,12 +65,10 @@ export function mapRapperRecordToViewModel(record: PrismaRapper): Rapper {
     mediaType: record.mediaType,
     backgroundAudioUrl: record.backgroundAudioUrl ?? undefined,
     bio: record.bio,
-    shortReview: record.shortReview,
     tags: record.tags,
     representativeWorks: record.representativeWorks,
     ratingCount: record.ratingCount,
     averageRatings,
     overallScore: toNumber(record.overallScore),
-    contentStatus: record.contentStatus === "READY" ? "ready" : "incomplete",
   };
 }

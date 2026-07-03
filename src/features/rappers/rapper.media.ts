@@ -1,4 +1,4 @@
-import type { Rapper } from "@/features/rappers/rapper.types";
+import type { Rapper, RapperSeedRecord } from "@/features/rappers/rapper.types";
 
 export const RAPPER_OSS_BASE_URL = "https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/";
 export const NIRVAZURE_OSS_BASE_URL = "https://nirvazure-next.oss-cn-hangzhou.aliyuncs.com/";
@@ -65,7 +65,7 @@ export function normalizeRapperImageUrl(url?: string): string | undefined {
   return `${RAPPER_OSS_BASE_URL}${url.slice("/rapper/".length)}`;
 }
 
-export function normalizeRapperImages(rapper: Rapper): Rapper {
+export function normalizeRapperImages(rapper: RapperSeedRecord): RapperSeedRecord {
   return {
     ...rapper,
     avatarUrl: normalizeRapperImageUrl(rapper.avatarUrl),

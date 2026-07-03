@@ -120,13 +120,13 @@ export function AppShell({
     }
 
     const rappers = (await response.json()) as Rapper[];
-    const candidates = rappers.filter((item) => item.slug && item.slug !== rapper.slug);
+    const candidates = rappers.filter((item) => item.id !== rapper.id);
     const pool = candidates.length > 0 ? candidates : [rapper];
     const next = pool[Math.floor(Math.random() * pool.length)];
-    if (!next?.slug) {
+    if (!next?.id) {
       return;
     }
-    router.push(`/rank/${next.slug}`);
+    router.push(`/rank/${next.id}`);
   }
 
   useLayoutEffect(() => {

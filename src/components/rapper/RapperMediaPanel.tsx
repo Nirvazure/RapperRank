@@ -58,7 +58,7 @@ export function RapperMediaPanel({
           {rapper.name}
         </h1>
         <p className="mt-2 line-clamp-2 max-w-xl text-sm font-black leading-5 text-white/85">
-          {rapper.shortReview}
+          {rapper.bio}
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {rapper.tags.slice(0, 3).map((tag) => (

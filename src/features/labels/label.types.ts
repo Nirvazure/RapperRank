@@ -1,8 +1,6 @@
 import type { Rapper } from "@/features/rappers/rapper.types";
 
-export type LabelMemberPreview = Pick<Rapper, "id" | "name" | "slug" | "avatarUrl" | "mediaUrl"> & {
-  alias?: string;
-};
+export type LabelMemberPreview = Pick<Rapper, "id" | "name" | "aliases" | "avatarUrl" | "mediaUrl">;
 
 export type LabelDefinition = {
   id: string;

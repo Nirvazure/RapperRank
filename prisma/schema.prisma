@@ -16,13 +16,6 @@ enum UserKind {
   @@schema("rapperank")
 }
 
-enum ContentStatus {
-  READY
-  INCOMPLETE
-
-  @@schema("rapperank")
-}
-
 enum RapperMediaType {
   image
   gif
@@ -60,13 +53,11 @@ model Session {
 
 model Rapper {
   id                  String          @id @default(cuid())
-  slug                String          @unique
+  seedKey             String?         @unique
   name                String
-  chineseName         String?
-  alias               String?
+  aliases             String[]        @default([])
   region              String
   bio                 String
-  shortReview         String
   avatarUrl           String?
   mediaUrl            String?
   mediaType           RapperMediaType
@@ -74,7 +65,6 @@ model Rapper {
   labels              String[]
   tags                String[]
   representativeWorks String[]
-  contentStatus       ContentStatus   @default(READY)
   ratingCount         Int             @default(0)
   avgFlow             Decimal         @default(0) @db.Decimal(3, 1)
   avgLyrics           Decimal         @default(0) @db.Decimal(3, 1)

@@ -1,14 +1,19 @@
-import { rappers } from "@/data/rappers";
+import { rappers as rapperSeedRecords } from "@/data/rappers";
 import { sortRappersByScore } from "@/features/rappers/rapper.utils";
 
 export async function fetchRappers() {
-  return rappers;
+  return rapperSeedRecords;
 }
 
-export async function fetchRapper(rapperId: string) {
-  return rappers.find((rapper) => rapper.id === rapperId);
+export async function fetchRapper(seedKey: string) {
+  return rapperSeedRecords.find((rapper) => rapper.seedKey === seedKey);
 }
 
 export async function fetchRanking() {
-  return sortRappersByScore(rappers).slice(0, 10);
+  return sortRappersByScore(
+    rapperSeedRecords.map((record, index) => ({
+      ...record,
+      id: `seed-${index}`,
+    })),
+  ).slice(0, 10);
 }

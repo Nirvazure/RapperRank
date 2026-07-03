@@ -1,14 +1,12 @@
 import type { RatingDimension } from "@/features/ratings/rating.types";
 
 export type RapperMediaType = "image" | "gif" | "video";
-export type RapperContentStatus = "ready" | "incomplete";
 
 export type Rapper = {
   id: string;
-  slug?: string;
+  seedKey?: string;
   name: string;
-  chineseName?: string;
-  alias?: string;
+  aliases: string[];
   labels?: string[];
   region: string;
   avatarUrl?: string;
@@ -17,11 +15,13 @@ export type Rapper = {
   /** 可选：艺人详情页后台循环播放的音频（跨域资源需在存储端配置 CORS） */
   backgroundAudioUrl?: string;
   bio: string;
-  shortReview: string;
   tags: string[];
   representativeWorks: string[];
   ratingCount: number;
   averageRatings: RatingDimension;
   overallScore?: number;
-  contentStatus?: RapperContentStatus;
+};
+
+export type RapperSeedRecord = Omit<Rapper, "id" | "overallScore"> & {
+  seedKey: string;
 };

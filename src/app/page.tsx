@@ -1,7 +1,12 @@
 import { RankPageView } from "@/features/rappers/RankPageView";
-import { pickRandomRapperSlug } from "@/features/rappers/rapper.repository";
+import { pickRandomRapperId } from "@/features/rappers/rapper.repository";
+import { notFound } from "next/navigation";
 
 export default async function Home() {
-  const slug = await pickRandomRapperSlug();
-  return <RankPageView slug={slug} />;
+  const rapperId = await pickRandomRapperId();
+  if (!rapperId) {
+    notFound();
+  }
+
+  return <RankPageView rapperId={rapperId} />;
 }

@@ -6,5 +6,5 @@ export default async function RankPage({
   params: Promise<{ rapperId: string }>;
 }) {
   const { rapperId } = await params;
-  return <RankPageView slug={rapperId} />;
+  return <RankPageView rapperId={rapperId} />;
 }
