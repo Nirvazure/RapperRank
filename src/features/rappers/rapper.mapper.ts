@@ -2,16 +2,26 @@ import type { Rapper as PrismaRapper, Rating } from "@prisma/client";
 import type { RatingDimension, UserRating } from "@/features/ratings/rating.types";
 import type { Rapper } from "@/features/rappers/rapper.types";
 
-function toNumber(value: { toNumber: () => number } | number | null | undefined): number {
+function toNumber(value: { toNumber: () => number } | number | string | null | undefined): number {
   if (typeof value === "number") {
-    return value;
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
   }
 
   if (!value) {
     return 0;
   }
 
-  return value.toNumber();
+  if (typeof value.toNumber === "function") {
+    return value.toNumber();
+  }
+
+  const coerced = Number(value);
+  return Number.isFinite(coerced) ? coerced : 0;
 }
 
 export function mapRatingRecordToUserRating(rating: Rating): UserRating {
@@ -45,10 +55,9 @@ export function mapRapperRecordToViewModel(record: PrismaRapper): Rapper {
 
   return {
     id: record.id,
-    slug: record.slug,
+    seedKey: record.seedKey ?? undefined,
     name: record.name,
-    chineseName: record.chineseName ?? undefined,
-    alias: record.alias ?? undefined,
+    aliases: record.aliases,
     labels: record.labels.length > 0 ? record.labels : undefined,
     region: record.region,
     avatarUrl: record.avatarUrl ?? undefined,
@@ -56,12 +65,10 @@ export function mapRapperRecordToViewModel(record: PrismaRapper): Rapper {
     mediaType: record.mediaType,
     backgroundAudioUrl: record.backgroundAudioUrl ?? undefined,
     bio: record.bio,
-    shortReview: record.shortReview,
     tags: record.tags,
     representativeWorks: record.representativeWorks,
     ratingCount: record.ratingCount,
     averageRatings,
     overallScore: toNumber(record.overallScore),
-    contentStatus: record.contentStatus === "READY" ? "ready" : "incomplete",
   };
 }

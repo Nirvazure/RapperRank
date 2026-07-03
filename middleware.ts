@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 import { SESSION_COOKIE_NAME } from "@/lib/server/session-cookie";
 
@@ -7,7 +8,9 @@ function hasSupabaseAuthCookie(request: NextRequest) {
 }
 
 export async function middleware(request: NextRequest) {
-  const supabaseResponse = await updateSession(request);
+  const supabaseResponse = hasSupabaseAuthCookie(request)
+    ? await updateSession(request)
+    : NextResponse.next({ request });
 
   if (hasSupabaseAuthCookie(request)) {
     return supabaseResponse;

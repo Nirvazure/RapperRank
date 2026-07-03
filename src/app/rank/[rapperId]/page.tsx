@@ -1,8 +1,4 @@
-import { AppShell } from "@/components/layout/AppShell";
-import { getViewer } from "@/lib/server/viewer";
-import { getRapperPageData } from "@/features/rappers/rapper.server";
-
-export const dynamic = "force-dynamic";
+import { RankPageView } from "@/features/rappers/RankPageView";
 
 export default async function RankPage({
   params,
@@ -10,15 +6,5 @@ export default async function RankPage({
   params: Promise<{ rapperId: string }>;
 }) {
   const { rapperId } = await params;
-  const viewer = await getViewer();
-  const data = await getRapperPageData(rapperId, viewer.userId);
-
-  return (
-    <AppShell
-      rapper={data.rapper}
-      isFavorite={data.isFavorite}
-      myRating={data.myRating}
-      viewer={viewer}
-    />
-  );
+  return <RankPageView rapperId={rapperId} />;
 }

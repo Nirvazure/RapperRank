@@ -1,9 +1,12 @@
-import { redirect } from "next/navigation";
-import { getRandomRapperSlugFromDb } from "@/features/rappers/rapper.server";
-
-export const dynamic = "force-dynamic";
+import { RankPageView } from "@/features/rappers/RankPageView";
+import { pickRandomRapperId } from "@/features/rappers/rapper.repository";
+import { notFound } from "next/navigation";
 
 export default async function Home() {
-  const slug = await getRandomRapperSlugFromDb();
-  redirect(`/rank/${slug}`);
+  const rapperId = await pickRandomRapperId();
+  if (!rapperId) {
+    notFound();
+  }
+
+  return <RankPageView rapperId={rapperId} />;
 }

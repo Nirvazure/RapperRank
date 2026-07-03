@@ -1,5 +1,6 @@
 import Image from "next/image";
 import {
+  optimizeOssImageUrl,
   RAPPER_IMAGE_PLACEHOLDER_LABEL,
   shouldBypassNextImageOptimization,
 } from "@/features/rappers/rapper.media";
@@ -28,9 +29,11 @@ export function RapperImage({
     );
   }
 
+  const optimizedSrc = optimizeOssImageUrl(src, { width: priority ? 1200 : 800 });
+
   return (
     <Image
-      src={src}
+      src={optimizedSrc}
       alt={alt}
       fill
       priority={priority}

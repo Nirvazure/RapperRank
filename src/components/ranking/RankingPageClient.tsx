@@ -40,8 +40,8 @@ export function RankingPageClient({
     return () => context.revert();
   }, []);
 
-  function openRapper(rapperSlug: string) {
-    router.push(`/rank/${rapperSlug}`);
+  function openRapper(rapperId: string) {
+    router.push(`/rank/${rapperId}`);
   }
 
   return (
@@ -68,10 +68,7 @@ export function RankingPageClient({
               rappers={ranking}
               compact
               onSelect={(rapperId) => {
-                const rapper = ranking.find((item) => item.id === rapperId);
-                if (rapper?.slug) {
-                  openRapper(rapper.slug);
-                }
+                openRapper(rapperId);
               }}
             />
           </aside>

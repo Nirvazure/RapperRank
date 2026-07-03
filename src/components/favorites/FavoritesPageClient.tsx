@@ -158,7 +158,7 @@ export function FavoritesPageClient({
                       className="favorite-card aspect-[3/4] overflow-hidden rounded-lg border border-white/10 bg-white/[0.06]"
                     >
                       <div className="flex h-full flex-col">
-                        <Link href={`/rank/${rapper.slug ?? rapper.id}`} className="relative block flex-1">
+                        <Link href={`/rank/${rapper.id}`} className="relative block flex-1">
                           <RapperImage
                             src={media.src}
                             alt={media.alt}

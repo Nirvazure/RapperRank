@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { rappers } from "@/data/rappers";
-import { rapperSchema, rappersSchema } from "@/features/rappers/rapper.schema";
+import { rapperSeedSchema, rapperSeedRecordsSchema } from "@/features/rappers/rapper.schema";
 
 describe("rapper schema", () => {
   it("validates the rapper mock dataset", () => {
-    expect(() => rappersSchema.parse(rappers)).not.toThrow();
+    expect(() => rapperSeedRecordsSchema.parse(rappers)).not.toThrow();
     expect(rappers.length).toBeGreaterThan(0);
     expect(rappers.every((rapper) => rapper.tags.length > 0)).toBe(true);
     expect(rappers.every((rapper) => rapper.representativeWorks.length > 0)).toBe(true);
@@ -29,14 +29,14 @@ describe("rapper schema", () => {
 
   it("accepts an OSS-hosted image and optional avatar", () => {
     expect(() =>
-      rapperSchema.parse({
-        id: "test",
+      rapperSeedSchema.parse({
+        seedKey: "test",
         name: "Test",
+        aliases: [],
         region: "Nowhere",
         mediaUrl: "https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/test.webp",
         mediaType: "image",
         bio: "bio",
-        shortReview: "review",
         tags: ["tag"],
         representativeWorks: ["song"],
         ratingCount: 0,
@@ -55,14 +55,14 @@ describe("rapper schema", () => {
 
   it("rejects a local public image path", () => {
     expect(() =>
-      rapperSchema.parse({
-        id: "test",
+      rapperSeedSchema.parse({
+        seedKey: "test",
         name: "Test",
+        aliases: [],
         region: "Nowhere",
         mediaUrl: "/rapper/test.webp",
         mediaType: "image",
         bio: "bio",
-        shortReview: "review",
         tags: ["tag"],
         representativeWorks: ["song"],
         ratingCount: 0,
@@ -81,13 +81,13 @@ describe("rapper schema", () => {
 
   it("accepts missing image values during OSS migration", () => {
     expect(() =>
-      rapperSchema.parse({
-        id: "test",
+      rapperSeedSchema.parse({
+        seedKey: "test",
         name: "Test",
+        aliases: [],
         region: "Nowhere",
         mediaType: "image",
         bio: "bio",
-        shortReview: "review",
         tags: ["tag"],
         representativeWorks: ["song"],
         ratingCount: 0,

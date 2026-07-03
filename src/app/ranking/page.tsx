@@ -1,17 +1,17 @@
 import { RankingPageClient } from "@/components/ranking/RankingPageClient";
-import { getViewer } from "@/lib/server/viewer";
+import { resolvePageViewer } from "@/lib/server/viewer";
 import { getRankingPageData } from "@/features/rappers/rapper.server";
 import { getViewerFavorites, getViewerRatings } from "@/features/user/user.server";
 
-export const dynamic = "force-dynamic";
-
 export default async function RankingPage() {
-  const viewer = await getViewer();
-  const [rankingData, favorites, ratings] = await Promise.all([
-    getRankingPageData(),
-    getViewerFavorites(viewer.userId),
-    getViewerRatings(viewer.userId),
-  ]);
+  const viewer = await resolvePageViewer();
+  const rankingData = await getRankingPageData();
+  const [favorites, ratings] = viewer.userId
+    ? await Promise.all([
+        getViewerFavorites(viewer.userId),
+        getViewerRatings(viewer.userId),
+      ])
+    : [[], []];
 
   return (
     <RankingPageClient

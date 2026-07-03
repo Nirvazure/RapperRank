@@ -1,5 +1,13 @@
 import { prisma } from "@/lib/prisma";
 
+export async function pickRandomRapperId(): Promise<string | null> {
+  const rows = await prisma.$queryRaw<Array<{ id: string }>>`
+    SELECT id FROM "rapperank"."Rapper" ORDER BY RANDOM() LIMIT 1
+  `;
+
+  return rows[0]?.id ?? null;
+}
+
 export async function listAllRappers() {
   return prisma.rapper.findMany({
     orderBy: [{ overallScore: "desc" }, { name: "asc" }],
@@ -13,23 +21,15 @@ export async function listTopRappers(limit: number) {
   });
 }
 
-export async function listRapperSlugs() {
-  const rows = await prisma.rapper.findMany({
-    select: { slug: true },
-  });
-
-  return rows.map((item) => item.slug);
-}
-
-export async function findRapperBySlug(slug: string) {
-  return prisma.rapper.findUnique({
-    where: { slug },
-  });
-}
-
 export async function findRapperById(id: string) {
   return prisma.rapper.findUnique({
     where: { id },
+  });
+}
+
+export async function findRapperBySeedKey(seedKey: string) {
+  return prisma.rapper.findUnique({
+    where: { seedKey },
   });
 }
 

@@ -24,7 +24,7 @@ export function RapperGallery({
           <button
             key={rapper.id}
             type="button"
-            onClick={() => onSelect(rapper.slug ?? rapper.id)}
+            onClick={() => onSelect(rapper.id)}
             className="group overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] text-left text-white transition duration-300 hover:-translate-y-1 hover:border-lime-200/70 hover:bg-white/10"
           >
             <div className={`relative overflow-hidden bg-black ${compact ? "aspect-[4/3]" : "aspect-[3/4]"}`}>

@@ -25,10 +25,20 @@ vi.mock("next/headers", () => ({
   })),
 }));
 
+vi.mock("@/lib/prisma", () => ({
+  prisma: {
+    session: {
+      findUnique: vi.fn(),
+    },
+  },
+}));
+
 import { getAuthUser } from "@/lib/server/auth";
 import { getAnonymousViewer } from "@/lib/server/auth-anonymous";
 import { ensureAuthenticatedUser } from "@/features/user/user.repository";
-import { getViewer } from "@/lib/server/viewer";
+import { getViewer, resolvePageViewer } from "@/lib/server/viewer";
+import { prisma } from "@/lib/prisma";
+import { cookies } from "next/headers";
 
 describe("getViewer", () => {
   beforeEach(() => {
@@ -76,5 +86,50 @@ describe("getViewer", () => {
       isAuthenticated: false,
       sessionToken: "token-1",
     });
+  });
+});
+
+describe("resolvePageViewer", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns anonymous viewer from existing session without creating a new one", async () => {
+    vi.mocked(getAuthUser).mockResolvedValue(null);
+    vi.mocked(cookies).mockResolvedValue({
+      get: vi.fn((name: string) =>
+        name === "rapperank-session" ? { value: "token-1" } : undefined,
+      ),
+    } as never);
+    vi.mocked(prisma.session.findUnique).mockResolvedValue({
+      userId: "anon-user-1",
+      expiresAt: new Date(Date.now() + 60_000),
+    } as never);
+
+    const viewer = await resolvePageViewer();
+
+    expect(viewer).toEqual({
+      userId: "anon-user-1",
+      displayName: "",
+      isAuthenticated: false,
+      sessionToken: "token-1",
+    });
+    expect(getAnonymousViewer).not.toHaveBeenCalled();
+  });
+
+  it("returns default anonymous viewer when session is missing", async () => {
+    vi.mocked(getAuthUser).mockResolvedValue(null);
+    vi.mocked(cookies).mockResolvedValue({
+      get: vi.fn(() => undefined),
+    } as never);
+
+    const viewer = await resolvePageViewer();
+
+    expect(viewer).toEqual({
+      displayName: "",
+      isAuthenticated: false,
+    });
+    expect(prisma.session.findUnique).not.toHaveBeenCalled();
+    expect(getAnonymousViewer).not.toHaveBeenCalled();
   });
 });

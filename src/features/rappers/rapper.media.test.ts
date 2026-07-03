@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  optimizeOssImageUrl,
   resolveRapperAvatar,
   resolveRapperMedia,
 } from "@/features/rappers/rapper.media";
@@ -46,5 +47,17 @@ describe("rapper media", () => {
       alt: "Test visual",
       isPlaceholder: true,
     });
+  });
+
+  it("appends OSS image processing params for rapperank OSS urls", () => {
+    const url = "https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/test.webp";
+    expect(optimizeOssImageUrl(url, { width: 1200 })).toBe(
+      `${url}?x-oss-process=image/resize,w_1200/quality,q_85`,
+    );
+  });
+
+  it("returns non-OSS urls unchanged", () => {
+    const url = "https://images.unsplash.com/photo-123";
+    expect(optimizeOssImageUrl(url)).toBe(url);
   });
 });

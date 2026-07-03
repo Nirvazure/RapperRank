@@ -1,9 +1,7 @@
 import { notFound } from "next/navigation";
 import {
-  findRapperBySlug,
-  listAllRappers,
-  listRapperSlugs,
-  listTopRappers,
+  findRapperById,
+  pickRandomRapperId,
   updateRapperAggregate as updateRapperAggregateRecord,
 } from "@/features/rappers/rapper.repository";
 import { mapRapperRecordToViewModel, mapRatingRecordToUserRating } from "@/features/rappers/rapper.mapper";
@@ -13,16 +11,12 @@ import { buildRatingAggregate, type RatingAggregate } from "@/features/ratings/r
 import type { Rapper } from "@/features/rappers/rapper.types";
 
 type RankedRapper = {
-  slug: string;
+  id: string;
   overallScore: number;
 };
 
 export type RankingDeps = {
   listTopRappers: (limit: number) => Promise<RankedRapper[]>;
-};
-
-export type RandomRapperDeps = {
-  listRapperSlugs: () => Promise<string[]>;
 };
 
 export async function getTopRankedRappers(
@@ -35,26 +29,29 @@ export async function getTopRankedRappers(
   );
 }
 
-export async function getRandomRapperSlug(deps: RandomRapperDeps): Promise<string> {
-  const slugs = await deps.listRapperSlugs();
-  if (slugs.length === 0) {
-    return "kendrick-lamar";
+export async function getRandomRapperIdFromDb(fallback?: string) {
+  const id = await pickRandomRapperId();
+  if (id) {
+    return id;
   }
 
-  const index = Math.floor(Math.random() * slugs.length);
-  return slugs[index] ?? "kendrick-lamar";
-}
+  if (fallback) {
+    const record = await findRapperById(fallback);
+    if (record) {
+      return record.id;
+    }
+  }
 
-export async function getRandomRapperSlugFromDb() {
-  return getRandomRapperSlug({
-    listRapperSlugs,
-  });
+  throw new Error("No rappers available");
 }
 
 export async function getRankingPageData() {
+  const { getCachedAllRappers, getCachedTopRappers } = await import(
+    "@/features/rappers/rapper.cache"
+  );
   const [rappers, rankingRecords] = await Promise.all([
-    listAllRappers(),
-    listTopRappers(10),
+    getCachedAllRappers(),
+    getCachedTopRappers(10),
   ]);
 
   return {
@@ -65,10 +62,18 @@ export async function getRankingPageData() {
   };
 }
 
-export async function getRapperPageData(slug: string, userId: string) {
-  const record = await findRapperBySlug(slug);
+export async function getRapperPageData(rapperId: string, userId?: string) {
+  const record = await findRapperById(rapperId);
   if (!record) {
     notFound();
+  }
+
+  if (!userId) {
+    return {
+      rapper: mapRapperRecordToViewModel(record),
+      isFavorite: false,
+      myRating: null,
+    };
   }
 
   const [favorite, rating] = await Promise.all([

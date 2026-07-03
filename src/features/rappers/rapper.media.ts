@@ -1,4 +1,4 @@
-import type { Rapper } from "@/features/rappers/rapper.types";
+import type { Rapper, RapperSeedRecord } from "@/features/rappers/rapper.types";
 
 export const RAPPER_OSS_BASE_URL = "https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/";
 export const NIRVAZURE_OSS_BASE_URL = "https://nirvazure-next.oss-cn-hangzhou.aliyuncs.com/";
@@ -11,6 +11,28 @@ export function shouldBypassNextImageOptimization(src: string): boolean {
     src.startsWith(NIRVAZURE_OSS_BASE_URL) ||
     src.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/label/")
   );
+}
+
+function isRapperankOssUrl(url: string): boolean {
+  return (
+    url.startsWith(RAPPER_OSS_BASE_URL) ||
+    url.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/label/")
+  );
+}
+
+/** 为 OSS 图片追加 resize/quality 参数，降低首屏传输体积。非 OSS URL 原样返回。 */
+export function optimizeOssImageUrl(url: string, { width = 1200 }: { width?: number } = {}): string {
+  if (!isRapperankOssUrl(url)) {
+    return url;
+  }
+
+  const processParam = `image/resize,w_${width}/quality,q_85`;
+  if (url.includes("x-oss-process=")) {
+    return url;
+  }
+
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}x-oss-process=${processParam}`;
 }
 
 export type ResolvedRapperImage = {
@@ -43,7 +65,7 @@ export function normalizeRapperImageUrl(url?: string): string | undefined {
   return `${RAPPER_OSS_BASE_URL}${url.slice("/rapper/".length)}`;
 }
 
-export function normalizeRapperImages(rapper: Rapper): Rapper {
+export function normalizeRapperImages(rapper: RapperSeedRecord): RapperSeedRecord {
   return {
     ...rapper,
     avatarUrl: normalizeRapperImageUrl(rapper.avatarUrl),
