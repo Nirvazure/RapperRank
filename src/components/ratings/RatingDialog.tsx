@@ -12,9 +12,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FondnessHeartPicker } from "@/components/ratings/FondnessHeartPicker";
 import { RapperRatingPanel } from "@/components/rapper/RapperRatingPanel";
 import type { Rapper } from "@/features/rappers/rapper.types";
-import type { RatingDimension } from "@/features/ratings/rating.types";
+import type { RatingDimension, RatingSubmission } from "@/features/ratings/rating.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
 
 const DEFAULT_RATINGS: RatingDimension = {
@@ -30,18 +31,21 @@ const DEFAULT_RATINGS: RatingDimension = {
 export function RatingDialog({
   rapper,
   value,
+  fondness,
   onSubmit,
   triggerLabel = "我要评分",
   viewerDisplayName,
 }: {
   rapper: Rapper;
   value?: RatingDimension;
-  onSubmit: (ratings: RatingDimension) => Promise<void>;
+  fondness?: number | null;
+  onSubmit: (submission: RatingSubmission) => Promise<void>;
   triggerLabel?: string;
   viewerDisplayName: string;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [draft, setDraft] = useState<RatingDimension>(value ?? DEFAULT_RATINGS);
+  const [draftFondness, setDraftFondness] = useState<number | null>(fondness ?? null);
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +70,7 @@ export function RatingDialog({
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
       setDraft(value ?? DEFAULT_RATINGS);
+      setDraftFondness(fondness ?? null);
       setError(null);
     }
 
@@ -77,7 +82,10 @@ export function RatingDialog({
     setError(null);
 
     try {
-      await onSubmit(draft);
+      await onSubmit({
+        ratings: draft,
+        fondness: draftFondness,
+      });
       setOpen(false);
     } catch {
       setError("评分保存失败，请稍后重试。");
@@ -108,7 +116,19 @@ export function RatingDialog({
               当前会话用户：{viewerDisplayName}。
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-5">
+          <section className="mt-5 rounded-lg border border-white/10 bg-white/[0.04] p-5">
+            <div className="mb-3">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-red-300">
+                optional
+              </p>
+              <h3 className="text-xl font-black uppercase">喜爱度</h3>
+              <p className="mt-1 text-sm text-white/45">
+                主观偏好，不参与综合分计算；不选则不计入社区喜爱度。
+              </p>
+            </div>
+            <FondnessHeartPicker value={draftFondness} onChange={setDraftFondness} />
+          </section>
+          <div className="mt-4">
             <RapperRatingPanel value={draft} onChange={setDraft} />
           </div>
           {error ? (

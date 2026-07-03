@@ -50,8 +50,9 @@ Copy-Item .env.example .env
 ```bash
 npm run db:generate
 npx prisma migrate deploy
-npm run db:seed
 ```
+
+艺人数据仅在 Supabase `rapperank.Rapper` 表维护，**不要**使用已移除的 seed 脚本写回艺人。
 
 本地开发若需新建 migration，使用 `npm run db:migrate`（`prisma migrate dev`）。
 
@@ -72,7 +73,7 @@ npm test
 npm run build
 npm run db:generate
 npm run db:migrate
-npm run db:seed
+npm run db:reset-ratings
 ```
 
 ## Runtime Notes
@@ -81,4 +82,4 @@ npm run db:seed
 - 登录后会将当前匿名会话的评分与收藏合并到认证账号。
 - 同一用户对同一 Rapper 只保留一条最新评分。
 - 排行榜和详情页分数读取 `Rapper` 聚合字段，评分写入时会同步重算。
-- 种子数据来自现有 rapper 数据集，缺失文案会在 seed 清洗时替换为明确占位文本。
+- 艺人资料以 Supabase 数据库为准；厂牌元数据来自 `src/features/labels/label.data.ts`。

@@ -37,6 +37,7 @@ export function mapRatingRecordToUserRating(rating: Rating): UserRating {
       stage: toNumber(rating.stage),
       ph: toNumber(rating.ph),
     },
+    fondness: rating.fondness == null ? null : toNumber(rating.fondness),
     createdAt: rating.createdAt.toISOString(),
     updatedAt: rating.updatedAt.toISOString(),
   };
@@ -70,5 +71,7 @@ export function mapRapperRecordToViewModel(record: PrismaRapper): Rapper {
     ratingCount: record.ratingCount,
     averageRatings,
     overallScore: toNumber(record.overallScore),
+    avgFondness: toNumber(record.avgFondness),
+    fondnessCount: record.fondnessCount,
   };
 }

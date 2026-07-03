@@ -24,3 +24,5 @@ export type LabelViewModel = LabelDefinition & {
   confirmedMemberCount: number;
   hasMembers: boolean;
 };
+
+export type RapperLabelPreview = Pick<LabelDefinition, "id" | "name" | "displayName" | "logoUrl">;

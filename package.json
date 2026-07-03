@@ -11,7 +11,7 @@
     "test": "vitest",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed"
+    "db:reset-ratings": "tsx prisma/reset-ratings.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
@@ -49,9 +49,6 @@
     "tsx": "^4.20.3",
     "typescript": "^5",
     "vitest": "^4.1.6"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   },
   "overrides": {
     "postcss": "8.5.14"

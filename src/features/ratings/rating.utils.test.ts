@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import {
   calculateOverallScore,
+  formatFondnessAverage,
   getUserRatingForRapper,
   inferPhOrientationFromRatings,
   mergeUserRatingIntoAverage,
@@ -93,6 +94,8 @@ describe("rating utils", () => {
       tags: ["tag"],
       representativeWorks: ["song"],
       ratingCount: 9,
+      avgFondness: 0,
+      fondnessCount: 0,
       averageRatings: {
         flow: 4,
         lyrics: 4,
@@ -138,6 +141,8 @@ describe("rating utils", () => {
       tags: ["tag"],
       representativeWorks: ["song"],
       ratingCount: 1,
+      avgFondness: 0,
+      fondnessCount: 0,
       averageRatings: {
         flow: 4,
         lyrics: 4,
@@ -161,6 +166,11 @@ describe("rating utils", () => {
 
     expect(merged.ph).toBe(0);
     expect(normalizePhOrientation(merged.ph)).toBe(0);
+  });
+
+  it("formats fondness average for empty community data", () => {
+    expect(formatFondnessAverage(0, 0)).toBe("—");
+    expect(formatFondnessAverage(4.2, 12)).toBe("4.2");
   });
 
   it("finds the local user's rating for a rapper", () => {
@@ -198,6 +208,8 @@ describe("rating utils", () => {
         tags: ["tag"],
         representativeWorks: ["song"],
         ratingCount: 9,
+        avgFondness: 0,
+        fondnessCount: 0,
         averageRatings: {
           flow: 4,
           lyrics: 4,
@@ -220,6 +232,8 @@ describe("rating utils", () => {
         tags: ["tag"],
         representativeWorks: ["song"],
         ratingCount: 3,
+        avgFondness: 0,
+        fondnessCount: 0,
         averageRatings: {
           flow: 3,
           lyrics: 3,

@@ -104,6 +104,8 @@ export async function updateRapperAggregate(input: {
     avgStage: averageRatings.stage,
     avgPh: averageRatings.ph ?? 0,
     overallScore: input.aggregate.overallScore,
+    avgFondness: input.aggregate.avgFondness,
+    fondnessCount: input.aggregate.fondnessCount,
   });
 }
 

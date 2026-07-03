@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { MAX_PH_RATING, MAX_RATING, MIN_PH_RATING, MIN_RATING } from "@/lib/constants";
+import { MAX_FONDNESS, MAX_PH_RATING, MAX_RATING, MIN_FONDNESS, MIN_PH_RATING, MIN_RATING } from "@/lib/constants";
 
 export const ratingValueSchema = z.number().min(MIN_RATING).max(MAX_RATING);
 export const phRatingValueSchema = z.number().min(MIN_PH_RATING).max(MAX_PH_RATING);
+export const fondnessValueSchema = z.number().min(MIN_FONDNESS).max(MAX_FONDNESS);
 
 export const ratingDimensionSchema = z.object({
   flow: ratingValueSchema,
@@ -18,6 +19,13 @@ export const userRatingSchema = z.object({
   userId: z.string().min(1),
   rapperId: z.string().min(1),
   ratings: ratingDimensionSchema,
+  fondness: fondnessValueSchema.nullable().optional(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
+});
+
+export const ratingSubmissionSchema = z.object({
+  rapperId: z.string().min(1),
+  ratings: ratingDimensionSchema,
+  fondness: fondnessValueSchema.nullable().optional(),
 });

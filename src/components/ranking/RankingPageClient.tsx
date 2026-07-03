@@ -1,20 +1,27 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { RankingBoard } from "@/components/ranking/RankingBoard";
 import { RapperGallery } from "@/components/rapper/RapperGallery";
+import { useFavoriteIds } from "@/hooks/useFavoriteIds";
 import type { Rapper } from "@/features/rappers/rapper.types";
-import type { UserRating } from "@/features/ratings/rating.types";
+import type { CommunitySortMode, UserRating } from "@/features/ratings/rating.types";
+import { sortRappersForCommunity } from "@/features/rappers/rapper.utils";
 
 import type { ViewerPresentation } from "@/features/user/user.types";
+
+const sortOptions: Array<{ value: CommunitySortMode; label: string }> = [
+  { value: "score", label: "按分数" },
+  { value: "fondness", label: "按喜爱度" },
+];
 
 export function RankingPageClient({
   rappers,
   ranking,
-  favoriteIds,
+  favoriteIds: initialFavoriteIds,
   ratings,
   viewer,
 }: {
@@ -26,7 +33,18 @@ export function RankingPageClient({
 }) {
   const pageRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const avatarRapper = rappers.find((rapper) => favoriteIds.includes(rapper.id)) ?? rappers[0];
+  const [sortMode, setSortMode] = useState<CommunitySortMode>("score");
+  const { favoriteIds, toggleFavorite } = useFavoriteIds(initialFavoriteIds);
+  const avatarRapper =
+    rappers.find((rapper) => favoriteIds.has(rapper.id)) ?? rappers[0];
+  const sortedRappers = useMemo(
+    () => sortRappersForCommunity(rappers, sortMode),
+    [rappers, sortMode],
+  );
+  const sortedRanking = useMemo(
+    () => sortRappersForCommunity(ranking.length > 0 ? rappers : [], sortMode).slice(0, 10),
+    [ranking.length, rappers, sortMode],
+  );
 
   useEffect(() => {
     const context = gsap.context(() => {
@@ -61,12 +79,36 @@ export function RankingPageClient({
             }}
           />
         </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {sortOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => setSortMode(option.value)}
+              className={`rounded-md border px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] transition ${
+                sortMode === option.value
+                  ? "border-lime-200 bg-lime-200 text-black"
+                  : "border-white/10 bg-white/[0.04] text-white/65 hover:border-white/20 hover:bg-white/[0.08]"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
-          <RapperGallery rappers={rappers} compact onSelect={openRapper} />
+          <RapperGallery
+            rappers={sortedRappers}
+            compact
+            favoriteIds={favoriteIds}
+            onToggleFavorite={toggleFavorite}
+            onSelect={openRapper}
+          />
           <aside className="lg:sticky lg:top-5 lg:self-start">
             <RankingBoard
-              rappers={ranking}
+              rappers={sortedRanking}
               compact
+              favoriteIds={favoriteIds}
+              onToggleFavorite={toggleFavorite}
               onSelect={(rapperId) => {
                 openRapper(rapperId);
               }}

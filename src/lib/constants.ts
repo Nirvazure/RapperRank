@@ -115,5 +115,7 @@ export const RATING_SCORE_WEIGHTS: Record<PhOrientation, Record<RadarRatingKey, 
 
 export const MAX_RATING = 5;
 export const MIN_RATING = 1;
+export const MAX_FONDNESS = 5;
+export const MIN_FONDNESS = 1;
 export const MAX_PH_RATING = 1;
 export const MIN_PH_RATING = -1;
