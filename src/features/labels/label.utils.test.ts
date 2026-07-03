@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { rappers as seedRappers } from "@/data/rappers";
 import { labelDefinitions } from "@/features/labels/label.data";
 import { buildLabelViewModels } from "@/features/labels/label.utils";
 import type { Rapper } from "@/features/rappers/rapper.types";
@@ -15,14 +14,83 @@ const emptyRatings = {
 } as const;
 
 function toMockRappers(): Rapper[] {
-  return seedRappers.map((record, index) => ({
-    ...record,
-    id: `mock-id-${index}`,
-    ratingCount: 0,
-    averageRatings: { ...emptyRatings },
-    avgFondness: 0,
-    fondnessCount: 0,
-  }));
+  return [
+    {
+      id: "mock-wang-yitai",
+      seedKey: "wang-yitai",
+      name: "王以太",
+      aliases: [],
+      region: "Chengdu",
+      mediaType: "image",
+      bio: "bio",
+      tags: ["tag"],
+      representativeWorks: ["song"],
+      ratingCount: 0,
+      averageRatings: { ...emptyRatings },
+      avgFondness: 0,
+      fondnessCount: 0,
+    },
+    {
+      id: "mock-xie-di",
+      seedKey: "xie-di",
+      name: "谢帝",
+      aliases: [],
+      region: "Chengdu",
+      mediaType: "image",
+      bio: "bio",
+      tags: ["tag"],
+      representativeWorks: ["song"],
+      ratingCount: 0,
+      averageRatings: { ...emptyRatings },
+      avgFondness: 0,
+      fondnessCount: 0,
+    },
+    {
+      id: "mock-ty",
+      seedKey: "ty",
+      name: "Ty.",
+      aliases: [],
+      region: "Chengdu",
+      mediaType: "image",
+      bio: "bio",
+      tags: ["tag"],
+      representativeWorks: ["song"],
+      ratingCount: 0,
+      averageRatings: { ...emptyRatings },
+      avgFondness: 0,
+      fondnessCount: 0,
+    },
+    {
+      id: "mock-mengzi-cdc",
+      seedKey: "mengzi-cdc",
+      name: "孟子",
+      aliases: [],
+      region: "Chengdu",
+      mediaType: "image",
+      bio: "bio",
+      tags: ["tag"],
+      representativeWorks: ["song"],
+      ratingCount: 0,
+      averageRatings: { ...emptyRatings },
+      avgFondness: 0,
+      fondnessCount: 0,
+    },
+    {
+      id: "mock-sleepy-cat",
+      seedKey: "sleepy-cat",
+      name: "Sleepy Cat",
+      aliases: [],
+      region: "Chengdu",
+      mediaType: "image",
+      bio: "bio",
+      tags: ["tag"],
+      representativeWorks: ["song"],
+      ratingCount: 0,
+      averageRatings: { ...emptyRatings },
+      avgFondness: 0,
+      fondnessCount: 0,
+    },
+  ];
 }
 
 describe("label utils", () => {

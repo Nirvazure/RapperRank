@@ -1,6 +1,6 @@
-import { Heart } from "lucide-react";
 import type { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import { FavoriteBookmarkButton } from "@/components/favorites/FavoriteBookmarkButton";
+import { RapperLabelStrip } from "@/components/labels/RapperLabelStrip";
 import { resolveRapperMedia } from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import { RapperImage } from "@/components/rapper/RapperImage";
@@ -35,28 +35,23 @@ export function RapperMediaPanel({
       </div>
       <div className="absolute right-4 top-4 flex items-center gap-2">
         {actionSlot}
-        <Button
-          type="button"
-          variant={isFavorite ? "default" : "outline"}
-          size="icon-lg"
-          aria-label={isFavorite ? "取消收藏" : "收藏"}
-          onClick={onToggleFavorite}
-          className={
-            isFavorite
-              ? "bg-red-500 text-white hover:bg-red-400"
-              : "border-white/20 bg-black/35 text-white backdrop-blur hover:bg-white/15"
-          }
-        >
-          <Heart className={isFavorite ? "fill-current" : ""} />
-        </Button>
+        <FavoriteBookmarkButton isFavorite={isFavorite} onToggle={onToggleFavorite} />
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
         <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-lime-200">
           featured artist
         </p>
-        <h1 className="max-w-[10ch] text-4xl font-black uppercase leading-[0.85] text-white sm:text-5xl md:text-6xl">
-          {rapper.name}
-        </h1>
+        <div className="mt-1 flex items-end justify-between gap-3">
+          <h1 className="min-w-0 shrink text-left text-4xl font-black uppercase leading-[0.85] text-white sm:text-5xl md:text-6xl">
+            {rapper.name}
+          </h1>
+          <RapperLabelStrip
+            rapper={rapper}
+            variant="featured"
+            align="end"
+            className="mt-0"
+          />
+        </div>
         <p className="mt-2 line-clamp-2 max-w-xl text-sm font-black leading-5 text-white/85">
           {rapper.bio}
         </p>

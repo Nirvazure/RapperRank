@@ -23,10 +23,3 @@ export type Rapper = {
   avgFondness: number;
   fondnessCount: number;
 };
-
-export type RapperSeedRecord = Omit<
-  Rapper,
-  "id" | "overallScore" | "ratingCount" | "averageRatings" | "avgFondness" | "fondnessCount"
-> & {
-  seedKey: string;
-};

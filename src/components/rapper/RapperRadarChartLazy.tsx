@@ -12,7 +12,7 @@ function RadarChartSkeleton() {
         </div>
         <div className="h-12 w-24 animate-pulse rounded bg-white/10" />
       </div>
-      <div className="min-h-[250px] flex-1 animate-pulse rounded-lg bg-white/[0.04]" />
+      <div className="min-h-[200px] flex-1 animate-pulse rounded-lg bg-white/[0.04]" />
     </section>
   );
 }

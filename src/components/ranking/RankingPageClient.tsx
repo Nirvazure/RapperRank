@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { RankingBoard } from "@/components/ranking/RankingBoard";
 import { RapperGallery } from "@/components/rapper/RapperGallery";
+import { useFavoriteIds } from "@/hooks/useFavoriteIds";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import type { CommunitySortMode, UserRating } from "@/features/ratings/rating.types";
 import { sortRappersForCommunity } from "@/features/rappers/rapper.utils";
@@ -20,7 +21,7 @@ const sortOptions: Array<{ value: CommunitySortMode; label: string }> = [
 export function RankingPageClient({
   rappers,
   ranking,
-  favoriteIds,
+  favoriteIds: initialFavoriteIds,
   ratings,
   viewer,
 }: {
@@ -33,7 +34,9 @@ export function RankingPageClient({
   const pageRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [sortMode, setSortMode] = useState<CommunitySortMode>("score");
-  const avatarRapper = rappers.find((rapper) => favoriteIds.includes(rapper.id)) ?? rappers[0];
+  const { favoriteIds, toggleFavorite } = useFavoriteIds(initialFavoriteIds);
+  const avatarRapper =
+    rappers.find((rapper) => favoriteIds.has(rapper.id)) ?? rappers[0];
   const sortedRappers = useMemo(
     () => sortRappersForCommunity(rappers, sortMode),
     [rappers, sortMode],
@@ -93,11 +96,19 @@ export function RankingPageClient({
           ))}
         </div>
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
-          <RapperGallery rappers={sortedRappers} compact onSelect={openRapper} />
+          <RapperGallery
+            rappers={sortedRappers}
+            compact
+            favoriteIds={favoriteIds}
+            onToggleFavorite={toggleFavorite}
+            onSelect={openRapper}
+          />
           <aside className="lg:sticky lg:top-5 lg:self-start">
             <RankingBoard
               rappers={sortedRanking}
               compact
+              favoriteIds={favoriteIds}
+              onToggleFavorite={toggleFavorite}
               onSelect={(rapperId) => {
                 openRapper(rapperId);
               }}

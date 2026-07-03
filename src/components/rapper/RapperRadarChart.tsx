@@ -35,7 +35,7 @@ export function RapperRadarChart({
       textStyle: { color: "#fff" },
     },
     radar: {
-      radius: "68%",
+      radius: "62%",
       center: ["50%", "54%"],
       splitNumber: 5,
       indicator: RATING_KEYS.map((key) => ({
@@ -108,13 +108,13 @@ export function RapperRadarChart({
           {actionSlot}
         </div>
       </div>
-      <div className="min-h-[250px] flex-1">
+      <div className="min-h-[200px] flex-1">
         <ReactECharts
           key={rapper.id}
           option={option}
           notMerge
           lazyUpdate
-          style={{ height: "100%", minHeight: 250, width: "100%" }}
+          style={{ height: "100%", minHeight: 200, width: "100%" }}
         />
       </div>
     </section>

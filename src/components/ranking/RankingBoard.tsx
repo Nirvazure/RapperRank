@@ -1,19 +1,23 @@
 "use client";
 
+import { RankingItem } from "@/components/ranking/RankingItem";
+import type { Rapper } from "@/features/rappers/rapper.types";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import type { Rapper } from "@/features/rappers/rapper.types";
-import { RankingItem } from "@/components/ranking/RankingItem";
 
 export function RankingBoard({
   rappers,
   selectedRapperId,
   compact = false,
+  favoriteIds,
+  onToggleFavorite,
   onSelect,
 }: {
   rappers: Rapper[];
   selectedRapperId?: string;
   compact?: boolean;
+  favoriteIds?: Set<string>;
+  onToggleFavorite?: (rapperId: string) => void;
   onSelect: (rapperId: string) => void;
 }) {
   const boardRef = useRef<HTMLElement>(null);
@@ -62,6 +66,10 @@ export function RankingBoard({
             rank={index + 1}
             active={selectedRapperId ? rapper.id === selectedRapperId : false}
             compact={compact}
+            isFavorite={favoriteIds?.has(rapper.id) ?? false}
+            onToggleFavorite={
+              onToggleFavorite ? () => onToggleFavorite(rapper.id) : undefined
+            }
             onSelect={() => onSelect(rapper.id)}
           />
         ))}
