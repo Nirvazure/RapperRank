@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { ratingDimensionSchema } from "@/features/ratings/rating.schema";
 
 const imageUrlSchema = z.url().refine(
   (value) => value.startsWith("https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/"),
@@ -21,8 +20,6 @@ export const rapperSeedSchema = z.object({
   bio: z.string().min(1),
   tags: z.array(z.string().min(1)).min(1),
   representativeWorks: z.array(z.string().min(1)).min(1),
-  ratingCount: z.number().int().nonnegative(),
-  averageRatings: ratingDimensionSchema,
 });
 
 export const rapperSeedRecordsSchema = z.array(rapperSeedSchema).min(1);

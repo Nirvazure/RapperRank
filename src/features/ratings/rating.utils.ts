@@ -71,6 +71,14 @@ export function formatScore(value: number): string {
   return value.toFixed(1);
 }
 
+export function formatFondnessAverage(avgFondness: number, fondnessCount: number): string {
+  if (fondnessCount === 0) {
+    return "—";
+  }
+
+  return avgFondness.toFixed(1);
+}
+
 export function getPhRating(ratings: RatingDimension): number {
   return ratings.ph ?? 0;
 }

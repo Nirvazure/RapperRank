@@ -44,6 +44,8 @@ export async function updateRapperAggregate(input: {
   avgStage: number;
   avgPh: number;
   overallScore: number;
+  avgFondness: number;
+  fondnessCount: number;
 }) {
   return prisma.rapper.update({
     where: { id: input.rapperId },
@@ -57,6 +59,8 @@ export async function updateRapperAggregate(input: {
       avgStage: input.avgStage,
       avgPh: input.avgPh,
       overallScore: input.overallScore,
+      avgFondness: input.avgFondness,
+      fondnessCount: input.fondnessCount,
     },
   });
 }

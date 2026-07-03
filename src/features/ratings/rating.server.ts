@@ -1,4 +1,4 @@
-import type { RatingDimension } from "@/features/ratings/rating.types";
+import type { FondnessAggregate, RatingDimension } from "@/features/ratings/rating.types";
 import {
   createRating as createRatingRecord,
   findRating as findRatingRecord,
@@ -11,23 +11,38 @@ import { calculateOverallScore, roundScore } from "@/features/ratings/rating.uti
 type StoredRating = RatingDimension & {
   userId: string;
   rapperId: string;
+  fondness: number | null;
 };
 
 export type RatingAggregate = {
   ratingCount: number;
   averageRatings: RatingDimension;
   overallScore: number;
+  fondnessCount: number;
+  avgFondness: number;
 };
 
 export type RatingDeps = {
   findRating: (input: { userId: string; rapperId: string }) => Promise<{ id: string } | null>;
-  createRating: (input: { userId: string; rapperId: string; ratings: RatingDimension }) => Promise<void>;
-  updateRating: (input: { userId: string; rapperId: string; ratings: RatingDimension }) => Promise<void>;
+  createRating: (input: {
+    userId: string;
+    rapperId: string;
+    ratings: RatingDimension;
+    fondness: number | null;
+  }) => Promise<void>;
+  updateRating: (input: {
+    userId: string;
+    rapperId: string;
+    ratings: RatingDimension;
+    fondness: number | null;
+  }) => Promise<void>;
   listRatingsForRapper: (rapperId: string) => Promise<StoredRating[]>;
   updateRapperAggregate: (input: { rapperId: string; aggregate: RatingAggregate }) => Promise<void>;
 };
 
 export function buildRatingAggregate(ratings: StoredRating[]): RatingAggregate {
+  const fondnessAggregate = buildFondnessAggregate(ratings);
+
   if (ratings.length === 0) {
     return {
       ratingCount: 0,
@@ -41,6 +56,7 @@ export function buildRatingAggregate(ratings: StoredRating[]): RatingAggregate {
         ph: 0,
       },
       overallScore: 0,
+      ...fondnessAggregate,
     };
   }
 
@@ -81,12 +97,38 @@ export function buildRatingAggregate(ratings: StoredRating[]): RatingAggregate {
     ratingCount: count,
     averageRatings,
     overallScore: calculateOverallScore(averageRatings),
+    ...fondnessAggregate,
+  };
+}
+
+export function buildFondnessAggregate(ratings: Pick<StoredRating, "fondness">[]): FondnessAggregate {
+  const withFondness = ratings.filter(
+    (item): item is { fondness: number } => item.fondness != null,
+  );
+
+  if (withFondness.length === 0) {
+    return {
+      fondnessCount: 0,
+      avgFondness: 0,
+    };
+  }
+
+  const total = withFondness.reduce((sum, item) => sum + item.fondness, 0);
+
+  return {
+    fondnessCount: withFondness.length,
+    avgFondness: roundScore(total / withFondness.length),
   };
 }
 
 export async function upsertRapperRating(
   deps: RatingDeps,
-  input: { userId: string; rapperId: string; ratings: RatingDimension },
+  input: {
+    userId: string;
+    rapperId: string;
+    ratings: RatingDimension;
+    fondness: number | null;
+  },
 ): Promise<RatingAggregate> {
   const existing = await deps.findRating({
     userId: input.userId,
@@ -113,6 +155,7 @@ export async function submitRapperRating(input: {
   userId: string;
   rapperId: string;
   ratings: RatingDimension;
+  fondness: number | null;
 }) {
   return upsertRapperRating(
     {
@@ -135,6 +178,7 @@ export async function submitRapperRating(input: {
           melody: Number(item.melody),
           stage: Number(item.stage),
           ph: Number(item.ph),
+          fondness: item.fondness == null ? null : Number(item.fondness),
         }));
       },
       updateRapperAggregate,

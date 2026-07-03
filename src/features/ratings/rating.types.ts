@@ -15,6 +15,19 @@ export type UserRating = {
   userId: string;
   rapperId: string;
   ratings: RatingDimension;
+  fondness?: number | null;
   createdAt: string;
   updatedAt: string;
 };
+
+export type RatingSubmission = {
+  ratings: RatingDimension;
+  fondness: number | null;
+};
+
+export type FondnessAggregate = {
+  fondnessCount: number;
+  avgFondness: number;
+};
+
+export type CommunitySortMode = "score" | "fondness";

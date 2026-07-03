@@ -5,7 +5,7 @@ import { RapperAvatar } from "@/components/rapper/RapperAvatar";
 import { RatingDialog } from "@/components/ratings/RatingDialog";
 import { Button } from "@/components/ui/button";
 import type { Rapper } from "@/features/rappers/rapper.types";
-import type { RatingDimension, UserRating } from "@/features/ratings/rating.types";
+import type { RatingSubmission, UserRating } from "@/features/ratings/rating.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
 
 export function EditableRatingsList({
@@ -16,7 +16,7 @@ export function EditableRatingsList({
 }: {
   rappers: Rapper[];
   ratings: UserRating[];
-  onChangeRating: (rapperId: string, ratings: RatingDimension) => Promise<void>;
+  onChangeRating: (rapperId: string, submission: RatingSubmission) => Promise<void>;
   viewerDisplayName: string;
 }) {
   const rapperMap = new Map(rappers.map((rapper) => [rapper.id, rapper]));
@@ -68,9 +68,10 @@ export function EditableRatingsList({
               <RatingDialog
                 rapper={rapper}
                 value={rating.ratings}
+                fondness={rating.fondness}
                 viewerDisplayName={viewerDisplayName}
                 triggerLabel="修改评分"
-                onSubmit={(nextRatings) => onChangeRating(rapper.id, nextRatings)}
+                onSubmit={(submission) => onChangeRating(rapper.id, submission)}
               />
             </article>
           ))}

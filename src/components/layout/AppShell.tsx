@@ -12,7 +12,7 @@ import { RapperMediaPanel } from "@/components/rapper/RapperMediaPanel";
 import { RapperProfilePanel } from "@/components/rapper/RapperProfilePanel";
 import { RapperRadarChartLazy } from "@/components/rapper/RapperRadarChartLazy";
 import type { Rapper } from "@/features/rappers/rapper.types";
-import type { UserRating } from "@/features/ratings/rating.types";
+import type { RatingSubmission, UserRating } from "@/features/ratings/rating.types";
 import type { ViewerPresentation } from "@/features/user/user.types";
 
 export function AppShell({
@@ -84,7 +84,7 @@ export function AppShell({
     });
   }
 
-  async function submitRating(ratings: UserRating["ratings"]) {
+  async function submitRating(submission: RatingSubmission) {
     const response = await fetch("/api/ratings", {
       method: "POST",
       headers: {
@@ -92,7 +92,8 @@ export function AppShell({
       },
       body: JSON.stringify({
         rapperId: rapper.id,
-        ratings,
+        ratings: submission.ratings,
+        fondness: submission.fondness,
       }),
     });
 
@@ -103,7 +104,8 @@ export function AppShell({
     setPendingRating({
       userId: myRating?.userId ?? "anonymous",
       rapperId: rapper.id,
-      ratings,
+      ratings: submission.ratings,
+      fondness: submission.fondness,
       createdAt: myRating?.createdAt ?? new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -197,6 +199,7 @@ export function AppShell({
                 <RatingDialog
                   rapper={rapper}
                   value={pendingRating?.ratings}
+                  fondness={pendingRating?.fondness}
                   triggerLabel="评分"
                   viewerDisplayName={viewer.displayName}
                   onSubmit={submitRating}

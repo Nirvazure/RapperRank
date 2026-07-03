@@ -4,10 +4,24 @@ import { labelDefinitions } from "@/features/labels/label.data";
 import { buildLabelViewModels } from "@/features/labels/label.utils";
 import type { Rapper } from "@/features/rappers/rapper.types";
 
+const emptyRatings = {
+  flow: 0,
+  lyrics: 0,
+  voice: 0,
+  technique: 0,
+  melody: 0,
+  stage: 0,
+  ph: 0,
+} as const;
+
 function toMockRappers(): Rapper[] {
   return seedRappers.map((record, index) => ({
     ...record,
     id: `mock-id-${index}`,
+    ratingCount: 0,
+    averageRatings: { ...emptyRatings },
+    avgFondness: 0,
+    fondnessCount: 0,
   }));
 }
 

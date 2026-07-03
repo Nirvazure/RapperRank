@@ -1,4 +1,5 @@
 import type { Rapper } from "@/features/rappers/rapper.types";
+import { FondnessStat } from "@/components/ratings/FondnessStat";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
 
 export function RankingItem({
@@ -40,6 +41,14 @@ export function RankingItem({
         <p className={active ? "text-xs text-black/60" : "text-xs text-white/45"}>
           {rapper.tags.slice(0, 2).join(" / ")}
         </p>
+        <div className="mt-1">
+          <FondnessStat
+            avgFondness={rapper.avgFondness}
+            fondnessCount={rapper.fondnessCount}
+            compact
+            inverted={active}
+          />
+        </div>
         {!compact && (
           <p className={active ? "mt-1 text-xs text-black/55" : "mt-1 text-xs text-white/35"}>
             Flow {rapper.averageRatings.flow.toFixed(1)} · Lyrics{" "}

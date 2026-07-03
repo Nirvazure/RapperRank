@@ -1,6 +1,7 @@
 "use client";
 
 import { RapperImage } from "@/components/rapper/RapperImage";
+import { FondnessStat } from "@/components/ratings/FondnessStat";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
 import { resolveRapperMedia } from "@/features/rappers/rapper.media";
@@ -46,6 +47,13 @@ export function RapperGallery({
                 <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-white/45">
                   {rapper.region}
                 </p>
+                <div className="mt-2">
+                  <FondnessStat
+                    avgFondness={rapper.avgFondness}
+                    fondnessCount={rapper.fondnessCount}
+                    compact
+                  />
+                </div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {rapper.tags.slice(0, compact ? 2 : 3).map((tag) => (

@@ -74,6 +74,8 @@ model Rapper {
   avgStage            Decimal         @default(0) @db.Decimal(3, 1)
   avgPh               Decimal         @default(0) @db.Decimal(3, 1)
   overallScore        Decimal         @default(0) @db.Decimal(3, 1)
+  avgFondness         Decimal         @default(0) @db.Decimal(3, 1)
+  fondnessCount       Int             @default(0)
   ratings             Rating[]
   favorites           Favorite[]
   createdAt           DateTime        @default(now())
@@ -91,8 +93,9 @@ model Rating {
   voice     Decimal  @db.Decimal(3, 1)
   technique Decimal  @db.Decimal(3, 1)
   melody    Decimal  @db.Decimal(3, 1)
-  stage     Decimal  @db.Decimal(3, 1)
-  ph        Decimal  @db.Decimal(3, 1)
+  stage     Decimal   @db.Decimal(3, 1)
+  ph        Decimal   @db.Decimal(3, 1)
+  fondness  Decimal?  @db.Decimal(3, 1)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   rapper    Rapper   @relation(fields: [rapperId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

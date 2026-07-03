@@ -39,16 +39,6 @@ describe("rapper schema", () => {
         bio: "bio",
         tags: ["tag"],
         representativeWorks: ["song"],
-        ratingCount: 0,
-        averageRatings: {
-          flow: 4,
-          lyrics: 4,
-          voice: 4,
-          technique: 4,
-          melody: 4,
-          stage: 4,
-          ph: 0,
-        },
       }),
     ).not.toThrow();
   });
@@ -65,16 +55,6 @@ describe("rapper schema", () => {
         bio: "bio",
         tags: ["tag"],
         representativeWorks: ["song"],
-        ratingCount: 0,
-        averageRatings: {
-          flow: 4,
-          lyrics: 4,
-          voice: 4,
-          technique: 4,
-          melody: 4,
-          stage: 4,
-          ph: 0,
-        },
       }),
     ).toThrow();
   });
@@ -90,16 +70,6 @@ describe("rapper schema", () => {
         bio: "bio",
         tags: ["tag"],
         representativeWorks: ["song"],
-        ratingCount: 0,
-        averageRatings: {
-          flow: 4,
-          lyrics: 4,
-          voice: 4,
-          technique: 4,
-          melody: 4,
-          stage: 4,
-          ph: 0,
-        },
       }),
     ).not.toThrow();
   });

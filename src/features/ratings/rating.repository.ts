@@ -13,6 +13,7 @@ export async function createRating(input: {
   userId: string;
   rapperId: string;
   ratings: RatingDimension;
+  fondness: number | null;
 }) {
   return prisma.rating.create({
     data: {
@@ -25,6 +26,7 @@ export async function createRating(input: {
       melody: input.ratings.melody,
       stage: input.ratings.stage,
       ph: input.ratings.ph ?? 0,
+      fondness: input.fondness,
     },
   });
 }
@@ -33,6 +35,7 @@ export async function updateRating(input: {
   userId: string;
   rapperId: string;
   ratings: RatingDimension;
+  fondness: number | null;
 }) {
   return prisma.rating.update({
     where: {
@@ -49,6 +52,7 @@ export async function updateRating(input: {
       melody: input.ratings.melody,
       stage: input.ratings.stage,
       ph: input.ratings.ph ?? 0,
+      fondness: input.fondness,
     },
   });
 }

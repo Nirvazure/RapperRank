@@ -11,7 +11,7 @@ import { RapperImage } from "@/components/rapper/RapperImage";
 import { Button } from "@/components/ui/button";
 import { resolveRapperMedia } from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
-import type { RatingDimension, UserRating } from "@/features/ratings/rating.types";
+import type { RatingSubmission, UserRating } from "@/features/ratings/rating.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
 
 import type { ViewerPresentation } from "@/features/user/user.types";
@@ -84,7 +84,7 @@ export function FavoritesPageClient({
     });
   }
 
-  async function submitRating(rapperId: string, nextRatings: RatingDimension) {
+  async function submitRating(rapperId: string, submission: RatingSubmission) {
     const response = await fetch("/api/ratings", {
       method: "POST",
       headers: {
@@ -92,7 +92,8 @@ export function FavoritesPageClient({
       },
       body: JSON.stringify({
         rapperId,
-        ratings: nextRatings,
+        ratings: submission.ratings,
+        fondness: submission.fondness,
       }),
     });
 

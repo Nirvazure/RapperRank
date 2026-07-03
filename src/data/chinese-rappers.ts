@@ -36,8 +36,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "把川渝江湖叙事、民族化旋律和强势咬字带入主流视野的中文说唱代表。",
     tags: ["Chongqing", "Chinese Rap", "Trap", "Mainstream"],
     representativeWorks: ["华夏", "烈火战马", "空城计"],
-    ratingCount: 78240,
-    averageRatings: { flow: 4.5, lyrics: 4.3, voice: 4.8, technique: 4.2, melody: 4.5, stage: 4.8 },
   },
   {
     seedKey: "air",
@@ -48,8 +46,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以旋律说唱、细腻叙事和稳定唱功见长的新疆说唱代表人物。",
     tags: ["Xinjiang", "Melody Rap", "Chinese Rap", "Vocal"],
     representativeWorks: ["星球坠落", "千里万里", "乌云中"],
-    ratingCount: 65480,
-    averageRatings: { flow: 4.2, lyrics: 4.3, voice: 4.7, technique: 4.1, melody: 4.8, stage: 4.5 },
   },
   {
     seedKey: "wang-yitai",
@@ -61,8 +57,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都说唱代表之一，融合 jazz rap、melody rap 与细密中文律动。",
     tags: ["Chengdu", "Melody Rap", "Jazz Rap", "CDC"],
     representativeWorks: ["目不转睛", "危险派对", "时间是金"],
-    ratingCount: 63120,
-    averageRatings: { flow: 4.5, lyrics: 4.4, voice: 4.6, technique: 4.4, melody: 4.7, stage: 4.3 },
   },
   {
     seedKey: "yanghesu",
@@ -73,8 +67,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以高密度技术、竞技表达和强烈自我驱动著称的中文说唱选手。",
     tags: ["Chengdu", "Technical", "Battle", "Chinese Rap"],
     representativeWorks: ["小丑女", "都走了", "让我快乐"],
-    ratingCount: 61290,
-    averageRatings: { flow: 4.7, lyrics: 4.4, voice: 4.2, technique: 4.8, melody: 4.0, stage: 4.7 },
   },
   {
     seedKey: "jony-j",
@@ -86,8 +78,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "南京说唱代表人物，以冷静叙事、社会观察和成熟文本结构见长。",
     tags: ["Nanjing", "Lyricist", "Conscious Rap", "Shooc"],
     representativeWorks: ["套路", "不用去猜", "My Man"],
-    ratingCount: 69800,
-    averageRatings: { flow: 4.4, lyrics: 4.8, voice: 4.2, technique: 4.4, melody: 4.1, stage: 4.3 },
   },
   {
     seedKey: "tizzy-t",
@@ -98,8 +88,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "从广州地下场景走向主流的旋律型 rapper，兼具 club 气质和流行表达。",
     tags: ["Guangzhou", "Melody Rap", "Pop Rap", "Club"],
     representativeWorks: ["变", "Going Go", "020"],
-    ratingCount: 58760,
-    averageRatings: { flow: 4.2, lyrics: 3.9, voice: 4.5, technique: 4.0, melody: 4.6, stage: 4.4 },
   },
   {
     seedKey: "after-journey",
@@ -110,8 +98,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "融合新疆音乐气质、boombap 根基和主流舞台表达的中文 rapper。",
     tags: ["Xinjiang", "Boombap", "Melody Rap", "Chinese Rap"],
     representativeWorks: ["After Journey", "库尔勒", "五亿探长"],
-    ratingCount: 55320,
-    averageRatings: { flow: 4.3, lyrics: 4.1, voice: 4.5, technique: 4.2, melody: 4.3, stage: 4.5 },
   },
   {
     seedKey: "huang-xu",
@@ -121,8 +107,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以稳定技术、硬朗声线和竞技舞台表现被中文说唱听众熟知。",
     tags: ["Xinjiang", "Technical", "Stage", "Chinese Rap"],
     representativeWorks: ["天堂来信", "孤独症", "Round 4"],
-    ratingCount: 49820,
-    averageRatings: { flow: 4.4, lyrics: 4.2, voice: 4.3, technique: 4.5, melody: 3.9, stage: 4.6 },
   },
   {
     seedKey: "manshuke",
@@ -132,8 +116,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以情歌说唱、流行旋律和柔和音色打开大众听感的中文 rapper。",
     tags: ["Yunnan", "Melody Rap", "Pop Rap", "Love Song"],
     representativeWorks: ["做我的猫", "稻草", "Nice View"],
-    ratingCount: 52100,
-    averageRatings: { flow: 4.0, lyrics: 3.9, voice: 4.5, technique: 3.8, melody: 4.8, stage: 4.1 },
   },
   {
     seedKey: "xiaoqinglong",
@@ -143,8 +125,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "云南说唱代表之一，以清晰旋律、竞技经历和青春化表达为人熟知。",
     tags: ["Yunnan", "Melody Rap", "Chinese Rap", "Stage"],
     representativeWorks: ["Time", "江湖流", "I'm OK"],
-    ratingCount: 37460,
-    averageRatings: { flow: 4.1, lyrics: 3.9, voice: 4.2, technique: 4.0, melody: 4.4, stage: 4.2 },
   },
   {
     seedKey: "huizi",
@@ -154,8 +134,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "北京说唱圈的重要面孔，以清晰咬字、叙事表达和比赛舞台被大众认识。",
     tags: ["Beijing", "Chinese Rap", "Lyricist", "Stage"],
     representativeWorks: ["中国话", "随意播放", "为梦而战"],
-    ratingCount: 32680,
-    averageRatings: { flow: 4.1, lyrics: 4.1, voice: 4.1, technique: 4.0, melody: 3.8, stage: 4.2 },
   },
   {
     seedKey: "mc-jin",
@@ -166,8 +144,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "华语和英语双语说唱代表，早期在美国 battle 与主流节目中建立影响力。",
     tags: ["Hong Kong", "Battle", "Bilingual", "Freestyle"],
     representativeWorks: ["Learn Chinese", "ABC", "逐梦令"],
-    ratingCount: 70500,
-    averageRatings: { flow: 4.5, lyrics: 4.3, voice: 4.2, technique: 4.6, melody: 3.9, stage: 4.7 },
   },
   {
     seedKey: "mc-hotdog",
@@ -178,8 +154,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "华语说唱早期代表人物之一，以讽刺文本、街头语言和主流突破建立地位。",
     tags: ["Taipei", "Old School", "Lyricist", "Chinese Rap"],
     representativeWorks: ["差不多先生", "我爱台妹", "贫民百万歌星"],
-    ratingCount: 86600,
-    averageRatings: { flow: 4.3, lyrics: 4.7, voice: 4.4, technique: 4.2, melody: 4.0, stage: 4.5 },
   },
   {
     seedKey: "soft-lipa",
@@ -189,8 +163,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以 jazz rap、生活化叙事和松弛 flow 构建华语说唱的温柔分支。",
     tags: ["Taipei", "Jazz Rap", "Storytelling", "Laid-back"],
     representativeWorks: ["收敛水", "关于小熊", "史诗"],
-    ratingCount: 51300,
-    averageRatings: { flow: 4.5, lyrics: 4.6, voice: 4.3, technique: 4.2, melody: 4.5, stage: 3.9 },
   },
   {
     seedKey: "mj116",
@@ -201,8 +173,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "台湾代表性说唱团体，以街头生活、派对能量和三人化学反应出圈。",
     tags: ["Taipei", "Group", "Street", "Party Rap"],
     representativeWorks: ["干大事", "辣台妹", "Just Believe"],
-    ratingCount: 69340,
-    averageRatings: { flow: 4.4, lyrics: 4.1, voice: 4.4, technique: 4.2, melody: 4.3, stage: 4.7 },
   },
   {
     seedKey: "vava",
@@ -213,8 +183,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "中文女性说唱代表人物之一，以强势台风、trap 气质和流行传播见长。",
     tags: ["Sichuan", "Female Rap", "Trap", "Mainstream"],
     representativeWorks: ["我的新衣", "Life's a Struggle", "Queen Is Back"],
-    ratingCount: 58620,
-    averageRatings: { flow: 4.3, lyrics: 4.0, voice: 4.6, technique: 4.1, melody: 4.2, stage: 4.6 },
   },
   {
     seedKey: "vinida",
@@ -224,8 +192,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "把 soul、R&B 和中文说唱融合得较成熟的女性音乐人。",
     tags: ["Fujian", "Female Rap", "R&B", "Soul"],
     representativeWorks: ["Queendom", "场上称霸", "Mr. Wonderful"],
-    ratingCount: 49220,
-    averageRatings: { flow: 4.2, lyrics: 4.2, voice: 4.7, technique: 4.1, melody: 4.6, stage: 4.4 },
   },
   {
     seedKey: "nineone",
@@ -237,8 +203,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以旋律说唱、独立女性表达和流行舞台被年轻听众熟知。",
     tags: ["Xi'an", "Female Rap", "Melody Rap", "Pop Rap"],
     representativeWorks: ["PUMA", "But U", "I Don't Wanna See U Anymore"],
-    ratingCount: 44480,
-    averageRatings: { flow: 4.0, lyrics: 3.9, voice: 4.4, technique: 3.8, melody: 4.5, stage: 4.2 },
   },
   {
     seedKey: "a-r",
@@ -249,8 +213,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "中文技术派代表之一，以高密度押韵、flow 设计和 battle 根基建立口碑。",
     tags: ["Guangzhou", "Technical", "Battle", "Lyricist"],
     representativeWorks: ["皇帝的新衣", "刷牙歌", "Purple Swag"],
-    ratingCount: 45660,
-    averageRatings: { flow: 4.7, lyrics: 4.6, voice: 4.1, technique: 4.8, melody: 3.7, stage: 4.3 },
   },
   {
     seedKey: "kafe-hu",
@@ -260,8 +222,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以 boombap、jazz rap 和意识流叙事形成高辨识度的中文说唱作者。",
     tags: ["Kunming", "Jazz Rap", "Boombap", "Lyricist"],
     representativeWorks: ["经济舱", "雨夜惊魂", "咖啡壶"],
-    ratingCount: 34220,
-    averageRatings: { flow: 4.4, lyrics: 4.6, voice: 4.1, technique: 4.3, melody: 4.2, stage: 3.9 },
   },
   {
     seedKey: "bridge-gosh",
@@ -272,8 +232,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "重庆 GOSH 代表成员之一，擅长用方言、跳跃 flow 和醒目人格塑造舞台记忆点。",
     tags: ["Chongqing", "GOSH", "Dialect Rap", "Stage"],
     representativeWorks: ["雾都夜话", "老大", "重庆森林"],
-    ratingCount: 42620,
-    averageRatings: { flow: 4.3, lyrics: 3.9, voice: 4.7, technique: 4.0, melody: 4.2, stage: 4.6 },
   },
   {
     seedKey: "wang-qiming",
@@ -285,8 +243,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "GOSH 成员，兼具方言说唱、旋律表达和城市叙事。",
     tags: ["Chongqing", "GOSH", "Dialect Rap", "Melody Rap"],
     representativeWorks: ["Watch Me", "重庆魂", "雾都"],
-    ratingCount: 38820,
-    averageRatings: { flow: 4.2, lyrics: 4.0, voice: 4.4, technique: 4.0, melody: 4.3, stage: 4.3 },
   },
   {
     seedKey: "wudu-montana",
@@ -298,8 +254,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "重庆 GOSH 代表成员，以 trap、方言腔调和低沉声线形成辨识度。",
     tags: ["Chongqing", "GOSH", "Trap", "Dialect Rap"],
     representativeWorks: ["雾都", "勒是雾都", "山城"],
-    ratingCount: 40180,
-    averageRatings: { flow: 4.2, lyrics: 3.8, voice: 4.5, technique: 3.9, melody: 4.1, stage: 4.2 },
   },
   {
     seedKey: "sheng-yu",
@@ -310,8 +264,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "C-BLOCK 成员，长沙说唱代表之一，以强势台风和稳定输出见长。",
     tags: ["Changsha", "C-BLOCK", "Street", "Stage"],
     representativeWorks: ["长沙策长沙", "以下范上", "隆里电丝"],
-    ratingCount: 52240,
-    averageRatings: { flow: 4.4, lyrics: 4.2, voice: 4.5, technique: 4.2, melody: 4.1, stage: 4.8 },
   },
   {
     seedKey: "kungfu-pen",
@@ -322,8 +274,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "C-BLOCK 成员，以技术、幽默和长沙方言表达构成鲜明个人标签。",
     tags: ["Changsha", "C-BLOCK", "Dialect Rap", "Technical"],
     representativeWorks: ["长沙策长沙", "经济舱", "隆里电丝"],
-    ratingCount: 51260,
-    averageRatings: { flow: 4.5, lyrics: 4.4, voice: 4.3, technique: 4.5, melody: 4.0, stage: 4.6 },
   },
   {
     seedKey: "key-l",
@@ -334,8 +284,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "C-BLOCK 成员，以旋律、叙事和长沙城市气质建立个人作品线。",
     tags: ["Changsha", "C-BLOCK", "Melody Rap", "Storytelling"],
     representativeWorks: ["Hey Kong", "经济舱", "隆里电丝"],
-    ratingCount: 58600,
-    averageRatings: { flow: 4.3, lyrics: 4.3, voice: 4.5, technique: 4.1, melody: 4.7, stage: 4.4 },
   },
   {
     seedKey: "c-block",
@@ -346,8 +294,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "长沙代表性说唱团体，以方言、街头叙事和团队化现场构成中文说唱重要版图。",
     tags: ["Changsha", "Group", "Dialect Rap", "Street"],
     representativeWorks: ["长沙策长沙", "隆里电丝", "以下范上"],
-    ratingCount: 74720,
-    averageRatings: { flow: 4.5, lyrics: 4.4, voice: 4.4, technique: 4.3, melody: 4.3, stage: 4.8 },
   },
   {
     seedKey: "ranzer",
@@ -357,8 +303,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都 CDC 相关音乐人，以地下质感、段落控制和现场经验见长。",
     tags: ["Chengdu", "CDC", "Street", "Underground"],
     representativeWorks: ["CDC Cypher", "成都集团", "街头日记"],
-    ratingCount: 21840,
-    averageRatings: { flow: 4.1, lyrics: 4.0, voice: 4.1, technique: 4.0, melody: 3.7, stage: 4.1 },
   },
   {
     seedKey: "xie-di",
@@ -370,8 +314,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都说唱代表人物之一，因方言说唱和早期电视舞台出圈。",
     tags: ["Chengdu", "Dialect Rap", "CDC", "Old School"],
     representativeWorks: ["明天不上班", "瓜老外", "老子明天不上班"],
-    ratingCount: 59400,
-    averageRatings: { flow: 4.3, lyrics: 4.2, voice: 4.4, technique: 4.1, melody: 4.0, stage: 4.5 },
   },
   {
     seedKey: "higher-brothers",
@@ -382,8 +324,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "从成都走向国际传播的中文说唱组合，以 trap、方言和互联网传播打开海外受众。",
     tags: ["Chengdu", "Group", "Trap", "International"],
     representativeWorks: ["Made in China", "Lover Boy 88", "WeChat"],
-    ratingCount: 88100,
-    averageRatings: { flow: 4.4, lyrics: 4.0, voice: 4.4, technique: 4.2, melody: 4.4, stage: 4.6 },
   },
   {
     seedKey: "masiwei",
@@ -394,8 +334,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "Higher Brothers 成员，个人作品覆盖 trap、旋律说唱和流行化表达。",
     tags: ["Chengdu", "Higher Brothers", "Trap", "Melody Rap"],
     representativeWorks: ["豆瓣酱", "花花公子", "Made in China"],
-    ratingCount: 70320,
-    averageRatings: { flow: 4.5, lyrics: 4.1, voice: 4.5, technique: 4.3, melody: 4.6, stage: 4.5 },
   },
   {
     seedKey: "melo",
@@ -406,8 +344,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "Higher Brothers 成员，以硬朗音色、街头段落和团队现场能量被熟知。",
     tags: ["Chengdu", "Higher Brothers", "Trap", "Street"],
     representativeWorks: ["Made in China", "WeChat", "Flexing So Hard"],
-    ratingCount: 42120,
-    averageRatings: { flow: 4.2, lyrics: 3.9, voice: 4.4, technique: 4.0, melody: 3.9, stage: 4.4 },
   },
   {
     seedKey: "psy-p",
@@ -418,8 +354,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "Higher Brothers 成员，常以旋律化段落和 trap 氛围增强作品记忆点。",
     tags: ["Chengdu", "Higher Brothers", "Trap", "Melody Rap"],
     representativeWorks: ["Lover Boy 88", "Made in China", "WeChat"],
-    ratingCount: 46780,
-    averageRatings: { flow: 4.1, lyrics: 3.8, voice: 4.3, technique: 3.9, melody: 4.5, stage: 4.2 },
   },
   {
     seedKey: "knowknow",
@@ -430,8 +364,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "Higher Brothers 成员，以跳跃语气、旋律 hook 和年轻化表达形成个人风格。",
     tags: ["Chengdu", "Higher Brothers", "Hook", "Trap"],
     representativeWorks: ["Lover Boy 88", "R&B All Night", "Made in China"],
-    ratingCount: 48980,
-    averageRatings: { flow: 4.1, lyrics: 3.8, voice: 4.4, technique: 3.9, melody: 4.6, stage: 4.3 },
   },
   {
     seedKey: "ty",
@@ -443,8 +375,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都说唱重要人物，兼具 trap、旋律和地下到主流的长期输出。",
     tags: ["Chengdu", "CDC", "Trap", "Melody Rap"],
     representativeWorks: ["凹造型", "你", "成都集团"],
-    ratingCount: 57920,
-    averageRatings: { flow: 4.3, lyrics: 4.1, voice: 4.3, technique: 4.1, melody: 4.3, stage: 4.4 },
   },
   {
     seedKey: "ansrj",
@@ -454,8 +384,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都说唱音乐人，以旋律、情绪文本和 CDC 场景关联被听众熟知。",
     tags: ["Chengdu", "CDC", "Melody Rap", "Emotional"],
     representativeWorks: ["Sunshine", "CDC Cypher", "成都夜"],
-    ratingCount: 27680,
-    averageRatings: { flow: 4.0, lyrics: 4.0, voice: 4.2, technique: 3.9, melody: 4.4, stage: 3.9 },
   },
   {
     seedKey: "dengdianguo",
@@ -466,8 +394,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都说唱新生代代表之一，以旋律化 trap 和年轻语境被更多听众认识。",
     tags: ["Chengdu", "New Wave", "Trap", "Melody Rap"],
     representativeWorks: ["Moonlight", "Lost", "成都新声"],
-    ratingCount: 23880,
-    averageRatings: { flow: 4.0, lyrics: 3.7, voice: 4.2, technique: 3.8, melody: 4.4, stage: 3.9 },
   },
   {
     seedKey: "lierxin",
@@ -478,8 +404,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都说唱音乐人，以旋律说唱、情绪氛围和稳定作品输出获得关注。",
     tags: ["Chengdu", "Melody Rap", "Emotional", "New Wave"],
     representativeWorks: ["没有理由", "走远", "成都夜"],
-    ratingCount: 29420,
-    averageRatings: { flow: 4.0, lyrics: 3.9, voice: 4.3, technique: 3.8, melody: 4.5, stage: 3.9 },
   },
   {
     seedKey: "jello-rio",
@@ -489,8 +413,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以旋律说唱、R&B 质感和比赛舞台表现进入大众视野的中文 rapper。",
     tags: ["Sichuan", "Melody Rap", "R&B", "Pop Rap"],
     representativeWorks: ["月儿圆", "星球坠落", "My Boo"],
-    ratingCount: 45200,
-    averageRatings: { flow: 4.1, lyrics: 3.9, voice: 4.5, technique: 3.9, melody: 4.7, stage: 4.1 },
   },
   {
     seedKey: "ice",
@@ -502,8 +424,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "以 melody trap、清爽声线和年轻化审美被中文说唱听众熟悉。",
     tags: ["Sichuan", "Melody Rap", "Trap", "New Wave"],
     representativeWorks: ["陪着你走", "Red", "雨"],
-    ratingCount: 39800,
-    averageRatings: { flow: 4.0, lyrics: 3.8, voice: 4.4, technique: 3.8, melody: 4.5, stage: 4.0 },
   },
   {
     seedKey: "gali",
@@ -514,8 +434,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "上海说唱代表之一，以精细 flow、都市审美和稳定作品质量获得口碑。",
     tags: ["Shanghai", "Flow", "Urban", "Chinese Rap"],
     representativeWorks: ["70%", "亚特兰蒂斯", "水晶"],
-    ratingCount: 60240,
-    averageRatings: { flow: 4.6, lyrics: 4.3, voice: 4.3, technique: 4.5, melody: 4.3, stage: 4.4 },
   },
   {
     seedKey: "kindergarten-killer",
@@ -526,8 +444,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "早期网络中文说唱中极具辨识度的匿名/低曝光 rapper。",
     tags: ["Internet Rap", "Underground", "Lyricist", "Chinese Rap"],
     representativeWorks: ["贫民窟的百万富翁", "反弹琵琶", "网路地下"],
-    ratingCount: 46920,
-    averageRatings: { flow: 4.2, lyrics: 4.4, voice: 4.2, technique: 4.1, melody: 3.7, stage: 3.4 },
   },
   {
     seedKey: "straight-fire-gang",
@@ -538,8 +454,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "上海说唱组合，融合中英表达、trap、grime 和国际化制作审美。",
     tags: ["Shanghai", "Group", "Bilingual", "Trap"],
     representativeWorks: ["Ninja Grime", "直火", "SFG"],
-    ratingCount: 36580,
-    averageRatings: { flow: 4.2, lyrics: 4.0, voice: 4.2, technique: 4.1, melody: 4.1, stage: 4.2 },
   },
   {
     seedKey: "fox-huosi",
@@ -550,8 +464,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "活死人相关成员之一，以国风旋律、说唱舞台和流行传播被大众熟知。",
     tags: ["Xinjiang", "Walking Dead", "Melody Rap", "Crossover"],
     representativeWorks: ["庆功酒", "生来倔强", "Woken Day"],
-    ratingCount: 48620,
-    averageRatings: { flow: 4.0, lyrics: 4.0, voice: 4.3, technique: 3.8, melody: 4.6, stage: 4.3 },
   },
   {
     seedKey: "jiang-yunsheng",
@@ -562,8 +474,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "云南音乐人，融合说唱、旋律和个人叙事表达，拥有强互联网传播。",
     tags: ["Kunming", "Melody Rap", "Internet Rap", "Storytelling"],
     representativeWorks: ["患", "拼个世界给自己", "浪漫主义"],
-    ratingCount: 62460,
-    averageRatings: { flow: 3.9, lyrics: 4.2, voice: 4.2, technique: 3.7, melody: 4.5, stage: 4.0 },
   },
   {
     seedKey: "lastkinglx",
@@ -574,8 +484,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "参加《中国新说唱》的 rapper，作品偏流行说唱和舞台表达。",
     tags: ["Chinese Rap", "Melody Rap", "Stage", "Pop Rap"],
     representativeWorks: ["中国新说唱", "Live Rap", "Cypher"],
-    ratingCount: 18640,
-    averageRatings: { flow: 3.9, lyrics: 3.7, voice: 4.0, technique: 3.7, melody: 4.1, stage: 3.9 },
   },
   {
     seedKey: "mc-guangguang",
@@ -587,8 +495,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "南京老牌中文 rapper，早期网络说唱和 diss/battle 语境中的重要人物。",
     tags: ["Nanjing", "Old School", "Underground", "Battle"],
     representativeWorks: ["南京地下", "网络说唱", "Diss Track"],
-    ratingCount: 29880,
-    averageRatings: { flow: 4.0, lyrics: 4.1, voice: 4.0, technique: 3.9, melody: 3.5, stage: 3.8 },
   },
   {
     seedKey: "po8",
@@ -600,8 +506,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都 SUP Music 代表成员，以叙事、旋律和专辑完整度获得中文说唱听众认可。",
     tags: ["Chengdu", "SUP Music", "Lyricist", "Melody Rap"],
     representativeWorks: ["她", "悬浮术", "头号玩家"],
-    ratingCount: 42880,
-    averageRatings: { flow: 4.3, lyrics: 4.6, voice: 4.2, technique: 4.2, melody: 4.5, stage: 4.0 },
   },
   {
     seedKey: "future-star",
@@ -613,8 +517,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "与 3Bangz 长期合作的中文说唱音乐人，风格偏怪趣、网络和反套路表达。",
     tags: ["Beijing", "Internet Rap", "Alternative Rap", "Underground"],
     representativeWorks: ["打工是不可能打工的", "未来星", "地下现场"],
-    ratingCount: 20680,
-    averageRatings: { flow: 3.7, lyrics: 3.7, voice: 3.9, technique: 3.5, melody: 3.8, stage: 3.8 },
   },
   {
     seedKey: "in3",
@@ -626,8 +528,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "北京早期中文说唱组合，以尖锐现实文本和地下传播影响一代听众。",
     tags: ["Beijing", "Group", "Old School", "Underground"],
     representativeWorks: ["老师你好", "北京晚报", "本性难移"],
-    ratingCount: 66880,
-    averageRatings: { flow: 4.2, lyrics: 4.7, voice: 4.3, technique: 4.1, melody: 3.6, stage: 4.2 },
   },
   {
     seedKey: "mengzi-cdc",
@@ -639,8 +539,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都 CDC 相关 rapper，参与本地地下 cypher 和现场表达。",
     tags: ["Chengdu", "CDC", "Underground", "Cypher"],
     representativeWorks: ["CDC Cypher", "成都地下", "Live Rap"],
-    ratingCount: 10880,
-    averageRatings: { flow: 3.7, lyrics: 3.6, voice: 3.7, technique: 3.5, melody: 3.4, stage: 3.6 },
   },
   {
     seedKey: "sleepy-cat",
@@ -651,8 +549,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "成都 CDC 相关制作人/rapper，参与本地地下说唱和新派制作。",
     tags: ["Chengdu", "CDC", "Producer", "Underground"],
     representativeWorks: ["CDC Cypher", "成都地下", "Sleepy Cat"],
-    ratingCount: 10280,
-    averageRatings: { flow: 3.5, lyrics: 3.5, voice: 3.6, technique: 3.4, melody: 3.8, stage: 3.3 },
   },
   {
     seedKey: "echo",
@@ -663,8 +559,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "??????????????????",
     tags: ["Chinese Rap", "Underground", "Stage"],
     representativeWorks: ["???"],
-    ratingCount: 9800,
-    averageRatings: { flow: 3.6, lyrics: 3.6, voice: 3.6, technique: 3.6, melody: 3.5, stage: 3.6, ph: 0 },
   },
   {
     seedKey: "hua-yunlong",
@@ -675,8 +569,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "??????????????????",
     tags: ["Chinese Rap", "Underground", "Stage"],
     representativeWorks: ["???"],
-    ratingCount: 9800,
-    averageRatings: { flow: 3.6, lyrics: 3.6, voice: 3.6, technique: 3.6, melody: 3.5, stage: 3.6, ph: 0 },
   },
   {
     seedKey: "youngleggo",
@@ -686,8 +578,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "??????????????????",
     tags: ["Chinese Rap", "Underground", "Stage"],
     representativeWorks: ["???"],
-    ratingCount: 9800,
-    averageRatings: { flow: 3.6, lyrics: 3.6, voice: 3.6, technique: 3.6, melody: 3.5, stage: 3.6, ph: 0 },
   },
   {
     seedKey: "rapeter",
@@ -698,8 +588,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "??????????????????",
     tags: ["Chinese Rap", "Underground", "Stage"],
     representativeWorks: ["???"],
-    ratingCount: 9800,
-    averageRatings: { flow: 3.6, lyrics: 3.6, voice: 3.6, technique: 3.6, melody: 3.5, stage: 3.6, ph: 0 },
   },
   {
     seedKey: "topbarry",
@@ -710,8 +598,6 @@ const chineseRapperSeeds: ChineseRapperSeed[] = [
     bio: "??????????????????",
     tags: ["Chinese Rap", "Underground", "Stage"],
     representativeWorks: ["???"],
-    ratingCount: 9800,
-    averageRatings: { flow: 3.6, lyrics: 3.6, voice: 3.6, technique: 3.6, melody: 3.5, stage: 3.6, ph: 0 },
   },
 ];
 

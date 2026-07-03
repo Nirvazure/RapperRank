@@ -20,8 +20,13 @@ export type Rapper = {
   ratingCount: number;
   averageRatings: RatingDimension;
   overallScore?: number;
+  avgFondness: number;
+  fondnessCount: number;
 };
 
-export type RapperSeedRecord = Omit<Rapper, "id" | "overallScore"> & {
+export type RapperSeedRecord = Omit<
+  Rapper,
+  "id" | "overallScore" | "ratingCount" | "averageRatings" | "avgFondness" | "fondnessCount"
+> & {
   seedKey: string;
 };

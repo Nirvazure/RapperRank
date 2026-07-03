@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { RatingDimension } from "@/features/ratings/rating.types";
-import { upsertRapperRating } from "@/features/ratings/rating.server";
+import { buildFondnessAggregate, upsertRapperRating } from "@/features/ratings/rating.server";
 
 const sampleRatings: RatingDimension = {
   flow: 5,
@@ -19,7 +19,7 @@ describe("rating server", () => {
       createRating: vi.fn(async () => undefined),
       updateRating: vi.fn(async () => undefined),
       listRatingsForRapper: vi.fn(async () => [
-        { ...sampleRatings, userId: "user-1", rapperId: "rapper-1" },
+        { ...sampleRatings, userId: "user-1", rapperId: "rapper-1", fondness: 5 },
       ]),
       updateRapperAggregate: vi.fn(async () => undefined),
     };
@@ -28,6 +28,7 @@ describe("rating server", () => {
       userId: "user-1",
       rapperId: "rapper-1",
       ratings: sampleRatings,
+      fondness: 5,
     });
 
     expect(deps.createRating).toHaveBeenCalledTimes(1);
@@ -41,7 +42,7 @@ describe("rating server", () => {
       createRating: vi.fn(async () => undefined),
       updateRating: vi.fn(async () => undefined),
       listRatingsForRapper: vi.fn(async () => [
-        { ...sampleRatings, userId: "user-1", rapperId: "rapper-1" },
+        { ...sampleRatings, userId: "user-1", rapperId: "rapper-1", fondness: null },
       ]),
       updateRapperAggregate: vi.fn(async () => undefined),
     };
@@ -50,10 +51,24 @@ describe("rating server", () => {
       userId: "user-1",
       rapperId: "rapper-1",
       ratings: sampleRatings,
+      fondness: null,
     });
 
     expect(deps.createRating).not.toHaveBeenCalled();
     expect(deps.updateRating).toHaveBeenCalledTimes(1);
     expect(deps.updateRapperAggregate).toHaveBeenCalledTimes(1);
+  });
+
+  it("aggregates fondness only from ratings that include fondness", () => {
+    expect(
+      buildFondnessAggregate([
+        { fondness: 5 },
+        { fondness: 3 },
+        { fondness: null },
+      ]),
+    ).toEqual({
+      fondnessCount: 2,
+      avgFondness: 4,
+    });
   });
 });
