@@ -1,24 +1,29 @@
 import { FavoritesPageClient } from "@/components/favorites/FavoritesPageClient";
 import { resolvePageViewer } from "@/lib/server/viewer";
-import { getViewerFavorites, getViewerRatings } from "@/features/user/user.server";
-import { getCachedAllRappers } from "@/features/rappers/rapper.cache";
-import { mapRapperRecordToViewModel } from "@/features/rappers/rapper.mapper";
+import { getViewerFavorites, getViewerRatingsPage } from "@/features/user/user.server";
 
 export default async function FavoritesPage() {
   const viewer = await resolvePageViewer();
-  const rappers = await getCachedAllRappers();
-  const [favorites, ratings] = viewer.userId
+  const [favorites, ratingsPage] = viewer.userId
     ? await Promise.all([
-        getViewerFavorites(viewer.userId),
-        getViewerRatings(viewer.userId),
-      ])
-    : [[], []];
+      getViewerFavorites(viewer.userId),
+      getViewerRatingsPage(viewer.userId),
+    ])
+    : [
+      [],
+      {
+        items: [],
+        page: 1,
+        pageSize: 6,
+        total: 0,
+        totalPages: 1,
+      },
+    ];
 
   return (
     <FavoritesPageClient
       favoriteRappers={favorites}
-      ratings={ratings}
-      allRappers={rappers.map(mapRapperRecordToViewModel)}
+      ratingsPage={ratingsPage}
       viewer={viewer}
     />
   );

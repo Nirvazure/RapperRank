@@ -20,6 +20,26 @@ export type UserRating = {
   updatedAt: string;
 };
 
+export type ViewerRatingListItem = {
+  rating: UserRating;
+  rapper: {
+    id: string;
+    name: string;
+    region: string;
+    avatarUrl?: string;
+    mediaUrl?: string;
+    mediaType: "image" | "gif" | "video";
+  };
+};
+
+export type ViewerRatingListResponse = {
+  items: ViewerRatingListItem[];
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+};
+
 export type RatingSubmission = {
   ratings: RatingDimension;
   fondness: number | null;

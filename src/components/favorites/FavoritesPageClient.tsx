@@ -11,26 +11,33 @@ import { RapperImage } from "@/components/rapper/RapperImage";
 import { Button } from "@/components/ui/button";
 import { resolveRapperMedia } from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
-import type { RatingSubmission, UserRating } from "@/features/ratings/rating.types";
+import type { RatingSubmission, ViewerRatingListResponse } from "@/features/ratings/rating.types";
 import { calculateOverallScore, formatScore } from "@/features/ratings/rating.utils";
-
 import type { ViewerPresentation } from "@/features/user/user.types";
 
 export function FavoritesPageClient({
   favoriteRappers,
-  ratings,
-  allRappers,
+  ratingsPage,
   viewer,
 }: {
   favoriteRappers: Rapper[];
-  ratings: UserRating[];
-  allRappers: Rapper[];
+  ratingsPage: ViewerRatingListResponse;
   viewer: ViewerPresentation;
 }) {
-  const pageRef = useRef<HTMLDivElement>(null);
-  const [removingId, setRemovingId] = useState<string | null>(null);
+  const pageRef = useRef<HTMLElement>(null);
+  const requestIdRef = useRef(0);
   const router = useRouter();
-  const avatarRapper = favoriteRappers[0] ?? allRappers[0];
+  const [removingId, setRemovingId] = useState<string | null>(null);
+  const [activeRatingsPage, setActiveRatingsPage] = useState(ratingsPage);
+  const [ratingsLoading, setRatingsLoading] = useState(false);
+  const [ratingsError, setRatingsError] = useState<string | null>(null);
+  const avatarRapper = favoriteRappers[0];
+
+  useEffect(() => {
+    setActiveRatingsPage(ratingsPage);
+    setRatingsLoading(false);
+    setRatingsError(null);
+  }, [ratingsPage]);
 
   useEffect(() => {
     const context = gsap.context(() => {
@@ -43,6 +50,40 @@ export function FavoritesPageClient({
 
     return () => context.revert();
   }, [favoriteRappers]);
+
+  async function loadRatingsPage(page: number) {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
+    setRatingsLoading(true);
+    setRatingsError(null);
+
+    try {
+      const response = await fetch(`/api/me/ratings?page=${page}&pageSize=${activeRatingsPage.pageSize}`, {
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("ratings request failed");
+      }
+
+      const nextRatingsPage = (await response.json()) as ViewerRatingListResponse;
+      if (requestId === requestIdRef.current) {
+        setActiveRatingsPage(nextRatingsPage);
+      }
+
+      return nextRatingsPage;
+    } catch {
+      if (requestId === requestIdRef.current) {
+        setRatingsError("Failed to load ratings. Please try again.");
+      }
+
+      return null;
+    } finally {
+      if (requestId === requestIdRef.current) {
+        setRatingsLoading(false);
+      }
+    }
+  }
 
   async function removeFavoriteWithMotion(rapperId: string) {
     if (removingId) {
@@ -101,6 +142,7 @@ export function FavoritesPageClient({
       throw new Error("rating request failed");
     }
 
+    await loadRatingsPage(1);
     startTransition(() => {
       router.refresh();
     });
@@ -115,7 +157,7 @@ export function FavoritesPageClient({
         <PageHeader
           eyebrow="local profile"
           title="Personal Center"
-          description="查看当前匿名会话的收藏列表与评分记录，所有数据都已持久化到后端。"
+          description="Review your saved rappers and recent scores in one place."
           user={{
             ...viewer,
             avatarRapper,
@@ -132,19 +174,21 @@ export function FavoritesPageClient({
                 <p className="text-xs font-black uppercase text-white/45">favorites</p>
               </div>
               <div className="rounded-lg border border-white/10 bg-white/[0.06] px-4 py-3 text-right">
-                <p className="font-mono text-3xl font-black text-lime-200">{ratings.length}</p>
+                <p className="font-mono text-3xl font-black text-lime-200">
+                  {activeRatingsPage.total}
+                </p>
                 <p className="text-xs font-black uppercase text-white/45">ratings</p>
               </div>
             </section>
 
             {favoriteRappers.length === 0 ? (
               <section className="rounded-lg border border-white/10 bg-white/[0.06] p-6">
-                <h2 className="text-2xl font-black uppercase">还没有收藏 Rapper</h2>
+                <h2 className="text-2xl font-black uppercase">No favorite rappers yet</h2>
                 <p className="mt-3 max-w-xl text-sm leading-6 text-white/55">
-                  去详情页给喜欢的 Rapper 打分或收藏，刷新后数据会从后端继续读回来。
+                  Rate or save artists from their detail pages and they will show up here.
                 </p>
                 <Button asChild className="mt-5 bg-lime-200 text-black hover:bg-lime-100">
-                  <Link href="/">去评分</Link>
+                  <Link href="/">Start exploring</Link>
                 </Button>
               </section>
             ) : (
@@ -195,7 +239,7 @@ export function FavoritesPageClient({
                             onClick={() => removeFavoriteWithMotion(rapper.id)}
                           >
                             <HeartOff className="size-4" />
-                            取消收藏
+                            Remove favorite
                           </Button>
                         </div>
                       </div>
@@ -206,12 +250,18 @@ export function FavoritesPageClient({
             )}
           </div>
 
-          <EditableRatingsList
-            rappers={allRappers}
-            ratings={ratings}
-            viewerDisplayName={viewer.displayName}
-            onChangeRating={submitRating}
-          />
+          <aside className="lg:sticky lg:top-5">
+            <EditableRatingsList
+              ratingsPage={activeRatingsPage}
+              viewerDisplayName={viewer.displayName}
+              isLoading={ratingsLoading}
+              errorMessage={ratingsError}
+              onPageChange={(page) => {
+                void loadRatingsPage(page);
+              }}
+              onChangeRating={submitRating}
+            />
+          </aside>
         </div>
       </div>
     </main>

@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { getAnonymousViewer } from "@/lib/server/auth-anonymous";
 import { getAuthUser } from "@/lib/server/auth";
+import { getLocalMockViewer, isLocalMockViewerEnabled } from "@/features/dev/local-mock.server";
 import { ensureAuthenticatedUser } from "@/features/user/user.repository";
 import {
   getAnonymousSessionTokenFromCookieValue,
@@ -27,6 +28,10 @@ export type PageViewer = {
 };
 
 export async function resolvePageViewer(): Promise<PageViewer> {
+  if (isLocalMockViewerEnabled()) {
+    return getLocalMockViewer();
+  }
+
   const authUser = await getAuthUser();
 
   if (authUser) {
@@ -81,6 +86,10 @@ export async function resolvePageViewer(): Promise<PageViewer> {
 }
 
 export async function getViewer(): Promise<Viewer> {
+  if (isLocalMockViewerEnabled()) {
+    return getLocalMockViewer();
+  }
+
   const authUser = await getAuthUser();
 
   if (authUser) {

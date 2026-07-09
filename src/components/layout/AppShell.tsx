@@ -199,6 +199,7 @@ export function AppShell({
                   fondness={pendingRating?.fondness}
                   triggerLabel="评分"
                   viewerDisplayName={viewer.displayName}
+                  communityOverallScore={rapper.overallScore}
                   onSubmit={submitRating}
                 />
               }

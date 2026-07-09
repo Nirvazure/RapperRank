@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getLocalMockViewerRapperState, isLocalMockViewerUserId } from "@/features/dev/local-mock.server";
 import {
   findRapperById,
   pickRandomRapperId,
@@ -66,6 +67,16 @@ export async function getRapperPageData(rapperId: string, userId?: string) {
   const record = await findRapperById(rapperId);
   if (!record) {
     notFound();
+  }
+
+  if (isLocalMockViewerUserId(userId)) {
+    const mockState = await getLocalMockViewerRapperState(record.id);
+
+    return {
+      rapper: mapRapperRecordToViewModel(record),
+      isFavorite: mockState.isFavorite,
+      myRating: mockState.myRating,
+    };
   }
 
   if (!userId) {
