@@ -69,3 +69,34 @@ export async function listRatingsForUser(userId: string) {
     orderBy: { updatedAt: "desc" },
   });
 }
+
+export async function countRatingsForUser(userId: string) {
+  return prisma.rating.count({
+    where: { userId },
+  });
+}
+
+export async function listRatingsPageForUser(input: {
+  userId: string;
+  skip: number;
+  take: number;
+}) {
+  return prisma.rating.findMany({
+    where: { userId: input.userId },
+    orderBy: { updatedAt: "desc" },
+    skip: input.skip,
+    take: input.take,
+    include: {
+      rapper: {
+        select: {
+          id: true,
+          name: true,
+          region: true,
+          avatarUrl: true,
+          mediaUrl: true,
+          mediaType: true,
+        },
+      },
+    },
+  });
+}

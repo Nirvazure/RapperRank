@@ -43,3 +43,6 @@ next-env.d.ts
 
 # specstory (local workspace metadata)
 .specstory/
+
+# local demo viewer state
+.dev-data/

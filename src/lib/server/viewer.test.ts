@@ -12,6 +12,15 @@ vi.mock("@/features/user/user.repository", () => ({
   ensureAuthenticatedUser: vi.fn(),
 }));
 
+vi.mock("@/features/dev/local-mock.server", () => ({
+  getLocalMockViewer: vi.fn(() => ({
+    userId: "local-dev-viewer",
+    displayName: "Local Demo",
+    isAuthenticated: true,
+  })),
+  isLocalMockViewerEnabled: vi.fn(() => false),
+}));
+
 vi.mock("@/features/user/user.merge", () => ({
   mergeAnonymousIntoAuthenticated: vi.fn(),
   getAnonymousSessionTokenFromCookieValue: vi.fn(),
@@ -34,6 +43,7 @@ vi.mock("@/lib/prisma", () => ({
 }));
 
 import { getAuthUser } from "@/lib/server/auth";
+import { isLocalMockViewerEnabled } from "@/features/dev/local-mock.server";
 import { getAnonymousViewer } from "@/lib/server/auth-anonymous";
 import { ensureAuthenticatedUser } from "@/features/user/user.repository";
 import { getViewer, resolvePageViewer } from "@/lib/server/viewer";
@@ -85,6 +95,18 @@ describe("getViewer", () => {
       displayName: "",
       isAuthenticated: false,
       sessionToken: "token-1",
+    });
+  });
+
+  it("returns the local demo viewer when mock mode is enabled", async () => {
+    vi.mocked(isLocalMockViewerEnabled).mockReturnValue(true);
+
+    const viewer = await getViewer();
+
+    expect(viewer).toEqual({
+      userId: "local-dev-viewer",
+      displayName: "Local Demo",
+      isAuthenticated: true,
     });
   });
 });

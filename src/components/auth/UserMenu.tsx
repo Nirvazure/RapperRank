@@ -9,6 +9,10 @@ import { DropdownMenu } from "radix-ui";
 import type { ViewerPresentation } from "@/features/user/user.types";
 import { cn } from "@/lib/utils";
 
+const localMockViewerEnabled =
+  process.env.NODE_ENV !== "production" &&
+  process.env.NEXT_PUBLIC_RAPPERRANK_ENABLE_DEV_MOCK_VIEWER === "1";
+
 export function UserMenu({ user }: { user: ViewerPresentation }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -93,17 +97,24 @@ export function UserMenu({ user }: { user: ViewerPresentation }) {
               个人中心
             </Link>
           </DropdownMenu.Item>
-          <DropdownMenu.Item
-            className="flex cursor-pointer items-center gap-2 rounded-sm px-2.5 py-2 text-xs font-bold outline-none hover:bg-white/10 focus:bg-white/10 disabled:opacity-50"
-            disabled={loggingOut}
-            onSelect={(event) => {
-              event.preventDefault();
-              void handleLogout();
-            }}
-          >
-            <LogOut className="size-3.5" />
-            {loggingOut ? "退出中…" : "退出登录"}
-          </DropdownMenu.Item>
+          {localMockViewerEnabled ? (
+            <DropdownMenu.Item className="flex items-center gap-2 rounded-sm px-2.5 py-2 text-xs font-bold text-white/45 outline-none">
+              <LogOut className="size-3.5" />
+              Local demo user
+            </DropdownMenu.Item>
+          ) : (
+            <DropdownMenu.Item
+              className="flex cursor-pointer items-center gap-2 rounded-sm px-2.5 py-2 text-xs font-bold outline-none hover:bg-white/10 focus:bg-white/10 disabled:opacity-50"
+              disabled={loggingOut}
+              onSelect={(event) => {
+                event.preventDefault();
+                void handleLogout();
+              }}
+            >
+              <LogOut className="size-3.5" />
+              {loggingOut ? "退出中…" : "退出登录"}
+            </DropdownMenu.Item>
+          )}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

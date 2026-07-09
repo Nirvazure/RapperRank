@@ -11,7 +11,7 @@ export function RapperAvatar({
   sizeClass = "size-10",
   grayscale = false,
 }: {
-  rapper: Rapper;
+  rapper: Pick<Rapper, "name" | "avatarUrl" | "mediaUrl">;
   sizeClass?: string;
   grayscale?: boolean;
 }) {
