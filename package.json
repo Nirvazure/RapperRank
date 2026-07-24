@@ -11,7 +11,8 @@
     "test": "vitest",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:reset-ratings": "tsx prisma/reset-ratings.ts"
+    "db:reset-ratings": "tsx prisma/reset-ratings.ts",
+    "db:import-rapper-images": "tsx prisma/import-rapper-images.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",

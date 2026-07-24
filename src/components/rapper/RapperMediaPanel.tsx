@@ -19,7 +19,7 @@ export function RapperMediaPanel({
   const media = resolveRapperMedia(rapper);
 
   return (
-    <section className="relative aspect-[3/4] h-full min-h-[360px] overflow-hidden rounded-lg border border-white/10 bg-black md:min-h-[460px] xl:aspect-auto xl:min-h-0">
+    <section className="relative isolate z-0 aspect-[3/4] max-h-[70vh] min-h-[280px] w-full overflow-hidden rounded-lg border border-white/10 bg-black md:aspect-[16/10] md:max-h-[38vh] md:min-h-[220px] xl:aspect-auto xl:h-full xl:max-h-none xl:min-h-0">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(217,255,0,0.24),transparent_32%),radial-gradient(circle_at_80%_10%,rgba(255,46,91,0.22),transparent_28%)]" />
       <div className="rapper-visual absolute inset-0">
         <RapperImage
@@ -38,18 +38,15 @@ export function RapperMediaPanel({
         <FavoriteBookmarkButton isFavorite={isFavorite} onToggle={onToggleFavorite} />
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-lime-200">
-          featured artist
-        </p>
-        <div className="mt-1 flex items-end justify-between gap-3">
+        <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
           <h1 className="min-w-0 shrink text-left text-4xl font-black uppercase leading-[0.85] text-white sm:text-5xl md:text-6xl">
             {rapper.name}
           </h1>
           <RapperLabelStrip
             rapper={rapper}
             variant="featured"
-            align="end"
-            className="mt-0"
+            align="start"
+            className="mt-0 sm:justify-end"
           />
         </div>
         <p className="mt-2 line-clamp-2 max-w-xl text-sm font-black leading-5 text-white/85">

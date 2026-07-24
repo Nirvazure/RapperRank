@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Geist } from "next/font/google";
-import { GlobalPlayerBar } from "@/components/audio/GlobalPlayerBar";
+import { AppChrome } from "@/components/layout/AppChrome";
 import { RapperPlayerProvider } from "@/contexts/RapperPlayerContext";
 import "./globals.css";
 
@@ -32,8 +32,7 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-background font-sans text-foreground">
         <RapperPlayerProvider>
-          <div className="min-h-full pb-20">{children}</div>
-          <GlobalPlayerBar />
+          <AppChrome>{children}</AppChrome>
         </RapperPlayerProvider>
         <Analytics />
       </body>

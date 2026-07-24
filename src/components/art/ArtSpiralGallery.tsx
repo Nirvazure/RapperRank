@@ -197,7 +197,7 @@ export function ArtSpiralGallery({ albums }: { albums: ArtWallAlbum[] }) {
     <>
       <div ref={trackRef} className="relative w-full pt-2">
         <div
-          className="relative mx-auto h-[min(78vh,720px)] w-full max-w-screen-2xl overflow-visible px-1 pb-2 pt-5 sm:px-3 md:px-5 md:pt-7"
+          className="relative mx-auto h-[min(calc(78dvh-var(--rr-chrome-offset,0px)),720px)] w-full max-w-screen-2xl overflow-visible px-1 pb-2 pt-5 sm:px-3 md:px-5 md:pt-7"
           style={{ perspective: "1200px" }}
         >
           <div

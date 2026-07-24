@@ -10,7 +10,7 @@ export const RATING_KEYS = [
 ] as const satisfies readonly RadarRatingKey[];
 
 export const RATING_LABELS: Record<RadarRatingKey, string> = {
-  flow: "Flow",
+  flow: "律动",
   lyrics: "歌词",
   voice: "声线",
   technique: "技巧",

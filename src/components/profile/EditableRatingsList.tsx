@@ -20,14 +20,12 @@ export function EditableRatingsList({
   ratingsPage,
   onPageChange,
   onChangeRating,
-  viewerDisplayName,
   isLoading = false,
   errorMessage,
 }: {
   ratingsPage: ViewerRatingListResponse;
   onPageChange: (page: number) => void;
   onChangeRating: (rapperId: string, submission: RatingSubmission) => Promise<void>;
-  viewerDisplayName: string;
   isLoading?: boolean;
   errorMessage?: string | null;
 }) {
@@ -36,7 +34,7 @@ export function EditableRatingsList({
   const isLastPage = ratingsPage.page >= ratingsPage.totalPages;
 
   return (
-    <section className="flex max-h-[36rem] min-h-[28rem] flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] lg:h-[calc(100vh-10.5rem)] lg:max-h-[calc(100vh-10.5rem)]">
+    <section className="flex max-h-[36rem] min-h-[28rem] flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] xl:h-[calc(100dvh-var(--rr-chrome-offset,5rem)-5.5rem)] xl:max-h-[calc(100dvh-var(--rr-chrome-offset,5rem)-5.5rem)]">
       <div className="border-b border-white/10 px-4 py-4">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -103,8 +101,7 @@ export function EditableRatingsList({
                         rapper={rapper}
                         value={rating.ratings}
                         fondness={rating.fondness}
-                        viewerDisplayName={viewerDisplayName}
-                        triggerLabel="Edit"
+                        triggerLabel="编辑"
                         triggerClassName="h-8 px-3 text-[11px]"
                         onSubmit={(submission) => onChangeRating(rapper.id, submission)}
                       />

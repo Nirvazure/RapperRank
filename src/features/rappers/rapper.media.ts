@@ -3,6 +3,7 @@ import type { Rapper } from "@/features/rappers/rapper.types";
 export const RAPPER_OSS_BASE_URL = "https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/";
 export const NIRVAZURE_OSS_BASE_URL = "https://nirvazure-next.oss-cn-hangzhou.aliyuncs.com/";
 export const RAPPER_IMAGE_PLACEHOLDER_LABEL = "No OSS Image";
+export const PENDING_RAPPER_IMAGE_BASE_URL = "pending-oss://rapper/";
 
 /** OSS 已由 CDN 托管；跳过 Next 图片优化，避免服务端拉取国内 OSS 导致 504。 */
 export function shouldBypassNextImageOptimization(src: string): boolean {
@@ -41,11 +42,16 @@ export type ResolvedRapperImage = {
   isPlaceholder: boolean;
 };
 
+function isPendingRapperImageUrl(url?: string): boolean {
+  return Boolean(url?.startsWith(PENDING_RAPPER_IMAGE_BASE_URL));
+}
+
 export function resolveRapperMedia(rapper: Pick<Rapper, "name" | "mediaUrl">): ResolvedRapperImage {
+  const src = isPendingRapperImageUrl(rapper.mediaUrl) ? undefined : rapper.mediaUrl;
   return {
-    src: rapper.mediaUrl,
+    src,
     alt: `${rapper.name} visual`,
-    isPlaceholder: !rapper.mediaUrl,
+    isPlaceholder: !src,
   };
 }
 
@@ -68,7 +74,8 @@ export function normalizeRapperImageUrl(url?: string): string | undefined {
 export function resolveRapperAvatar(
   rapper: Pick<Rapper, "name" | "avatarUrl" | "mediaUrl">,
 ): ResolvedRapperImage {
-  const src = rapper.avatarUrl ?? rapper.mediaUrl;
+  const candidate = rapper.avatarUrl ?? rapper.mediaUrl;
+  const src = isPendingRapperImageUrl(candidate) ? undefined : candidate;
 
   return {
     src,
