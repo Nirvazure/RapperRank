@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -16,7 +14,6 @@ import { FondnessHeartPicker } from "@/components/ratings/FondnessHeartPicker";
 import { RapperRatingPanel } from "@/components/rapper/RapperRatingPanel";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import type { RatingDimension, RatingSubmission } from "@/features/ratings/rating.types";
-import { formatScore } from "@/features/ratings/rating.utils";
 import { cn } from "@/lib/utils";
 
 const DEFAULT_RATINGS: RatingDimension = {
@@ -34,9 +31,7 @@ export function RatingDialog({
   value,
   fondness,
   onSubmit,
-  triggerLabel = "Rate",
-  viewerDisplayName,
-  communityOverallScore,
+  triggerLabel = "评分",
   triggerClassName,
 }: {
   rapper: Pick<Rapper, "id" | "name">;
@@ -44,8 +39,6 @@ export function RatingDialog({
   fondness?: number | null;
   onSubmit: (submission: RatingSubmission) => Promise<void>;
   triggerLabel?: string;
-  viewerDisplayName: string;
-  communityOverallScore?: number;
   triggerClassName?: string;
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -93,7 +86,7 @@ export function RatingDialog({
       });
       setOpen(false);
     } catch {
-      setError("Failed to save your rating. Please try again.");
+      setError("保存失败，请重试。");
     } finally {
       setSubmitting(false);
     }
@@ -115,25 +108,15 @@ export function RatingDialog({
       </DialogTrigger>
       <DialogContent className="max-h-[88vh] overflow-y-auto border-white/15 bg-zinc-950 text-white sm:max-w-3xl">
         <div ref={contentRef}>
-          <DialogHeader>
-            <DialogTitle className="text-3xl font-black uppercase">
-              Rate {rapper.name}
-            </DialogTitle>
-            <DialogDescription className="space-y-1 text-white/55">
-              {communityOverallScore !== undefined ? (
-                <span className="block">Community score: {formatScore(communityOverallScore)} / 5.0</span>
-              ) : null}
-              <span className="block">Current session: {viewerDisplayName}</span>
-            </DialogDescription>
-          </DialogHeader>
-          <section className="mt-5 rounded-lg border border-white/10 bg-white/[0.04] p-5">
+          <DialogTitle className="sr-only">评分 {rapper.name}</DialogTitle>
+          <section className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
             <div className="mb-3">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-red-300">
-                optional
+                OPTIONAL
               </p>
-              <h3 className="text-xl font-black uppercase">Fondness</h3>
+              <h3 className="text-xl font-black">喜爱度</h3>
               <p className="mt-1 text-sm text-white/45">
-                This is a personal preference signal and does not affect the overall score.
+                这是个人偏好信号，不影响综合评分。
               </p>
             </div>
             <FondnessHeartPicker value={draftFondness} onChange={setDraftFondness} />
@@ -153,7 +136,7 @@ export function RatingDialog({
               className="bg-lime-200 text-black hover:bg-lime-100"
               onClick={handleSubmit}
             >
-              {submitting ? "Saving..." : "Save rating"}
+              {submitting ? "保存中..." : "保存评分"}
             </Button>
           </div>
         </div>

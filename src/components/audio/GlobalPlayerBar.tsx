@@ -15,7 +15,7 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-export function GlobalPlayerBar() {
+export function GlobalPlayerBar({ hideBottomNav = false }: { hideBottomNav?: boolean }) {
   const { currentTrack, playbackState, togglePlay, seekTo, setVolume } = useRapperPlayer();
 
   if (!currentTrack) {
@@ -36,8 +36,58 @@ export function GlobalPlayerBar() {
   const coverUrl = currentTrack.coverUrl;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#0a0a0a]/95 shadow-2xl backdrop-blur-xl">
-      <div className="flex h-20 items-center gap-4 px-4">
+    <div
+      className={
+        hideBottomNav
+          ? "fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[#0a0a0a]/95 pb-[env(safe-area-inset-bottom,0px)] shadow-2xl backdrop-blur-xl"
+          : "fixed inset-x-0 bottom-[calc(var(--rr-bottom-nav)+env(safe-area-inset-bottom,0px))] z-50 border-t border-white/10 bg-[#0a0a0a]/95 shadow-2xl backdrop-blur-xl lg:bottom-0 lg:pb-[env(safe-area-inset-bottom,0px)]"
+      }
+    >
+      {/* Mobile mini bar */}
+      <div className="flex h-14 items-center gap-3 px-3 lg:hidden">
+        <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-md border border-white/10 bg-black">
+          {coverUrl ? (
+            <Image
+              src={coverUrl}
+              alt={currentTrack.title}
+              fill
+              className="object-cover"
+              unoptimized={shouldBypassNextImageOptimization(coverUrl)}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center font-mono text-[9px] font-black uppercase text-lime-200/70">
+              RR
+            </div>
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <h4 className="truncate text-xs font-black uppercase text-white">{currentTrack.title}</h4>
+          <div
+            onClick={handleProgressClick}
+            className="mt-1.5 h-1 cursor-pointer rounded-full bg-white/10"
+          >
+            <div
+              className="h-full rounded-full bg-lime-200"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={togglePlay}
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-lime-200 text-black transition-colors hover:bg-lime-100"
+          aria-label={playbackState.isPlaying ? "暂停" : "播放"}
+        >
+          {playbackState.isPlaying ? (
+            <Pause className="h-4 w-4" fill="currentColor" />
+          ) : (
+            <Play className="ml-0.5 h-4 w-4" fill="currentColor" />
+          )}
+        </button>
+      </div>
+
+      {/* Desktop full bar */}
+      <div className="hidden h-20 items-center gap-4 px-4 lg:flex">
         <div className="flex w-64 min-w-0 flex-shrink-0 items-center gap-3">
           <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-white/10 bg-black">
             {coverUrl ? (
@@ -99,7 +149,7 @@ export function GlobalPlayerBar() {
           </div>
         </div>
 
-        <div className="hidden w-32 flex-shrink-0 items-center gap-2 md:flex">
+        <div className="flex w-32 flex-shrink-0 items-center gap-2">
           {playbackState.volume === 0 ? (
             <VolumeX className="h-4 w-4 text-white/45" />
           ) : (

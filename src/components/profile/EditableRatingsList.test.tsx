@@ -102,7 +102,6 @@ describe("EditableRatingsList", () => {
     render(
       <EditableRatingsList
         ratingsPage={createRatingsPage()}
-        viewerDisplayName="viewer"
         onPageChange={onPageChange}
         onChangeRating={vi.fn(async () => undefined)}
       />,
@@ -125,7 +124,6 @@ describe("EditableRatingsList", () => {
     render(
       <EditableRatingsList
         ratingsPage={createRatingsPage({ page: 2, totalPages: 2 })}
-        viewerDisplayName="viewer"
         onPageChange={vi.fn()}
         onChangeRating={onChangeRating}
       />,
@@ -133,7 +131,7 @@ describe("EditableRatingsList", () => {
 
     expect(screen.getByRole("button", { name: /Next/i })).toBeDisabled();
 
-    await user.click(screen.getByRole("button", { name: "Edit" }));
+    await user.click(screen.getByRole("button", { name: "编辑" }));
 
     expect(onChangeRating).toHaveBeenCalledWith(
       "rapper-1",
@@ -151,7 +149,6 @@ describe("EditableRatingsList", () => {
           total: 0,
           totalPages: 1,
         })}
-        viewerDisplayName="viewer"
         onPageChange={vi.fn()}
         onChangeRating={vi.fn(async () => undefined)}
       />,

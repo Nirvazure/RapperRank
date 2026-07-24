@@ -44,9 +44,9 @@ export function RapperRatingPanel({
       <div className="mb-5 flex items-end justify-between gap-4">
         <div>
           <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-red-300">
-            your score
+            YOUR SCORE
           </p>
-          <h2 className="text-2xl font-black uppercase">六维评分</h2>
+          <h2 className="text-2xl font-black">六维评分</h2>
         </div>
         <span className="font-mono text-xs text-white/45">匿名会话</span>
       </div>

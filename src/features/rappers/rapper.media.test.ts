@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { normalizeRapperImageUrl } from "@/features/rappers/rapper.media";
+import {
+  normalizeRapperImageUrl,
+  resolveRapperAvatar,
+  resolveRapperMedia,
+} from "@/features/rappers/rapper.media";
 
 describe("rapper media", () => {
   it("normalizes local rapper paths to OSS URLs", () => {
@@ -16,5 +20,30 @@ describe("rapper media", () => {
   it("returns undefined for unsupported URLs", () => {
     expect(normalizeRapperImageUrl("https://example.com/image.jpg")).toBeUndefined();
     expect(normalizeRapperImageUrl(undefined)).toBeUndefined();
+  });
+
+  it("treats pending placeholder media URLs as missing images", () => {
+    expect(
+      resolveRapperMedia({
+        name: "Kendrick Lamar",
+        mediaUrl: "pending-oss://rapper/kendrick.jpg",
+      }),
+    ).toMatchObject({
+      src: undefined,
+      isPlaceholder: true,
+    });
+  });
+
+  it("treats pending placeholder avatar URLs as missing so media fallback can stay empty", () => {
+    expect(
+      resolveRapperAvatar({
+        name: "Kendrick Lamar",
+        avatarUrl: "pending-oss://rapper/kendrick.jpg",
+        mediaUrl: undefined,
+      }),
+    ).toMatchObject({
+      src: undefined,
+      isPlaceholder: true,
+    });
   });
 });

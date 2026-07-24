@@ -154,7 +154,7 @@ export function AppShell({
   return (
     <main
       ref={shellRef}
-      className="flex h-screen max-h-screen flex-col overflow-hidden bg-[#050505] px-4 py-3 text-white max-xl:overflow-y-auto sm:px-6 lg:px-8"
+      className="flex h-[calc(100dvh-var(--rr-chrome-offset,5rem))] max-h-[calc(100dvh-var(--rr-chrome-offset,5rem))] flex-col overflow-hidden bg-[#050505] px-4 py-3 text-white max-xl:overflow-y-auto sm:px-6 lg:px-8"
     >
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px]" />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(217,255,0,0.14),transparent_26%),radial-gradient(circle_at_82%_12%,rgba(255,46,91,0.16),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(0,190,255,0.12),transparent_32%)]" />
@@ -169,8 +169,10 @@ export function AppShell({
           />
         </div>
 
-        <div className="grid min-h-0 flex-1 gap-3 xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)]">
-          <div className="hero-enter h-full min-h-0">
+        <div
+          className="grid min-h-0 flex-1 grid-cols-1 gap-3 [grid-template-areas:'media'_'radar'_'hits'] md:grid-cols-2 md:[grid-template-areas:'media_media'_'radar_hits'] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)] xl:grid-rows-[minmax(0,1fr)_auto] xl:[grid-template-areas:'media_radar'_'media_hits']"
+        >
+          <div className="hero-enter [grid-area:media] w-full self-start xl:h-full xl:min-h-0 xl:self-stretch">
             <RapperMediaPanel
               rapper={rapper}
               isFavorite={pendingFavorite}
@@ -189,7 +191,7 @@ export function AppShell({
               }
             />
           </div>
-          <div className="hero-enter score-panel grid h-full min-h-0 grid-rows-[minmax(0,1fr)_minmax(0,0.5fr)] gap-3">
+          <div className="hero-enter relative z-10 [grid-area:radar] min-h-[280px] md:min-h-[300px] xl:min-h-0 xl:h-full">
             <RapperRadarChartLazy
               rapper={rapper}
               actionSlot={
@@ -198,12 +200,12 @@ export function AppShell({
                   value={pendingRating?.ratings}
                   fondness={pendingRating?.fondness}
                   triggerLabel="评分"
-                  viewerDisplayName={viewer.displayName}
-                  communityOverallScore={rapper.overallScore}
                   onSubmit={submitRating}
                 />
               }
             />
+          </div>
+          <div className="hero-enter relative z-10 [grid-area:hits] md:h-full xl:h-auto">
             <RapperProfilePanel rapper={rapper} />
           </div>
         </div>

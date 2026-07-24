@@ -31,13 +31,15 @@ export function FavoritesPageClient({
   const [activeRatingsPage, setActiveRatingsPage] = useState(ratingsPage);
   const [ratingsLoading, setRatingsLoading] = useState(false);
   const [ratingsError, setRatingsError] = useState<string | null>(null);
+  const [syncedRatingsPage, setSyncedRatingsPage] = useState(ratingsPage);
   const avatarRapper = favoriteRappers[0];
 
-  useEffect(() => {
+  if (ratingsPage !== syncedRatingsPage) {
+    setSyncedRatingsPage(ratingsPage);
     setActiveRatingsPage(ratingsPage);
     setRatingsLoading(false);
     setRatingsError(null);
-  }, [ratingsPage]);
+  }
 
   useEffect(() => {
     const context = gsap.context(() => {
@@ -164,7 +166,7 @@ export function FavoritesPageClient({
           }}
         />
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:items-start">
+        <div className="grid gap-5 xl:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] xl:items-start">
           <div className="grid gap-4">
             <section className="grid grid-cols-2 gap-2">
               <div className="rounded-lg border border-white/10 bg-white/[0.06] px-4 py-3 text-right">
@@ -250,10 +252,9 @@ export function FavoritesPageClient({
             )}
           </div>
 
-          <aside className="lg:sticky lg:top-5">
+          <aside className="xl:sticky xl:top-5">
             <EditableRatingsList
               ratingsPage={activeRatingsPage}
-              viewerDisplayName={viewer.displayName}
               isLoading={ratingsLoading}
               errorMessage={ratingsError}
               onPageChange={(page) => {

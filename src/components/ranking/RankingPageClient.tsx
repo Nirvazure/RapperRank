@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { CommunityRapperList } from "@/components/ranking/CommunityRapperList";
 import { RankingBoard } from "@/components/ranking/RankingBoard";
 import { RapperGallery } from "@/components/rapper/RapperGallery";
 import { useFavoriteIds } from "@/hooks/useFavoriteIds";
@@ -47,11 +48,16 @@ export function RankingPageClient({
   );
 
   useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      return;
+    }
+
     const context = gsap.context(() => {
       gsap.fromTo(
         ".ranking-title",
-        { opacity: 0, y: 36 },
-        { opacity: 1, y: 0, duration: 0.75, ease: "power3.out" },
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
       );
     }, pageRef);
 
@@ -79,13 +85,13 @@ export function RankingPageClient({
             }}
           />
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-full items-center gap-2">
           {sortOptions.map((option) => (
             <button
               key={option.value}
               type="button"
               onClick={() => setSortMode(option.value)}
-              className={`rounded-md border px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] transition ${
+              className={`min-h-10 flex-1 rounded-md border px-3 py-2 text-xs font-black uppercase tracking-[0.12em] transition sm:flex-none ${
                 sortMode === option.value
                   ? "border-lime-200 bg-lime-200 text-black"
                   : "border-white/10 bg-white/[0.04] text-white/65 hover:border-white/20 hover:bg-white/[0.08]"
@@ -95,7 +101,26 @@ export function RankingPageClient({
             </button>
           ))}
         </div>
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
+
+        {/* Mobile / tablet: Top10 first, then compact full list */}
+        <div className="flex flex-col gap-5 xl:hidden">
+          <RankingBoard
+            rappers={sortedRanking}
+            compact
+            favoriteIds={favoriteIds}
+            onToggleFavorite={toggleFavorite}
+            onSelect={openRapper}
+          />
+          <CommunityRapperList
+            rappers={sortedRappers}
+            favoriteIds={favoriteIds}
+            onToggleFavorite={toggleFavorite}
+            onSelect={openRapper}
+          />
+        </div>
+
+        {/* Desktop: gallery + sticky board */}
+        <div className="hidden gap-4 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
           <RapperGallery
             rappers={sortedRappers}
             compact
@@ -103,15 +128,13 @@ export function RankingPageClient({
             onToggleFavorite={toggleFavorite}
             onSelect={openRapper}
           />
-          <aside className="lg:sticky lg:top-5 lg:self-start">
+          <aside className="xl:sticky xl:top-5 xl:self-start">
             <RankingBoard
               rappers={sortedRanking}
               compact
               favoriteIds={favoriteIds}
               onToggleFavorite={toggleFavorite}
-              onSelect={(rapperId) => {
-                openRapper(rapperId);
-              }}
+              onSelect={openRapper}
             />
           </aside>
         </div>

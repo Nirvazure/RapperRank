@@ -74,29 +74,28 @@ export function RapperRadarChart({
 
   return (
     <section className="flex h-full min-h-0 flex-col rounded-lg border border-white/10 bg-black/70 p-3">
-      <div className="mb-2 flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h2 className="text-lg font-black uppercase text-white">Power Radar</h2>
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <span className="rounded-md border border-lime-200/20 bg-lime-200/10 px-2 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-lime-200">
+      <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1 basis-[12rem]">
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+            <span className="w-fit rounded-md border border-lime-200/20 bg-lime-200/10 px-3 py-1.5 text-sm font-black tracking-[0.12em] text-lime-200">
               {PH_ORIENTATION_LABELS[orientation]}
             </span>
-            <span className="line-clamp-1 text-[10px] font-bold leading-4 text-white/45">
+            <span className="text-sm font-bold leading-snug text-white/70">
               {PH_ORIENTATION_DESCRIPTIONS[orientation]}
             </span>
           </div>
         </div>
-        <div className="flex shrink-0 items-start gap-2">
+        <div className="flex max-w-full shrink-0 flex-wrap items-start justify-end gap-2">
           <div className="text-right">
             <div className="flex items-end justify-end gap-1">
-              <span className="font-mono text-4xl font-black leading-none text-lime-200">
+              <span className="font-mono text-3xl font-black leading-none text-lime-200 md:text-3xl xl:text-4xl">
                 {formatScore(rapper.overallScore ?? calculateOverallScore(rapper.averageRatings))}
               </span>
               <span className="pb-1 font-mono text-xs font-black text-white/45">
                 /5.0
               </span>
             </div>
-            <div className="mt-1 flex justify-end gap-1.5">
+            <div className="mt-1 flex flex-wrap justify-end gap-1.5">
               <span className="rounded-md border border-white/10 bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] font-black uppercase text-white/55">
                 {rapper.ratingCount.toLocaleString()} ratings
               </span>
@@ -108,7 +107,7 @@ export function RapperRadarChart({
           {actionSlot}
         </div>
       </div>
-      <div className="min-h-[200px] flex-1">
+      <div className="min-h-[220px] flex-1 md:min-h-[200px] xl:min-h-[200px]">
         <ReactECharts
           key={rapper.id}
           option={option}
