@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { StorageImage as Image } from "@/components/rapper/StorageImage";
 import {
   optimizeOssImageUrl,
   RAPPER_IMAGE_PLACEHOLDER_LABEL,

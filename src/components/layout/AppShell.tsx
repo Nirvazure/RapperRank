@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { RatingDialog } from "@/components/ratings/RatingDialog";
 import { Button } from "@/components/ui/button";
 import { RapperMediaPanel } from "@/components/rapper/RapperMediaPanel";
+import { RapperMobileDetailTabs } from "@/components/rapper/RapperMobileDetailTabs";
 import { RapperProfilePanel } from "@/components/rapper/RapperProfilePanel";
 import { RapperRadarChartLazy } from "@/components/rapper/RapperRadarChartLazy";
 import type { Rapper } from "@/features/rappers/rapper.types";
@@ -170,7 +171,7 @@ export function AppShell({
         </div>
 
         <div
-          className="grid min-h-0 flex-1 grid-cols-1 gap-3 [grid-template-areas:'media'_'radar'_'hits'] md:grid-cols-2 md:[grid-template-areas:'media_media'_'radar_hits'] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)] xl:grid-rows-[minmax(0,1fr)_auto] xl:[grid-template-areas:'media_radar'_'media_hits']"
+          className="grid min-h-0 flex-1 grid-cols-1 gap-3 [grid-template-areas:'media'_'detail'] md:grid-cols-2 md:[grid-template-areas:'media_media'_'radar_hits'] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)] xl:grid-rows-[minmax(0,1fr)_auto] xl:[grid-template-areas:'media_radar'_'media_hits']"
         >
           <div className="hero-enter [grid-area:media] w-full self-start xl:h-full xl:min-h-0 xl:self-stretch">
             <RapperMediaPanel
@@ -191,7 +192,21 @@ export function AppShell({
               }
             />
           </div>
-          <div className="hero-enter relative z-10 [grid-area:radar] min-h-[280px] md:min-h-[300px] xl:min-h-0 xl:h-full">
+          <div className="hero-enter relative z-10 [grid-area:detail] md:hidden">
+            <RapperMobileDetailTabs
+              rapper={rapper}
+              actionSlot={
+                <RatingDialog
+                  rapper={rapper}
+                  value={pendingRating?.ratings}
+                  fondness={pendingRating?.fondness}
+                  triggerLabel="评分"
+                  onSubmit={submitRating}
+                />
+              }
+            />
+          </div>
+          <div className="hero-enter relative z-10 hidden [grid-area:radar] md:block md:min-h-[300px] xl:min-h-0 xl:h-full">
             <RapperRadarChartLazy
               rapper={rapper}
               actionSlot={
@@ -205,7 +220,7 @@ export function AppShell({
               }
             />
           </div>
-          <div className="hero-enter relative z-10 [grid-area:hits] md:h-full xl:h-auto">
+          <div className="hero-enter relative z-10 hidden [grid-area:hits] md:block md:h-full xl:h-auto">
             <RapperProfilePanel rapper={rapper} />
           </div>
         </div>

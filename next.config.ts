@@ -14,6 +14,7 @@ if (process.env.SUPABASE_KEY) {
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      new URL("https://tfvzcuksahcofooqqezx.supabase.co/storage/v1/object/public/rapperank/**"),
       new URL("https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/**"),
       new URL("https://rapperank.oss-cn-hangzhou.aliyuncs.com/label/**"),
       new URL("https://images.unsplash.com/**"),

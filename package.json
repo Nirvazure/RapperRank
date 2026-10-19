@@ -12,7 +12,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset-ratings": "tsx prisma/reset-ratings.ts",
-    "db:import-rapper-images": "tsx prisma/import-rapper-images.ts"
+    "db:import-rapper-images": "tsx prisma/import-rapper-images.ts",
+    "storage:migrate": "tsx scripts/migrate-storage.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
@@ -46,10 +47,15 @@
     "eslint-config-next": "16.2.6",
     "jsdom": "^29.1.1",
     "prisma": "^6.8.2",
+    "sharp": "0.34.5",
     "tailwindcss": "^4.3.0",
     "tsx": "^4.20.3",
     "typescript": "^5",
     "vitest": "^4.1.6"
+  },
+  "optionalDependencies": {
+    "@ffmpeg-installer/win32-x64": "4.1.0",
+    "@ffprobe-installer/win32-x64": "5.1.0"
   },
   "overrides": {
     "postcss": "8.5.14"

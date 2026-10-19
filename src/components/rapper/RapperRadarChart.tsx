@@ -73,14 +73,14 @@ export function RapperRadarChart({
   };
 
   return (
-    <section className="flex h-full min-h-0 flex-col rounded-lg border border-white/10 bg-black/70 p-3">
+    <section className="flex h-auto min-h-0 flex-col rounded-lg border border-white/10 bg-black/70 p-3 md:h-full">
       <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 flex-1 basis-[12rem]">
+        <div className="min-w-0 flex-1 basis-full sm:basis-[12rem]">
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             <span className="w-fit rounded-md border border-lime-200/20 bg-lime-200/10 px-3 py-1.5 text-sm font-black tracking-[0.12em] text-lime-200">
               {PH_ORIENTATION_LABELS[orientation]}
             </span>
-            <span className="text-sm font-bold leading-snug text-white/70">
+            <span className="line-clamp-2 text-sm font-bold leading-snug text-white/70">
               {PH_ORIENTATION_DESCRIPTIONS[orientation]}
             </span>
           </div>
@@ -88,7 +88,7 @@ export function RapperRadarChart({
         <div className="flex max-w-full shrink-0 flex-wrap items-start justify-end gap-2">
           <div className="text-right">
             <div className="flex items-end justify-end gap-1">
-              <span className="font-mono text-3xl font-black leading-none text-lime-200 md:text-3xl xl:text-4xl">
+              <span className="font-mono text-2xl font-black leading-none text-lime-200 sm:text-3xl md:text-3xl xl:text-4xl">
                 {formatScore(rapper.overallScore ?? calculateOverallScore(rapper.averageRatings))}
               </span>
               <span className="pb-1 font-mono text-xs font-black text-white/45">
