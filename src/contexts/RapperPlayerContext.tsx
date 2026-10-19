@@ -37,9 +37,14 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
 
     audio.src = resolveStorageAssetUrl(src);
     audio.load();
-    if (autoPlay) {
-      void audio.play().catch(() => {});
+    if (!autoPlay) {
+      return;
     }
+
+    void audio.play().catch(() => {
+      // Autoplay may be blocked (e.g. cold open). Keep UI as paused.
+      setPlaybackState((prev) => ({ ...prev, isPlaying: false }));
+    });
   }, []);
 
   const playRapperTrack = useCallback(
@@ -47,7 +52,7 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
       setCurrentTrack(track);
       setPlaybackState((prev) => ({
         ...prev,
-        isPlaying: autoPlay,
+        isPlaying: false,
         currentTime: 0,
         duration: 0,
       }));
@@ -63,7 +68,9 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
     }
 
     if (audio.paused) {
-      void audio.play().catch(() => {});
+      void audio.play().catch(() => {
+        setPlaybackState((prev) => ({ ...prev, isPlaying: false }));
+      });
     } else {
       audio.pause();
     }
