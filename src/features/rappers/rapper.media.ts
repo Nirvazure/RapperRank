@@ -1,8 +1,9 @@
 import type { Rapper } from "@/features/rappers/rapper.types";
+import { isStorageImageUrl } from "@/lib/storage-media";
 
 export const RAPPER_OSS_BASE_URL = "https://rapperank.oss-cn-hangzhou.aliyuncs.com/rapper/";
 export const NIRVAZURE_OSS_BASE_URL = "https://nirvazure-next.oss-cn-hangzhou.aliyuncs.com/";
-export const RAPPER_IMAGE_PLACEHOLDER_LABEL = "No OSS Image";
+export const RAPPER_IMAGE_PLACEHOLDER_LABEL = "No Image";
 export const PENDING_RAPPER_IMAGE_BASE_URL = "pending-oss://rapper/";
 
 /** OSS 已由 CDN 托管；跳过 Next 图片优化，避免服务端拉取国内 OSS 导致 504。 */
@@ -59,6 +60,8 @@ export function normalizeRapperImageUrl(url?: string): string | undefined {
   if (!url) {
     return undefined;
   }
+
+  if (isStorageImageUrl(url)) return url;
 
   if (url.startsWith(RAPPER_OSS_BASE_URL)) {
     return url;

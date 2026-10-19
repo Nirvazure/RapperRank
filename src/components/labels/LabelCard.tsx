@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { StorageImage as Image } from "@/components/rapper/StorageImage";
 import { LabelMemberStrip } from "@/components/labels/LabelMemberStrip";
 import type { LabelViewModel } from "@/features/labels/label.types";
 

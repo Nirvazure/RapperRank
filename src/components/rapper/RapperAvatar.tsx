@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { StorageImage as Image } from "@/components/rapper/StorageImage";
 import {
   RAPPER_IMAGE_PLACEHOLDER_LABEL,
   resolveRapperAvatar,

@@ -14,6 +14,7 @@ import type {
   RapperPlayerContextValue,
   RapperTrack,
 } from "@/contexts/rapper-player-types";
+import { resolveStorageAssetUrl } from "@/lib/storage-media";
 
 const RapperPlayerContext = createContext<RapperPlayerContextValue | null>(null);
 
@@ -34,7 +35,7 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    audio.src = src;
+    audio.src = resolveStorageAssetUrl(src);
     audio.load();
     if (autoPlay) {
       void audio.play().catch(() => {});

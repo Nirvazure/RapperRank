@@ -1,12 +1,13 @@
 import { artWallOssIndices } from "@/data/art-wall-indices";
 import type { ArtWallAlbum } from "@/features/art/art-wall.types";
+import { resolveStorageAssetUrl } from "@/lib/storage-media";
 
 const LISTEN_ART_WALL_BASE =
   "https://nirvazure-next.oss-cn-hangzhou.aliyuncs.com/album/art";
 
 export function artWallCoverUrl(fileIndex: number): string {
   const n = fileIndex + 1;
-  return `${LISTEN_ART_WALL_BASE}/${encodeURIComponent(`album (${n}).jpg`)}`;
+  return resolveStorageAssetUrl(`${LISTEN_ART_WALL_BASE}/${encodeURIComponent(`album (${n}).jpg`)}`);
 }
 
 function makeAlbum(ossIndex: number, id: number): ArtWallAlbum {

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { StorageImage as Image } from "@/components/rapper/StorageImage";
 import { Pause, Play, Volume2, VolumeX } from "lucide-react";
 import { useRapperPlayer } from "@/contexts/RapperPlayerContext";
 import { shouldBypassNextImageOptimization } from "@/features/rappers/rapper.media";
@@ -51,6 +51,7 @@ export function GlobalPlayerBar({ hideBottomNav = false }: { hideBottomNav?: boo
               src={coverUrl}
               alt={currentTrack.title}
               fill
+              sizes="40px"
               className="object-cover"
               unoptimized={shouldBypassNextImageOptimization(coverUrl)}
             />
@@ -95,6 +96,7 @@ export function GlobalPlayerBar({ hideBottomNav = false }: { hideBottomNav?: boo
                 src={coverUrl}
                 alt={currentTrack.title}
                 fill
+                sizes="56px"
                 className="object-cover"
                 unoptimized={shouldBypassNextImageOptimization(coverUrl)}
               />

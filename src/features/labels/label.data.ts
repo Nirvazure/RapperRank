@@ -1,8 +1,9 @@
 import type { LabelDefinition } from "@/features/labels/label.types";
+import { resolveStorageAssetUrl } from "@/lib/storage-media";
 
 const labelOssBaseUrl = "https://rapperank.oss-cn-hangzhou.aliyuncs.com/label";
 
-export const labelDefinitions: LabelDefinition[] = [
+export const legacyLabelDefinitions: LabelDefinition[] = [
   {
     id: "cdc",
     slug: "cdc",
@@ -196,3 +197,8 @@ export const labelDefinitions: LabelDefinition[] = [
     sortOrder: 12,
   },
 ];
+
+export const labelDefinitions: LabelDefinition[] = legacyLabelDefinitions.map((label) => ({
+  ...label,
+  logoUrl: resolveStorageAssetUrl(label.logoUrl),
+}));

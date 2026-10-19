@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { StorageImage as Image } from "@/components/rapper/StorageImage";
 import { resolveRapperLabelsForArtist } from "@/features/labels/label.resolver";
 import { shouldBypassNextImageOptimization } from "@/features/rappers/rapper.media";
 import type { Rapper } from "@/features/rappers/rapper.types";
