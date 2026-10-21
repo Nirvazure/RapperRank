@@ -13,6 +13,7 @@ import type {
   RapperPlaybackState,
   RapperPlayerContextValue,
   RapperTrack,
+  EmbeddedTrack,
 } from "@/contexts/rapper-player-types";
 import { resolveStorageAssetUrl } from "@/lib/storage-media";
 
@@ -20,6 +21,8 @@ const RapperPlayerContext = createContext<RapperPlayerContextValue | null>(null)
 
 export function RapperPlayerProvider({ children }: { children: ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState<RapperTrack | null>(null);
+  const [activeEmbed, setActiveEmbed] = useState<EmbeddedTrack | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [playbackState, setPlaybackState] = useState<RapperPlaybackState>({
     isPlaying: false,
     currentTime: 0,
@@ -28,6 +31,24 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
   });
 
   const audioRef = useRef<HTMLAudioElement>(null);
+  const pendingLoad = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const stopPlayback = useCallback(() => {
+    if (pendingLoad.current) clearTimeout(pendingLoad.current);
+    const audio = audioRef.current;
+    if (audio?.getAttribute("src")) {
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+    }
+    setCurrentTrack(null);
+    setActiveEmbed(null);
+    setError(null);
+    setPlaybackState((prev) => ({ ...prev, isPlaying: false, currentTime: 0, duration: 0 }));
+  }, []);
+  const playEmbeddedTrack = useCallback((track: EmbeddedTrack) => {
+    stopPlayback();
+    setActiveEmbed(track);
+  }, [stopPlayback]);
 
   const loadAudio = useCallback((src: string, autoPlay = false) => {
     const audio = audioRef.current;
@@ -49,6 +70,7 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
 
   const playRapperTrack = useCallback(
     (track: RapperTrack, autoPlay = true) => {
+      stopPlayback();
       setCurrentTrack(track);
       setPlaybackState((prev) => ({
         ...prev,
@@ -56,9 +78,9 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
         currentTime: 0,
         duration: 0,
       }));
-      window.setTimeout(() => loadAudio(track.src, autoPlay), 100);
+      pendingLoad.current = setTimeout(() => loadAudio(track.src, autoPlay), 100);
     },
-    [loadAudio],
+    [loadAudio, stopPlayback],
   );
 
   const togglePlay = useCallback(() => {
@@ -78,12 +100,13 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
 
   const seekTo = useCallback((time: number) => {
     const audio = audioRef.current;
-    if (!audio) {
+    if (!audio || !Number.isFinite(time) || !Number.isFinite(audio.duration) || audio.duration <= 0) {
       return;
     }
 
-    audio.currentTime = time;
-    setPlaybackState((prev) => ({ ...prev, currentTime: time }));
+    const currentTime = Math.max(0, Math.min(time, audio.duration));
+    audio.currentTime = currentTime;
+    setPlaybackState((prev) => ({ ...prev, currentTime }));
   }, []);
 
   const setVolume = useCallback((volume: number) => {
@@ -112,14 +135,15 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
     const handlePause = () => setPlaybackState((prev) => ({ ...prev, isPlaying: false }));
     const handleEnded = () => {
       setPlaybackState((prev) => ({ ...prev, isPlaying: false, currentTime: 0 }));
-      void audio.play().catch(() => {});
     };
+    const handleError = () => { setError("音频暂时无法播放，请尝试官方播放入口。"); setPlaybackState((prev) => ({ ...prev, isPlaying: false })); };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("play", handlePlay);
     audio.addEventListener("pause", handlePause);
     audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("error", handleError);
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
@@ -127,11 +151,17 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
       audio.removeEventListener("play", handlePlay);
       audio.removeEventListener("pause", handlePause);
       audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("error", handleError);
+      if (pendingLoad.current) clearTimeout(pendingLoad.current);
     };
   }, []);
 
   const value: RapperPlayerContextValue = {
     currentTrack,
+    activeEmbed,
+    error,
+    playEmbeddedTrack,
+    stopPlayback,
     playbackState,
     playRapperTrack,
     togglePlay,
@@ -143,7 +173,7 @@ export function RapperPlayerProvider({ children }: { children: ReactNode }) {
   return (
     <RapperPlayerContext.Provider value={value}>
       {children}
-      <audio ref={audioRef} loop className="hidden" aria-hidden />
+      <audio ref={audioRef} loop={currentTrack?.loop ?? false} className="hidden" aria-hidden />
     </RapperPlayerContext.Provider>
   );
 }

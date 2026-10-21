@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { RapperProfilePanel } from "@/components/rapper/RapperProfilePanel";
 import { RapperRadarChartLazy } from "@/components/rapper/RapperRadarChartLazy";
 import type { Rapper } from "@/features/rappers/rapper.types";
@@ -10,7 +10,7 @@ type DetailTab = "radar" | "hits";
 
 const TABS: { id: DetailTab; label: string }[] = [
   { id: "radar", label: "能力画像" },
-  { id: "hits", label: "金曲" },
+  { id: "hits", label: "档案与作品" },
 ];
 
 export function RapperMobileDetailTabs({
@@ -20,12 +20,12 @@ export function RapperMobileDetailTabs({
   rapper: Rapper;
   actionSlot?: ReactNode;
 }) {
+  return <MobileDetailTabs key={rapper.id} rapper={rapper} actionSlot={actionSlot} />;
+}
+
+function MobileDetailTabs({ rapper, actionSlot }: { rapper: Rapper; actionSlot?: ReactNode }) {
   const baseId = useId();
   const [tab, setTab] = useState<DetailTab>("radar");
-
-  useEffect(() => {
-    setTab("radar");
-  }, [rapper.id]);
 
   return (
     <div className="flex flex-col gap-3">

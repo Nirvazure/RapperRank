@@ -13,10 +13,17 @@ export type RapperTrack = {
   subtitle: string;
   coverUrl?: string;
   src: string;
+  loop?: boolean;
 };
+
+export type EmbeddedTrack = { rapperId: string; title: string; src: string };
 
 export type RapperPlayerContextValue = {
   currentTrack: RapperTrack | null;
+  activeEmbed: EmbeddedTrack | null;
+  error: string | null;
+  playEmbeddedTrack: (track: EmbeddedTrack) => void;
+  stopPlayback: () => void;
   playbackState: RapperPlaybackState;
   playRapperTrack: (track: RapperTrack, autoPlay?: boolean) => void;
   togglePlay: () => void;

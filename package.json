@@ -13,7 +13,11 @@
     "db:migrate": "prisma migrate dev",
     "db:reset-ratings": "tsx prisma/reset-ratings.ts",
     "db:import-rapper-images": "tsx prisma/import-rapper-images.ts",
-    "storage:migrate": "tsx scripts/migrate-storage.ts"
+    "storage:migrate": "tsx scripts/migrate-storage.ts",
+    "content:discover": "tsx scripts/discover-content.ts",
+    "content:import": "tsx scripts/import-content.ts",
+    "content:verify": "tsx scripts/verify-content.ts",
+    "content:upload": "tsx scripts/upload-content-asset.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",

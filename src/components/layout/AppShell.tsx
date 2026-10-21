@@ -30,43 +30,13 @@ export function AppShell({
 }) {
   const shellRef = useRef<HTMLElement>(null);
   const router = useRouter();
-  const { playRapperTrack } = useRapperPlayer();
+  const { stopPlayback } = useRapperPlayer();
   const [pendingFavorite, setPendingFavorite] = useState(isFavorite);
   const [pendingRating, setPendingRating] = useState<UserRating | null>(myRating);
 
   useEffect(() => {
-    if (!rapper.backgroundAudioUrl) {
-      return;
-    }
-
-    const track = {
-      rapperId: rapper.id,
-      title: rapper.name,
-      subtitle: rapper.region,
-      coverUrl: rapper.avatarUrl ?? rapper.mediaUrl,
-      src: rapper.backgroundAudioUrl,
-    };
-
-    const startPlayback = () => {
-      playRapperTrack(track);
-    };
-
-    if (typeof window.requestIdleCallback === "function") {
-      const idleId = window.requestIdleCallback(startPlayback, { timeout: 1500 });
-      return () => window.cancelIdleCallback(idleId);
-    }
-
-    const timeoutId = window.setTimeout(startPlayback, 1500);
-    return () => window.clearTimeout(timeoutId);
-  }, [
-    playRapperTrack,
-    rapper.avatarUrl,
-    rapper.backgroundAudioUrl,
-    rapper.id,
-    rapper.mediaUrl,
-    rapper.name,
-    rapper.region,
-  ]);
+    return () => stopPlayback();
+  }, [rapper.id, stopPlayback]);
 
   async function toggleFavorite() {
     const wasFavorite = pendingFavorite;
@@ -171,7 +141,7 @@ export function AppShell({
         </div>
 
         <div
-          className="grid min-h-0 flex-1 grid-cols-1 gap-3 [grid-template-areas:'media'_'detail'] md:grid-cols-2 md:[grid-template-areas:'media_media'_'radar_hits'] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)] xl:grid-rows-[minmax(0,1fr)_auto] xl:[grid-template-areas:'media_radar'_'media_hits']"
+          className="grid min-h-0 flex-1 grid-cols-1 gap-3 [grid-template-areas:'media'_'detail'] md:grid-cols-2 md:[grid-template-areas:'media_media'_'radar_hits'] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)] xl:grid-rows-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:[grid-template-areas:'media_radar'_'media_hits']"
         >
           <div className="hero-enter [grid-area:media] w-full self-start xl:h-full xl:min-h-0 xl:self-stretch">
             <RapperMediaPanel
@@ -220,7 +190,7 @@ export function AppShell({
               }
             />
           </div>
-          <div className="hero-enter relative z-10 hidden [grid-area:hits] md:block md:h-full xl:h-auto">
+          <div className="hero-enter relative z-10 hidden min-h-0 [grid-area:hits] md:block md:h-full">
             <RapperProfilePanel rapper={rapper} />
           </div>
         </div>

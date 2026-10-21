@@ -16,21 +16,12 @@ function formatTime(seconds: number): string {
 }
 
 export function GlobalPlayerBar({ hideBottomNav = false }: { hideBottomNav?: boolean }) {
-  const { currentTrack, playbackState, togglePlay, seekTo, setVolume } = useRapperPlayer();
+  const { currentTrack, activeEmbed, error, stopPlayback, playbackState, togglePlay, seekTo, setVolume } = useRapperPlayer();
+
+  if (activeEmbed) return <aside className="fixed inset-x-0 bottom-[calc(var(--rr-bottom-nav)+env(safe-area-inset-bottom,0px))] z-50 border-t border-white/20 bg-zinc-950 p-3 lg:bottom-0" aria-label="官方试听播放器"><div className="mx-auto max-w-4xl"><div className="mb-2 flex justify-between gap-3 text-xs text-white"><span className="truncate">{activeEmbed.title} · 官方试听</span><button onClick={stopPlayback} className="shrink-0 text-lime-200">关闭播放器</button></div><iframe key={activeEmbed.src} src={activeEmbed.src} title={`${activeEmbed.title} 官方播放器`} allow="autoplay *; encrypted-media *; fullscreen *" referrerPolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms" className="h-[175px] w-full rounded-lg border-0" /><p className="mt-1 text-[11px] text-white/50">若无法试听，请使用作品旁的官方完整播放入口。登录、会员与地区条件以平台为准。</p></div></aside>;
 
   if (!currentTrack) {
     return null;
-  }
-
-  const progressPercentage =
-    playbackState.duration > 0
-      ? (playbackState.currentTime / playbackState.duration) * 100
-      : 0;
-
-  function handleProgressClick(event: React.MouseEvent<HTMLDivElement>) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const percentage = (event.clientX - rect.left) / rect.width;
-    seekTo(percentage * playbackState.duration);
   }
 
   const coverUrl = currentTrack.coverUrl;
@@ -43,6 +34,7 @@ export function GlobalPlayerBar({ hideBottomNav = false }: { hideBottomNav?: boo
           : "fixed inset-x-0 bottom-[calc(var(--rr-bottom-nav)+env(safe-area-inset-bottom,0px))] z-50 border-t border-white/10 bg-[#0a0a0a]/95 shadow-2xl backdrop-blur-xl lg:bottom-0 lg:pb-[env(safe-area-inset-bottom,0px)]"
       }
     >
+      {error ? <p role="alert" className="px-4 py-1 text-xs text-red-200">{error}</p> : null}
       {/* Mobile mini bar */}
       <div className="flex h-14 items-center gap-3 px-3 lg:hidden">
         <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-md border border-white/10 bg-black">
@@ -63,15 +55,7 @@ export function GlobalPlayerBar({ hideBottomNav = false }: { hideBottomNav?: boo
         </div>
         <div className="min-w-0 flex-1">
           <h4 className="truncate text-xs font-black uppercase text-white">{currentTrack.title}</h4>
-          <div
-            onClick={handleProgressClick}
-            className="mt-1.5 h-1 cursor-pointer rounded-full bg-white/10"
-          >
-            <div
-              className="h-full rounded-full bg-lime-200"
-              style={{ width: `${progressPercentage}%` }}
-            />
-          </div>
+          <input type="range" min="0" max={playbackState.duration || 0} step="0.1" value={Math.min(playbackState.currentTime, playbackState.duration || 0)} disabled={!playbackState.duration} onChange={(event) => seekTo(Number(event.target.value))} aria-label="播放进度" className="mt-1.5 h-1 w-full cursor-pointer accent-lime-200" />
         </div>
         <button
           type="button"
@@ -134,17 +118,7 @@ export function GlobalPlayerBar({ hideBottomNav = false }: { hideBottomNav?: boo
             <span className="min-w-[40px] text-right font-mono text-xs tabular-nums text-white/45">
               {formatTime(playbackState.currentTime)}
             </span>
-            <div
-              onClick={handleProgressClick}
-              className="group relative h-1.5 flex-1 cursor-pointer rounded-full bg-white/10"
-            >
-              <div
-                className="relative h-full rounded-full bg-lime-200 transition-all"
-                style={{ width: `${progressPercentage}%` }}
-              >
-                <div className="absolute right-0 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-lime-200 opacity-0 transition-opacity group-hover:opacity-100" />
-              </div>
-            </div>
+            <input type="range" min="0" max={playbackState.duration || 0} step="0.1" value={Math.min(playbackState.currentTime, playbackState.duration || 0)} disabled={!playbackState.duration} onChange={(event) => seekTo(Number(event.target.value))} aria-label="播放进度" className="h-1.5 min-w-0 flex-1 cursor-pointer accent-lime-200" />
             <span className="min-w-[40px] font-mono text-xs tabular-nums text-white/45">
               {formatTime(playbackState.duration)}
             </span>

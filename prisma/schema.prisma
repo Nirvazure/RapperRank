@@ -65,6 +65,12 @@ model Rapper {
   labels              String[]
   tags                String[]
   representativeWorks String[]
+  profileTimeline     Json            @default("[]")
+  officialLinks       Json            @default("[]")
+  contentReviewedAt   DateTime?
+  contentSources      ContentSource[]
+  tracks              RapperTrack[]
+  assets              MediaAsset[]
   ratingCount         Int             @default(0)
   avgFlow             Decimal         @default(0) @db.Decimal(3, 1)
   avgLyrics           Decimal         @default(0) @db.Decimal(3, 1)
@@ -116,5 +122,156 @@ model Favorite {
 
   @@unique([userId, rapperId])
   @@index([rapperId])
+  @@schema("rapperank")
+}
+
+enum ContentReviewStatus {
+  pending
+  approved
+  rejected
+  @@schema("rapperank")
+}
+
+enum PlaybackKind {
+  external
+  embed
+  audio_preview
+  audio_full
+  @@schema("rapperank")
+}
+
+enum PlaybackStatus {
+  pending
+  available
+  unavailable
+  @@schema("rapperank")
+}
+
+model ContentSource {
+  id           String @id
+  rapperId     String?
+  trackId      String?
+  albumId      String?
+  title        String
+  url          String
+  fields       String[]
+  retrievedAt  DateTime
+  reviewStatus ContentReviewStatus @default(pending)
+  reviewer     String?
+  rapper       Rapper? @relation(fields: [rapperId], references: [id], onDelete: Cascade)
+  track        Track? @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album        Album? @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  assets       MediaAsset[]
+  @@index([rapperId])
+  @@index([trackId])
+  @@index([albumId])
+  @@schema("rapperank")
+}
+
+model Track {
+  id           String @id
+  title        String
+  artistCredit String
+  version      String
+  releasedAt   DateTime? @db.Date
+  durationMs   Int?
+  isrc         String?
+  reviewStatus ContentReviewStatus @default(pending)
+  rappers      RapperTrack[]
+  albums       AlbumTrack[]
+  playback     PlaybackSource[]
+  sources      ContentSource[]
+  assets       MediaAsset[]
+  @@schema("rapperank")
+}
+
+model RapperTrack {
+  rapperId String
+  trackId  String
+  role     String @default("primary")
+  sortOrder Int @default(0)
+  rapper   Rapper @relation(fields: [rapperId], references: [id], onDelete: Cascade)
+  track    Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  @@id([rapperId, trackId])
+  @@index([trackId])
+  @@schema("rapperank")
+}
+
+model Album {
+  id           String @id
+  title        String
+  artistCredit String
+  releasedAt   DateTime? @db.Date
+  reviewStatus ContentReviewStatus @default(pending)
+  tracks       AlbumTrack[]
+  playback     PlaybackSource[]
+  sources      ContentSource[]
+  assets       MediaAsset[]
+  @@schema("rapperank")
+}
+
+model AlbumTrack {
+  albumId    String
+  trackId    String
+  discNumber Int @default(1)
+  position   Int
+  album      Album @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  track      Track @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  @@id([albumId, discNumber, position])
+  @@index([trackId])
+  @@schema("rapperank")
+}
+
+model PlaybackSource {
+  id           String @id
+  trackId      String?
+  albumId      String?
+  kind         PlaybackKind
+  provider     String
+  platformId   String
+  storefront   String
+  url          String
+  durationSeconds Int?
+  conditions   String
+  status       PlaybackStatus @default(pending)
+  checkedAt    DateTime?
+  verificationNote String?
+  reviewStatus ContentReviewStatus @default(pending)
+  track        Track? @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album        Album? @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  @@unique([provider, platformId, storefront, kind])
+  @@index([trackId])
+  @@index([albumId])
+  @@schema("rapperank")
+}
+
+model MediaAsset {
+  id           String @id
+  rapperId     String?
+  trackId      String?
+  albumId      String?
+  sourceId     String
+  kind         String
+  bucket       String @default("rapperank")
+  objectPath   String @unique
+  mime         String
+  bytes        Int
+  sha256       String
+  width        Int?
+  height       Int?
+  durationSeconds Float?
+  caption      String
+  attribution  String
+  rightsBasis  String
+  redistributionAllowed Boolean @default(false)
+  reviewStatus ContentReviewStatus @default(pending)
+  sortOrder    Int @default(0)
+  rapper       Rapper? @relation(fields: [rapperId], references: [id], onDelete: Cascade)
+  track        Track? @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album        Album? @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  source       ContentSource @relation(fields: [sourceId], references: [id])
+  @@index([rapperId])
+  @@index([trackId])
+  @@index([albumId])
   @@schema("rapperank")
 }
