@@ -53,6 +53,7 @@ import { cookies } from "next/headers";
 describe("getViewer", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(isLocalMockViewerEnabled).mockReturnValue(false);
   });
 
   it("returns authenticated viewer when Supabase user exists", async () => {
@@ -114,6 +115,7 @@ describe("getViewer", () => {
 describe("resolvePageViewer", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(isLocalMockViewerEnabled).mockReturnValue(false);
   });
 
   it("returns anonymous viewer from existing session without creating a new one", async () => {

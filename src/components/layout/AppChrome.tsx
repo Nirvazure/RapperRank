@@ -6,13 +6,13 @@ import { GlobalPlayerBar } from "@/components/audio/GlobalPlayerBar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { useRapperPlayer } from "@/contexts/RapperPlayerContext";
 
-function chromeOffset(hideBottomNav: boolean, hasPlayer: boolean): string {
+function chromeOffset(hideBottomNav: boolean, hasPlayer: boolean, embedded: boolean): string {
   const parts: string[] = [];
   if (!hideBottomNav) {
     parts.push("var(--rr-bottom-nav)");
   }
   if (hasPlayer) {
-    parts.push("var(--rr-player-bar)");
+    parts.push(embedded ? "16rem" : "var(--rr-player-bar)");
   }
   parts.push("env(safe-area-inset-bottom, 0px)");
   return `calc(${parts.join(" + ")})`;
@@ -20,10 +20,10 @@ function chromeOffset(hideBottomNav: boolean, hasPlayer: boolean): string {
 
 export function AppChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { currentTrack } = useRapperPlayer();
+  const { currentTrack, activeEmbed } = useRapperPlayer();
   const hideBottomNav = pathname === "/login";
-  const hasPlayer = Boolean(currentTrack);
-  const offset = chromeOffset(hideBottomNav, hasPlayer);
+  const hasPlayer = Boolean(currentTrack || activeEmbed);
+  const offset = chromeOffset(hideBottomNav, hasPlayer, Boolean(activeEmbed));
 
   return (
     <>

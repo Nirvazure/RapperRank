@@ -10,6 +10,7 @@ import { findFavorite } from "@/features/favorites/favorite.repository";
 import { findRating } from "@/features/ratings/rating.repository";
 import { buildRatingAggregate, type RatingAggregate } from "@/features/ratings/rating.server";
 import type { Rapper } from "@/features/rappers/rapper.types";
+import { getRapperContent } from "@/features/content/content.repository";
 
 type RankedRapper = {
   id: string;
@@ -68,12 +69,13 @@ export async function getRapperPageData(rapperId: string, userId?: string) {
   if (!record) {
     notFound();
   }
+  const rapper: Rapper = { ...mapRapperRecordToViewModel(record), content: await getRapperContent(record.id) };
 
   if (isLocalMockViewerUserId(userId)) {
     const mockState = await getLocalMockViewerRapperState(record.id);
 
     return {
-      rapper: mapRapperRecordToViewModel(record),
+      rapper,
       isFavorite: mockState.isFavorite,
       myRating: mockState.myRating,
     };
@@ -81,7 +83,7 @@ export async function getRapperPageData(rapperId: string, userId?: string) {
 
   if (!userId) {
     return {
-      rapper: mapRapperRecordToViewModel(record),
+      rapper,
       isFavorite: false,
       myRating: null,
     };
@@ -93,7 +95,7 @@ export async function getRapperPageData(rapperId: string, userId?: string) {
   ]);
 
   return {
-    rapper: mapRapperRecordToViewModel(record),
+    rapper,
     isFavorite: Boolean(favorite),
     myRating: rating ? mapRatingRecordToUserRating(rating) : null,
   };
