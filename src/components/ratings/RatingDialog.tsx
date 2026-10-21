@@ -53,6 +53,9 @@ export function RatingDialog({
     if (!element || !open) {
       return;
     }
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
 
     const animation = gsap.fromTo(
       element,
@@ -106,10 +109,13 @@ export function RatingDialog({
           {triggerLabel}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[88vh] overflow-y-auto border-white/15 bg-zinc-950 text-white sm:max-w-3xl">
-        <div ref={contentRef}>
-          <DialogTitle className="sr-only">评分 {rapper.name}</DialogTitle>
-          <section className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
+      <DialogContent className="bottom-0 left-0 top-auto flex max-h-[calc(100dvh-env(safe-area-inset-top,0px)-1rem)] max-w-none translate-x-0 translate-y-0 overflow-hidden rounded-b-none rounded-t-2xl border-white/15 bg-zinc-950 p-0 text-white sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[88dvh] sm:max-w-3xl sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl [&>[data-slot=dialog-close]]:size-11">
+        <div ref={contentRef} className="flex min-h-0 w-full flex-col">
+          <div className="shrink-0 border-b border-white/10 px-4 py-4 pr-14 sm:px-5">
+            <DialogTitle className="break-words text-lg font-black leading-6">评分 {rapper.name}</DialogTitle>
+          </div>
+          <div className="min-h-0 overflow-y-auto overscroll-contain p-4 sm:p-5">
+          <section className="rounded-lg border border-white/10 bg-white/[0.04] p-4 sm:p-5">
             <div className="mb-3">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-red-300">
                 OPTIONAL
@@ -129,11 +135,12 @@ export function RatingDialog({
               {error}
             </p>
           ) : null}
-          <div className="mt-4 flex justify-end">
+          </div>
+          <div className="flex shrink-0 justify-end border-t border-white/10 bg-zinc-950 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:px-5">
             <Button
               type="button"
               disabled={submitting}
-              className="bg-lime-200 text-black hover:bg-lime-100"
+              className="h-12 w-full bg-lime-200 text-base font-black text-black hover:bg-lime-100 sm:h-10 sm:w-auto sm:text-sm"
               onClick={handleSubmit}
             >
               {submitting ? "保存中..." : "保存评分"}

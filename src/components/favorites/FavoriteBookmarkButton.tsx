@@ -22,11 +22,12 @@ export function FavoriteBookmarkButton({
       variant={isFavorite ? "default" : "outline"}
       size={compact ? "icon-sm" : "icon-lg"}
       aria-label={isFavorite ? "取消收藏" : "收藏"}
+      aria-pressed={isFavorite}
       onClick={(event) => {
         event.stopPropagation();
         onToggle();
       }}
-      className={`${
+      className={`min-h-11 min-w-11 lg:min-h-0 lg:min-w-0 ${
         isFavorite
           ? "border-lime-200/40 bg-lime-200 text-black hover:bg-lime-100"
           : inverted

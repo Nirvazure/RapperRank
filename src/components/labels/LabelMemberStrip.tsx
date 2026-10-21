@@ -32,7 +32,7 @@ export function LabelMemberStrip({
         </span>
       </div>
       <div className="mt-3 flex items-center gap-2">
-        <div className="flex items-center -space-x-2">
+        <div className="flex shrink-0 items-center -space-x-2">
           {previewMembers.map((member) => (
             <div key={member.id} className="rounded-md border border-black bg-black">
               <RapperAvatar rapper={member as Rapper} sizeClass="size-10" grayscale />
@@ -40,7 +40,7 @@ export function LabelMemberStrip({
           ))}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-black text-white">
+          <p className="line-clamp-2 break-words text-sm font-black leading-5 text-white sm:line-clamp-1">
             {previewMembers.map((member) => member.name).join(" / ")}
           </p>
           {overflowCount > 0 ? (

@@ -71,7 +71,7 @@ export function RankingPageClient({
   return (
     <main
       ref={pageRef}
-      className="min-h-screen bg-[#050505] px-4 py-5 text-white sm:px-6 lg:px-8"
+      className="min-h-dvh min-w-0 bg-[#050505] px-4 py-4 text-white sm:px-6 sm:py-5 lg:px-8"
     >
       <div className="mx-auto flex max-w-[1600px] flex-col gap-5">
         <div className="ranking-title">
@@ -90,8 +90,9 @@ export function RankingPageClient({
             <button
               key={option.value}
               type="button"
+              aria-pressed={sortMode === option.value}
               onClick={() => setSortMode(option.value)}
-              className={`min-h-10 flex-1 rounded-md border px-3 py-2 text-xs font-black uppercase tracking-[0.12em] transition sm:flex-none ${
+              className={`min-h-12 flex-1 rounded-lg border px-3 py-2 text-sm font-black transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-200 sm:min-h-10 sm:flex-none sm:rounded-md sm:text-xs sm:uppercase sm:tracking-[0.12em] ${
                 sortMode === option.value
                   ? "border-lime-200 bg-lime-200 text-black"
                   : "border-white/10 bg-white/[0.04] text-white/65 hover:border-white/20 hover:bg-white/[0.08]"

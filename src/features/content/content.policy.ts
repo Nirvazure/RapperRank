@@ -34,15 +34,6 @@ export function isCheckedSource(source: SourcePolicy, now = new Date()): boolean
   return Number.isFinite(age) && age >= 0 && age <= 30 * 24 * 60 * 60 * 1000;
 }
 
-export function isPlayableSource(source: SourcePolicy, now = new Date()): boolean {
-  return source.kind !== "external" && isCheckedSource(source, now);
-}
-
-export function canPublishAlbum(album: { sources: SourcePolicy[]; tracks: { sources: SourcePolicy[] }[] }, now = new Date()): boolean {
-  return album.sources.some((source) => source.kind === "external" && isCheckedSource(source, now))
-    && album.tracks.some((track) => track.sources.some((source) => isPlayableSource(source, now)));
-}
-
 export function canStoreAsset(asset: { reviewStatus: string; rightsBasis: string; sourceUrl: string; redistributionAllowed: boolean }): boolean {
   if (asset.reviewStatus !== "approved" || !asset.rightsBasis.trim() || !asset.redistributionAllowed) return false;
   try {

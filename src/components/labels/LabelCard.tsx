@@ -4,7 +4,7 @@ import type { LabelViewModel } from "@/features/labels/label.types";
 
 export function LabelCard({ label }: { label: LabelViewModel }) {
   return (
-    <article className="label-card overflow-hidden rounded-lg border border-white/10 bg-white/[0.06]">
+    <article className="label-card min-w-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.06]">
       <div className="relative aspect-[16/9] overflow-hidden border-b border-white/10 bg-[#0b0b0b]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(217,255,0,0.16),transparent_30%),radial-gradient(circle_at_82%_22%,rgba(255,46,91,0.14),transparent_28%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(255,255,255,0)_100%)]" />
@@ -22,10 +22,10 @@ export function LabelCard({ label }: { label: LabelViewModel }) {
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-lime-200">
               {label.themeTag}
             </p>
-            <h2 className="mt-1 text-2xl font-black uppercase leading-none text-white">
+            <h2 className="mt-1 break-words text-2xl font-black uppercase leading-tight text-white">
               {label.name}
             </h2>
-            <p className="mt-2 text-sm font-bold text-white/70">{label.alias}</p>
+            <p className="mt-2 break-words text-sm font-bold leading-6 text-white/70">{label.alias}</p>
           </div>
           <span className="rounded-md border border-white/10 bg-black/25 px-2 py-1 text-[11px] font-black uppercase text-white/55">
             {label.region}
@@ -36,7 +36,7 @@ export function LabelCard({ label }: { label: LabelViewModel }) {
 
         <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-3">
           <p className="text-[11px] font-black uppercase tracking-[0.14em] text-white/45">label</p>
-          <p className="mt-2 text-lg font-black text-white">{label.displayName}</p>
+          <p className="mt-2 break-words text-lg font-black text-white">{label.displayName}</p>
         </div>
 
         <LabelMemberStrip members={label.members} placeholder={label.memberPlaceholder} />

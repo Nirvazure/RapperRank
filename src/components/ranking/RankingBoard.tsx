@@ -67,7 +67,7 @@ export function RankingBoard({
       </div>
 
       {/* Mobile (&lt;md): horizontal rank rail */}
-      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 no-scrollbar md:hidden">
+      <div className="no-scrollbar -mx-1 flex snap-x snap-mandatory gap-2 overflow-x-auto overscroll-x-contain px-1 pb-2 md:hidden" aria-label="前十名，左右滑动查看">
         {rappers.map((rapper, index) => {
           const rank = index + 1;
           const active = selectedRapperId ? rapper.id === selectedRapperId : false;
@@ -80,7 +80,7 @@ export function RankingBoard({
               key={rapper.id}
               type="button"
               onClick={() => onSelect(rapper.id)}
-              className={`ranking-rail-card flex w-[7.5rem] shrink-0 flex-col gap-2 rounded-lg border p-2.5 text-left transition ${
+              className={`ranking-rail-card flex w-[7.5rem] shrink-0 snap-start flex-col gap-2 rounded-lg border p-3 text-left transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-200 ${
                 active
                   ? "border-lime-200 bg-lime-200 text-black"
                   : "border-white/10 bg-black/50 text-white hover:border-lime-200/50"
@@ -93,7 +93,7 @@ export function RankingBoard({
               >
                 {rank.toString().padStart(2, "0")}
               </span>
-              <span className="line-clamp-2 min-h-[2.25rem] text-xs font-black uppercase leading-tight">
+              <span className="line-clamp-2 min-h-10 text-sm font-black leading-5">
                 {rapper.name}
               </span>
               <span className={`font-mono text-sm font-black ${active ? "text-black" : "text-lime-200"}`}>
@@ -103,6 +103,7 @@ export function RankingBoard({
           );
         })}
       </div>
+      <p className="mt-2 text-xs text-white/50 md:hidden">左右滑动查看榜单 · 点击艺人进入详情</p>
 
       {/* md+: vertical list */}
       <div className="hidden gap-2 md:grid">

@@ -21,6 +21,7 @@ export function LabelPageClient({
   const pageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const context = gsap.context(() => {
       gsap.fromTo(
         ".label-card",
@@ -33,7 +34,7 @@ export function LabelPageClient({
   }, []);
 
   return (
-    <main ref={pageRef} className="min-h-screen bg-[#050505] px-4 py-5 text-white sm:px-6 lg:px-8">
+    <main ref={pageRef} className="min-h-dvh min-w-0 bg-[#050505] px-4 py-4 text-white sm:px-6 sm:py-5 lg:px-8">
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px]" />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(217,255,0,0.12),transparent_26%),radial-gradient(circle_at_82%_12%,rgba(255,46,91,0.12),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(0,190,255,0.1),transparent_32%)]" />
 
@@ -48,7 +49,7 @@ export function LabelPageClient({
           }}
         />
 
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <section className="grid min-w-0 gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-label="厂牌列表">
           {labels.map((label) => (
             <LabelCard key={label.id} label={label} />
           ))}

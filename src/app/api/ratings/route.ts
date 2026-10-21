@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     fondness: parsed.data.fondness ?? null,
   });
 
-  await revalidateRapperPublicCache(parsed.data.rapperId);
+  await revalidateRapperPublicCache();
 
   return ok(aggregate);
 }

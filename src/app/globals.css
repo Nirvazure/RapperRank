@@ -143,11 +143,10 @@
 }
 
 :root {
-  /* Shell chrome: mobile bottom tab + player (desktop player only) */
+  /* Reserve space for the mobile bottom navigation. */
   --rr-bottom-nav: 3.5rem;
-  --rr-player-bar: 3.5rem;
   --rr-chrome-bottom: calc(
-    var(--rr-bottom-nav) + var(--rr-player-bar) + env(safe-area-inset-bottom, 0px)
+    var(--rr-bottom-nav) + env(safe-area-inset-bottom, 0px)
   );
 
   --background: oklch(0.08 0.01 255);
@@ -221,8 +220,6 @@
 @media (min-width: 1024px) {
   :root {
     --rr-bottom-nav: 0px;
-    --rr-player-bar: 5rem;
-    --rr-chrome-bottom: calc(var(--rr-player-bar) + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -233,14 +230,22 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-bottom: calc(var(--rr-chrome-bottom) + 1rem);
   }
 
   body {
     @apply bg-background text-foreground;
+    -webkit-tap-highlight-color: transparent;
   }
 
   button {
     cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 

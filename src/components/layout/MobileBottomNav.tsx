@@ -25,7 +25,7 @@ export function MobileBottomNav() {
   return (
     <nav
       aria-label="主导航"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[#0a0a0a]/95 pb-[env(safe-area-inset-bottom,0px)] backdrop-blur-xl lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[#0a0a0a]/95 pb-[env(safe-area-inset-bottom,0px)] pl-[env(safe-area-inset-left,0px)] pr-[env(safe-area-inset-right,0px)] backdrop-blur-xl lg:hidden"
     >
       <div className="mx-auto flex h-14 max-w-[1600px] items-stretch">
         {items.map((item) => {
@@ -36,12 +36,13 @@ export function MobileBottomNav() {
             <Link
               key={item.key}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-[10px] font-black uppercase tracking-[0.08em] transition",
+                "flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-1 text-[11px] font-bold tracking-[0.04em] transition focus-visible:outline-2 focus-visible:outline-lime-200 focus-visible:outline-offset-[-4px]",
                 isActive ? "text-lime-200" : "text-white/55 hover:text-white",
               )}
             >
-              <Icon className="size-4" />
+              <Icon className="size-5" />
               <span className="truncate">{item.label}</span>
             </Link>
           );

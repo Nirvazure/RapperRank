@@ -2,50 +2,12 @@ import { notFound } from "next/navigation";
 import { getLocalMockViewerRapperState, isLocalMockViewerUserId } from "@/features/dev/local-mock.server";
 import {
   findRapperById,
-  pickRandomRapperId,
   updateRapperAggregate as updateRapperAggregateRecord,
 } from "@/features/rappers/rapper.repository";
 import { mapRapperRecordToViewModel, mapRatingRecordToUserRating } from "@/features/rappers/rapper.mapper";
 import { findFavorite } from "@/features/favorites/favorite.repository";
 import { findRating } from "@/features/ratings/rating.repository";
-import { buildRatingAggregate, type RatingAggregate } from "@/features/ratings/rating.server";
-import type { Rapper } from "@/features/rappers/rapper.types";
-import { getRapperContent } from "@/features/content/content.repository";
-
-type RankedRapper = {
-  id: string;
-  overallScore: number;
-};
-
-export type RankingDeps = {
-  listTopRappers: (limit: number) => Promise<RankedRapper[]>;
-};
-
-export async function getTopRankedRappers(
-  deps: RankingDeps,
-  limit: number,
-): Promise<RankedRapper[]> {
-  const rappers = await deps.listTopRappers(limit);
-  return [...rappers].sort(
-    (first, second) => (second.overallScore ?? 0) - (first.overallScore ?? 0),
-  );
-}
-
-export async function getRandomRapperIdFromDb(fallback?: string) {
-  const id = await pickRandomRapperId();
-  if (id) {
-    return id;
-  }
-
-  if (fallback) {
-    const record = await findRapperById(fallback);
-    if (record) {
-      return record.id;
-    }
-  }
-
-  throw new Error("No rappers available");
-}
+import type { RatingAggregate } from "@/features/ratings/rating.server";
 
 export async function getRankingPageData() {
   const { getCachedAllRappers, getCachedTopRappers } = await import(
@@ -69,7 +31,7 @@ export async function getRapperPageData(rapperId: string, userId?: string) {
   if (!record) {
     notFound();
   }
-  const rapper: Rapper = { ...mapRapperRecordToViewModel(record), content: await getRapperContent(record.id) };
+  const rapper = mapRapperRecordToViewModel(record);
 
   if (isLocalMockViewerUserId(userId)) {
     const mockState = await getLocalMockViewerRapperState(record.id);
@@ -121,11 +83,3 @@ export async function updateRapperAggregate(input: {
     fondnessCount: input.aggregate.fondnessCount,
   });
 }
-
-export function sortByScoreDesc(rappers: Rapper[]) {
-  return [...rappers].sort(
-    (first, second) => (second.overallScore ?? 0) - (first.overallScore ?? 0),
-  );
-}
-
-export { buildRatingAggregate };

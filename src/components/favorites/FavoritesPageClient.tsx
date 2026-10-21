@@ -153,7 +153,7 @@ export function FavoritesPageClient({
   return (
     <main
       ref={pageRef}
-      className="min-h-screen bg-[#050505] px-4 py-5 text-white sm:px-6 lg:px-8"
+      className="min-h-[calc(100dvh-var(--rr-chrome-offset,0px))] bg-[#050505] px-4 py-4 text-white sm:px-6 sm:py-5 lg:px-8"
     >
       <div className="mx-auto flex max-w-[1600px] flex-col gap-5">
         <PageHeader
@@ -189,7 +189,7 @@ export function FavoritesPageClient({
                 <p className="mt-3 max-w-xl text-sm leading-6 text-white/55">
                   Rate or save artists from their detail pages and they will show up here.
                 </p>
-                <Button asChild className="mt-5 bg-lime-200 text-black hover:bg-lime-100">
+                <Button asChild className="mt-5 min-h-11 bg-lime-200 text-black hover:bg-lime-100 sm:min-h-0">
                   <Link href="/">Start exploring</Link>
                 </Button>
               </section>
@@ -202,10 +202,10 @@ export function FavoritesPageClient({
                     <article
                       key={rapper.id}
                       data-favorite-id={rapper.id}
-                      className="favorite-card aspect-[3/4] overflow-hidden rounded-lg border border-white/10 bg-white/[0.06]"
+                      className="favorite-card overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] sm:aspect-[3/4]"
                     >
-                      <div className="flex h-full flex-col">
-                        <Link href={`/rank/${rapper.id}`} className="relative block flex-1">
+                      <div className="flex min-h-44 sm:h-full sm:flex-col">
+                        <Link href={`/rank/${rapper.id}`} aria-label={`查看 ${rapper.name}`} className="relative block w-24 shrink-0 sm:w-auto sm:flex-1">
                           <RapperImage
                             src={media.src}
                             alt={media.alt}
@@ -213,11 +213,11 @@ export function FavoritesPageClient({
                           />
                           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08)_0%,rgba(0,0,0,0.18)_50%,rgba(0,0,0,0.9)_100%)]" />
                         </Link>
-                        <div className="space-y-2 p-3">
+                        <div className="min-w-0 flex-1 space-y-2 p-3 sm:flex-initial">
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                              <h2 className="truncate text-lg font-black uppercase">{rapper.name}</h2>
-                              <p className="text-[11px] text-white/45">{rapper.region}</p>
+                              <h2 className="line-clamp-2 break-words text-lg font-black uppercase sm:truncate">{rapper.name}</h2>
+                              <p className="break-words text-xs text-white/55 sm:text-[11px] sm:text-white/45">{rapper.region}</p>
                             </div>
                             <span className="font-mono text-lg font-black text-lime-200">
                               {formatScore(calculateOverallScore(rapper.averageRatings))}
@@ -227,7 +227,7 @@ export function FavoritesPageClient({
                             {rapper.tags.slice(0, 3).map((tag) => (
                               <span
                                 key={tag}
-                                className="rounded-md border border-white/10 px-2 py-1 text-[10px] font-black uppercase text-white/65"
+                                className="max-w-full break-words rounded-md border border-white/10 px-2 py-1 text-[11px] font-black uppercase text-white/65 sm:text-[10px]"
                               >
                                 {tag}
                               </span>
@@ -237,7 +237,7 @@ export function FavoritesPageClient({
                             type="button"
                             variant="outline"
                             disabled={removingId === rapper.id}
-                            className="h-8 w-full border-white/15 bg-black/30 text-[11px] text-white hover:bg-red-500 hover:text-white"
+                            className="h-11 w-full border-white/15 bg-black/30 text-xs text-white hover:bg-red-500 hover:text-white sm:h-8 sm:text-[11px]"
                             onClick={() => removeFavoriteWithMotion(rapper.id)}
                           >
                             <HeartOff className="size-4" />

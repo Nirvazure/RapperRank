@@ -5,7 +5,6 @@ import type {
   UserRating,
 } from "@/features/ratings/rating.types";
 import {
-  PH_ORIENTATION_LABELS,
   RATING_KEYS,
   RATING_SCORE_WEIGHTS,
 } from "@/lib/constants";
@@ -109,8 +108,4 @@ export function inferPhOrientationFromRatings(ratings: RatingDimension): PhOrien
   }
 
   return 0;
-}
-
-export function getPhOrientationLabel(ph?: number): string {
-  return PH_ORIENTATION_LABELS[normalizePhOrientation(ph)];
 }

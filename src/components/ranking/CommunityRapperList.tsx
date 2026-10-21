@@ -49,7 +49,7 @@ export function CommunityRapperList({
   }, [rappers]);
 
   return (
-    <section ref={listRef} className="flex flex-col gap-2">
+    <section ref={listRef} className="flex min-w-0 flex-col gap-2">
       <div className="flex items-end justify-between gap-3 px-0.5">
         <div>
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-lime-200">
@@ -60,7 +60,7 @@ export function CommunityRapperList({
         <span className="font-mono text-xs text-white/45">{rappers.length}</span>
       </div>
 
-      <ul className="grid gap-1.5">
+      <ul className="grid min-w-0 grid-cols-1 gap-1.5">
         {rappers.map((rapper, index) => {
           const isFavorite = favoriteIds.has(rapper.id);
           const score = formatScore(
@@ -68,22 +68,22 @@ export function CommunityRapperList({
           );
 
           return (
-            <li key={rapper.id}>
-              <div className="community-list-row flex items-center gap-2 rounded-lg border border-white/10 bg-black/40 px-2 py-2 transition hover:border-white/25 hover:bg-white/[0.06]">
+            <li key={rapper.id} className="min-w-0">
+              <div className="community-list-row flex min-w-0 items-center gap-2 rounded-lg border border-white/10 bg-black/40 px-2 py-2 transition hover:border-white/25 hover:bg-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => onSelect(rapper.id)}
-                  className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                  className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-md text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-200"
                 >
-                  <span className="w-8 shrink-0 font-mono text-sm font-black tabular-nums text-white/40">
+                  <span className="w-6 shrink-0 font-mono text-xs font-black tabular-nums text-white/40 sm:w-8 sm:text-sm">
                     {(index + 1).toString().padStart(2, "0")}
                   </span>
                   <RapperAvatar rapper={rapper} sizeClass="size-11 shrink-0" grayscale />
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-sm font-black uppercase leading-tight text-white">
+                    <h3 className="line-clamp-2 break-words text-sm font-black uppercase leading-5 text-white sm:truncate">
                       {rapper.name}
                     </h3>
-                    <p className="mt-0.5 truncate text-[10px] font-bold uppercase tracking-[0.14em] text-white/45">
+                    <p className="mt-1 truncate text-xs font-bold text-white/55 sm:mt-0.5 sm:text-[10px] sm:uppercase sm:tracking-[0.14em] sm:text-white/45">
                       {rapper.region}
                     </p>
                   </div>
@@ -93,6 +93,7 @@ export function CommunityRapperList({
                 </button>
                 <FavoriteBookmarkButton
                   compact
+                  className="size-11 shrink-0 sm:size-8"
                   isFavorite={isFavorite}
                   onToggle={() => onToggleFavorite(rapper.id)}
                 />
