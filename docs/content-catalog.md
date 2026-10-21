@@ -30,7 +30,7 @@
 # 搜索候选，只写本地忽略目录，不在页面请求里调用搜索
 npm run content:discover
 
-# 审核 data/content/pilot.json 后先检查，再写入
+# 审核本地 .dev-data/content/manifests/pilot.json 后先检查，再写入
 npm run content:import
 npm run content:import -- --apply
 
@@ -46,13 +46,15 @@ npm run content:upload -- --file=reviewed-asset.json
 npm run content:upload -- --file=reviewed-asset.json --apply
 ```
 
-`pilot.json` 是审核后的可导入清单；`profiles.json` 保存中文编辑稿；`playback-verification.json` 保留首批播放观察；`album-playback-evidence.json` 是本轮专辑补充证据，过期后不能直接重新批准。不要更改时间冒充新验证。清单生成器依赖本地发现原始数据，不适合在没有原始证据时重新运行。
+真实内容清单保存在本地 `.dev-data/content/manifests/`，由 `.gitignore` 忽略。`pilot.json` 是审核后的可导入清单；`profiles.json` 保存中文编辑稿；`playback-verification.json` 保留首批播放观察；`album-playback-evidence.json` 是本轮专辑补充证据，过期后不能直接重新批准。不要更改时间冒充新验证。清单生成器依赖本地发现原始数据，不适合在没有原始证据时重新运行。
+
+这些文件不是应用运行时数据，也不是部署依赖。页面从 Supabase 读取内容；新检出仓库可以直接类型检查、测试和构建。Git 仅保留导入工具、校验规则和虚构测试样例，不保存真实的单次导入与试听证据。需要再次导入时先准备本地审核清单，或用 `content:import -- --file=<本地清单>` 指定文件；部署时不要自动执行导入。
 
 外跳来源重新核验使用同一个 `--evidence` 命令，但必须设置 `checkType: "external_page"` 和 `officialPageObserved: true`，在 note 内记录已观察的作品身份、地区和登录条件；`observedSeconds: 0`、`durationSeconds: null`、`pausedObserved: false`。该类型只允许匹配 external 行，不能批准嵌入或音频。试听证据默认 `checkType: "playback"`，仍须播放进度、时长和暂停。
 
 导入在事务内对内容表加锁，先校验身份及旧简介，再批量写入。重复导入跳过已有记录，不更新已审核内容；冲突录音、来源、播放身份和专辑曲序直接报错。审核后的修改通过单独的人工编辑流程处理，不能靠重跑覆盖。
 
-素材导入仅接受本地文件，不代下载平台资源。图片验证格式，生成原图及四档 WebP，逐个验证公开对象的 MIME 和 SHA-256；已有对象冲突时拒绝覆盖。音频只支持 AAC/MP4；preview 不超过 90 秒，full 必须额外确认完整录音授权。音频校验时长和 Range 后仍保持 pending，直到真实浏览器证据通过。许可清单例子：`data/content/higher-brothers-image.json`；其本地下载文件在 `.dev-data/`，不提交 Git。
+素材导入仅接受本地文件，不代下载平台资源。图片验证格式，生成原图及四档 WebP，逐个验证公开对象的 MIME 和 SHA-256；已有对象冲突时拒绝覆盖。音频只支持 AAC/MP4；preview 不超过 90 秒，full 必须额外确认完整录音授权。音频校验时长和 Range 后仍保持 pending，直到真实浏览器证据通过。首批图片清单在本地 `.dev-data/content/manifests/higher-brothers-image.json`；文件路径按清单所在目录解析，图片与清单均不提交 Git。
 
 数据库迁移须使用支持会话的连接（Supabase session pooler 5432 或直连）。事务 pooler 6543 适合应用查询，本轮通过它运行迁移状态查询曾挂起；使用会话连接池后迁移成功。
 

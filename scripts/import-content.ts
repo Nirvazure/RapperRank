@@ -7,7 +7,7 @@ loadEnvConfig(process.cwd());
 const db = new PrismaClient();
 const args = process.argv.slice(2);
 async function main() {
-  const file = args.find((arg) => arg.startsWith("--file="))?.slice(7) ?? "data/content/pilot.json";
+  const file = args.find((arg) => arg.startsWith("--file="))?.slice(7) ?? ".dev-data/content/manifests/pilot.json";
   const manifest = contentManifestSchema.parse(JSON.parse(await readFile(file, "utf8")));
   const snapshot = await db.rapper.findMany({ where: { id: { in: manifest.artists.map((artist) => artist.rapperId) } }, select: { id: true, name: true, bio: true, contentReviewedAt: true } });
   for (const artist of manifest.artists) {
