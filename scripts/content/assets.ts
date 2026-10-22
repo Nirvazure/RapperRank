@@ -1,20 +1,4 @@
 import { z } from "zod";
-import { canStoreAsset } from "../../src/features/content/content.policy";
-
-export const assetManifestSchema = z.object({
-  id: z.string().regex(/^[a-zA-Z0-9_-]+$/).max(120),
-  owner: z.enum(["rapper", "track", "album"]), ownerId: z.string().regex(/^[a-zA-Z0-9_-]+$/).max(160),
-  kind: z.enum(["image", "audio_preview", "audio_full"]),
-  file: z.string().min(1), sha256: z.string().regex(/^[a-f0-9]{64}$/),
-  caption: z.string().min(1), attribution: z.string().min(1),
-  rightsBasis: z.string().min(1), redistributionAllowed: z.literal(true),
-  fullAudioAuthorized: z.boolean().default(false), reviewStatus: z.literal("approved"),
-  source: z.object({ id: z.string().regex(/^[a-zA-Z0-9_-]+$/), title: z.string().min(1), url: z.url(), retrievedAt: z.iso.datetime(), reviewer: z.string().min(1) }),
-}).superRefine((value, ctx) => {
-  if (!canStoreAsset({ ...value, sourceUrl: value.source.url })) ctx.addIssue({ code: "custom", message: "Asset rights or source do not permit redistribution" });
-  if (value.kind.startsWith("audio") && value.owner !== "track") ctx.addIssue({ code: "custom", message: "Audio requires an exact track identity" });
-  if (value.kind === "audio_full" && !value.fullAudioAuthorized) ctx.addIssue({ code: "custom", message: "Full audio requires explicit full-recording authorization" });
-});
 
 export const playbackEvidenceSchema = z.array(z.object({
   id: z.string().min(1), url: z.url(), checkedAt: z.iso.datetime(),

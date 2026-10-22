@@ -22,7 +22,7 @@
 - `ContentSource`：具体字段来源和审核人，与单个艺人、录音或专辑关联。
 - `MediaAsset`：单个内容归属、来源、bucket/path、MIME、尺寸或时长、SHA-256、使用依据和审核状态。
 
-迁移 `202610201000_content_catalog` 为增量迁移，增加外键、索引、单一归属、审核依据及正曲序约束。公开 bucket 不能隐藏草稿，故仅允许受控导入脚本在文件审核通过后上传。Service role key 只读服务器环境；不写入 NEXT_PUBLIC 或数据清单。
+迁移 `202610201000_content_catalog` 为增量迁移，增加外键、索引、单一归属、审核依据及正曲序约束。公开 bucket 不能隐藏草稿；既有已审核资源继续公开读取。资源上传脚本已移除，应用不再使用服务端管理 Key。
 
 ## 操作方式
 
@@ -41,9 +41,6 @@ npm run content:verify -- --all
 # 新的浏览器证据须为 24 小时内，包含实际播放进度、时长、暂停和精确 URL
 npm run content:verify -- --evidence=reviewed-playback.json --apply
 
-# 本地审核文件；默认 dry run，校验文件 SHA-256、实际格式、授权和所有者
-npm run content:upload -- --file=reviewed-asset.json
-npm run content:upload -- --file=reviewed-asset.json --apply
 ```
 
 真实内容清单保存在本地 `.dev-data/content/manifests/`，由 `.gitignore` 忽略。`pilot.json` 是审核后的可导入清单；`profiles.json` 保存中文编辑稿；`playback-verification.json` 保留首批播放观察；`album-playback-evidence.json` 是本轮专辑补充证据，过期后不能直接重新批准。不要更改时间冒充新验证。清单生成器依赖本地发现原始数据，不适合在没有原始证据时重新运行。
@@ -54,9 +51,9 @@ npm run content:upload -- --file=reviewed-asset.json --apply
 
 导入在事务内对内容表加锁，先校验身份及旧简介，再批量写入。重复导入跳过已有记录，不更新已审核内容；冲突录音、来源、播放身份和专辑曲序直接报错。审核后的修改通过单独的人工编辑流程处理，不能靠重跑覆盖。
 
-素材导入仅接受本地文件，不代下载平台资源。图片验证格式，生成原图及四档 WebP，逐个验证公开对象的 MIME 和 SHA-256；已有对象冲突时拒绝覆盖。音频只支持 AAC/MP4；preview 不超过 90 秒，full 必须额外确认完整录音授权。音频校验时长和 Range 后仍保持 pending，直到真实浏览器证据通过。首批图片清单在本地 `.dev-data/content/manifests/higher-brothers-image.json`；文件路径按清单所在目录解析，图片与清单均不提交 Git。
+资源上传工具已移除；现有数据库媒体记录、Storage 对象和客户端读取逻辑保留。历史审核清单在本地忽略目录，不参与构建。
 
-数据库迁移须使用支持会话的连接（Supabase session pooler 5432 或直连）。事务 pooler 6543 适合应用查询，本轮通过它运行迁移状态查询曾挂起；使用会话连接池后迁移成功。
+数据库结构已初始化，迁移命令和独立迁移连接已移除，历史 SQL 保留作为结构记录。
 
 ## 来源与剩余缺口
 
