@@ -37,24 +37,21 @@ Copy-Item .env.example .env
 
 | 变量 | 用途 |
 |------|------|
-| `SUPABASE_URL` | YQYHub 项目 URL（`.env` 中配置；启动时镜像为 `NEXT_PUBLIC_SUPABASE_URL` 供客户端） |
-| `SUPABASE_KEY` | YQYHub anon / publishable key（镜像为 `NEXT_PUBLIC_SUPABASE_KEY`） |
-| `SUPABASE_SERVICE_ROLE_KEY` | 仅服务端（可选脚本） |
+| `SUPABASE_URL` | Auth 地址；Vercel 关联同名 Shared 变量 |
+| `SUPABASE_PUBLISHABLE_KEY` | Auth 公开 Key；Vercel 关联同名 Shared 变量，服务端读取 |
 | `DATABASE_URL` | 应用运行时，使用 Transaction Pooler（端口 6543） |
-| `DIRECT_DATABASE_URL` | Prisma migration，使用 Direct connection（端口 5432） |
 
-两条连接串均需带 `?schema=rapperank`（或等效的 schema 参数），确保表落在 `rapperank` schema 而非 `public`。
+DATABASE_URL 连接串需带 `?schema=rapperank`（或等效的 schema 参数），确保表落在 `rapperank` schema 而非 `public`。
 
 3. 准备数据库
 
 ```bash
 npm run db:generate
-npx prisma migrate deploy
 ```
 
 艺人数据仅在 Supabase `rapperank.Rapper` 表维护，**不要**使用已移除的 seed 脚本写回艺人。
 
-本地开发若需新建 migration，使用 `npm run db:migrate`（`prisma migrate dev`）。
+数据库已初始化；构建只生成 Prisma Client，不执行迁移。迁移命令、图片导入及资源上传和 Storage 迁移工具已移除，历史 SQL 保留在 `prisma/migrations` 作为结构记录。
 
 4. 启动开发服务器
 
@@ -72,9 +69,16 @@ npm run typecheck
 npm test
 npm run build
 npm run db:generate
-npm run db:migrate
 npm run db:reset-ratings
 ```
+
+## Vercel 环境变量
+
+- Shared：关联 `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEY`，检查所需环境。
+- Project：保留现有 `DATABASE_URL`，值不变。
+- 发布本次代码时切换公开 Key 名称，清理旧项目级 Auth 配置，避免同名变量覆盖 Shared。
+- 不再读取独立迁移连接或服务端管理 Key；本地也无需保留。
+- 修改环境变量后重新部署，验证登录、回调、评分、收藏和排行榜。
 
 ## Runtime Notes
 

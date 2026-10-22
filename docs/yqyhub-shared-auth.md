@@ -51,9 +51,9 @@ flowchart TB
 
 从 Dashboard → **Project Settings → API** 获取：
 
-- `Project URL` → `SUPABASE_URL`（Next.js 项目通过 `next.config` `env` 暴露；亦可用 `NEXT_PUBLIC_SUPABASE_URL`）
-- `anon` / `publishable` key → `SUPABASE_KEY`（亦可用 `NEXT_PUBLIC_SUPABASE_ANON_KEY`）
-- `service_role` key → **仅服务端** `SUPABASE_SERVICE_ROLE_KEY`
+- `Project URL` → `SUPABASE_URL`（RapperRank 服务端读取）
+- `publishable` key → `SUPABASE_PUBLISHABLE_KEY`（RapperRank 服务端读取）
+- RapperRank 不使用高权限 API Key；其他应用如需要，应仅在服务端配置。
 
 ---
 
@@ -80,7 +80,6 @@ Prisma 项目在 `schema.prisma` 中声明：
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_DATABASE_URL")
   schemas   = ["myapp"]
 }
 
@@ -114,45 +113,27 @@ model Profile {
 
 每个应用仓库的 `.env.example` 应包含以下变量（值从 YQYHub 复制，**密码不要用方括号包裹**）。
 
-### 3.1 Auth（所有应用相同）
+### 3.1 Auth（共享）
 
 ```env
-# YQYHub Auth（与 Artmind 等 Nuxt 项目命名一致）
 SUPABASE_URL=https://tfvzcuksahcofooqqezx.supabase.co
-SUPABASE_KEY=
-
-# Next.js（RapperRank）：`next.config` 启动时将 `SUPABASE_*` 镜像为 `NEXT_PUBLIC_SUPABASE_*`（Turbopack 客户端需要）
-
-# 仅服务端（Route Handler / Server Action / 后台脚本）
-SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_PUBLISHABLE_KEY=
 ```
 
-### 3.2 Database（按应用 schema 区分）
+RapperRank 的登录由服务端发起，Auth 配置只在服务端读取，无需 NEXT_PUBLIC 镜像。
 
-**本地开发** — Session Pooler `5432`，`DATABASE_URL` 与 `DIRECT_DATABASE_URL` **相同**：
+### 3.2 Database
 
-```env
-DATABASE_URL=postgresql://postgres.tfvzcuksahcofooqqezx:[password]@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require&schema=myapp
-DIRECT_DATABASE_URL=postgresql://postgres.tfvzcuksahcofooqqezx:[password]@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require&schema=myapp
-```
+仅保留 `DATABASE_URL`，使用本应用 `schema=rapperank`。本地可以使用 Session Pooler 5432；Vercel 继续使用现有连接串，生产 Transaction Pooler 6543 需带 `pgbouncer=true`。本次不更改连接值。
 
-**Vercel 生产** — 运行时与迁移分离：
+迁移命令及资源上传、迁移工具已移除；历史 SQL 保留，构建不执行迁移。
 
-```env
-# 运行时：Transaction Pooler 6543，必须 pgbouncer=true
-DATABASE_URL=postgresql://postgres.tfvzcuksahcofooqqezx:[password]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&schema=myapp
+### 3.3 Vercel 配置
 
-# 迁移：Session Pooler 5432
-DIRECT_DATABASE_URL=postgresql://postgres.tfvzcuksahcofooqqezx:[password]@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require&schema=myapp
-```
-
-将 `myapp` 替换为本应用的 schema 名（RapperRank 为 `rapperank`）。
-
-### 3.3 Vercel 配置注意
-
-- 每个 Vercel 项目都要单独配置上述变量；**只有 schema 名不同**，Supabase URL / Key 相同
-- 修改环境变量后必须 **Redeploy**
-- 不要把 `.env` 提交到 Git
+- 关联团队 Shared 的 `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEY`，检查关联环境。
+- Project 保留本项目 `DATABASE_URL`。
+- 同名同环境的项目变量覆盖 Shared，切换时清理重复项。
+- 修改变量后重新部署；本地 `.env` 不提交 Git。
 
 ---
 
@@ -217,7 +198,7 @@ export async function getAuthUser() {
   const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.SUPABASE_URL!,
-    process.env.SUPABASE_KEY!,
+    process.env.SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
         getAll: () => cookieStore.getAll(),
@@ -360,7 +341,7 @@ Table Editor 默认显示 `public`。业务数据在自定义 schema 时：
 
 ## 9. 安全清单（必做）
 
-- [ ] 前端绝不使用 `SUPABASE_SERVICE_ROLE_KEY`
+- [ ] 前端绝不包含高权限 Key 或数据库连接串
 - [ ] RLS：凡暴露给 `anon` / `authenticated` 的表必须启用并写清 policy
 - [ ] 权限字段放 `app_metadata`，不用 `user_metadata` 做授权
 - [ ] 删除用户前先 `signOut` / 吊销 session；删除 `auth.users` 不会立即使旧 JWT 失效
@@ -388,9 +369,8 @@ Table Editor 默认显示 `public`。业务数据在自定义 schema 时：
 
 ### 运行时
 
-- [ ] 本地 `5432` 可 migrate + seed
+- [ ] Prisma Client 可生成，现有业务数据库查询正常
 - [ ] Vercel 生产 `DATABASE_URL` 为 `6543` + `pgbouncer=true&schema=myapp`
-- [ ] Vercel `DIRECT_DATABASE_URL` 为 `5432` + `schema=myapp`
 - [ ] Redeploy 后登录 / 回调 / 受保护 API 冒烟通过
 
 ### 鉴权

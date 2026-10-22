@@ -44,5 +44,8 @@ next-env.d.ts
 # specstory (local workspace metadata)
 .specstory/
 
-# local demo viewer state
+# Local demo state, content discovery, reviewed import manifests and playback evidence
 .dev-data/
+
+# Retired import location; production content lives in Supabase
+/data/content/

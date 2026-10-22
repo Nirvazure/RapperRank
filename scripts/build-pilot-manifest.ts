@@ -1,6 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
-import profiles from "../data/content/profiles.json";
-import verification from "../data/content/playback-verification.json";
+import { z } from "zod";
 import { contentManifestSchema, type ContentManifest } from "./content/manifest";
 import type { AppleRecording } from "./content/discovery";
 
@@ -15,6 +14,13 @@ const selection: Record<string, { tracks: number[]; album?: number; unresolved: 
 
 type CatalogRecording = AppleRecording & { wrapperType?: string; collectionViewUrl?: string; collectionName?: string; releaseDate?: string; trackCount?: number };
 async function main() {
+  const profiles = z.record(z.string(), z.object({
+    bio: z.string(), artistId: z.number(),
+    timeline: z.array(z.object({ date: z.string(), text: z.string(), source: z.string() })),
+    references: z.array(z.object({ key: z.string(), title: z.string(), url: z.url() })),
+  })).parse(JSON.parse(await readFile(".dev-data/content/manifests/profiles.json", "utf8")));
+  const verification = z.record(z.string(), z.object({ durationSeconds: z.number().positive(), checkedAt: z.iso.datetime(), note: z.string() }))
+    .parse(JSON.parse(await readFile(".dev-data/content/manifests/playback-verification.json", "utf8")));
   const discovery = JSON.parse(await readFile(".dev-data/content/pilot-discovery.json", "utf8"));
   const recordings = JSON.parse(await readFile(".dev-data/content/recordings.json", "utf8"));
   const checkedAt = new Date().toISOString();
@@ -35,7 +41,7 @@ async function main() {
       officialUrl.searchParams.delete("uo");
       const embed = new URL(officialUrl);
       embed.hostname = "embed.music.apple.com";
-      const evidence = (verification as Record<string, { durationSeconds: number; checkedAt: string; note: string }>)[String(song.trackId)];
+      const evidence = verification[String(song.trackId)];
       const base = { provider: "apple", platformId: String(song.trackId), storefront: "us", reviewStatus: "approved" as const };
       return {
         id, title: song.trackName, artistCredit: song.artistName,
@@ -68,7 +74,7 @@ async function main() {
     artists.push({ rapperId: current.id, name, expectedBio: current.bio, bio: profile.bio, timeline: profile.timeline.map(({ source: key, ...entry }) => ({ ...entry, sourceId: ref(key) })), officialLinks: [{ label: "Apple Music 官方艺人页", url: `https://music.apple.com/us/artist/artist/${profile.artistId}` }], sources: profile.references.map((reference) => source(ref(reference.key), reference.title, reference.url, ["bio", "timeline"])), tracks, albums, unresolvedWorks: chosen.unresolved });
   }
   const manifest = contentManifestSchema.parse({ version: 1, artists });
-  await writeFile("data/content/pilot.json", `${JSON.stringify(manifest, null, 2)}\n`);
+  await writeFile(".dev-data/content/manifests/pilot.json", `${JSON.stringify(manifest, null, 2)}\n`);
   console.log(JSON.stringify(manifest.artists.map((artist) => ({ name: artist.name, bioLength: artist.bio.length, tracks: artist.tracks.length, verified: artist.tracks.filter((track) => track.playback.some((source) => source.kind === "embed" && source.status === "available")).length, albumCandidates: artist.albums.length })), null, 2));
 }
 main().catch((error) => { console.error(error); process.exitCode = 1; });
