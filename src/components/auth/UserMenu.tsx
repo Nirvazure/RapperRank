@@ -23,7 +23,7 @@ export function UserMenu({ user }: { user: ViewerPresentation }) {
     return (
       <Link
         href="/login"
-        className="inline-flex h-8 items-center rounded-md border border-white/15 px-3 text-[11px] font-black uppercase text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white"
+        className="inline-flex h-11 min-w-11 items-center justify-center rounded-md border border-white/15 px-3 text-xs font-black uppercase text-white/80 transition hover:border-white/30 hover:bg-white/10 hover:text-white lg:h-8 lg:min-w-0 lg:text-[11px]"
       >
         登录
       </Link>
@@ -51,8 +51,9 @@ export function UserMenu({ user }: { user: ViewerPresentation }) {
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
+          aria-label={`用户菜单：${user.displayName}`}
           className={cn(
-            "flex min-w-0 items-center gap-2 rounded-md border px-2.5 py-1.5 transition outline-none focus-visible:ring-2 focus-visible:ring-lime-200/50",
+            "flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-md border p-1.5 transition outline-none focus-visible:ring-2 focus-visible:ring-lime-200/50 sm:px-2.5",
             profileActive
               ? "border-lime-200 bg-lime-200 text-black"
               : "border-white/10 bg-white/[0.06] text-white hover:border-white/25 hover:bg-white/10",
@@ -64,20 +65,20 @@ export function UserMenu({ user }: { user: ViewerPresentation }) {
               alt={user.displayName}
               width={32}
               height={32}
-              className="size-8 rounded-full object-cover"
+              className="size-8 shrink-0 rounded-full object-cover"
               unoptimized
             />
           ) : (
             <div
               className={cn(
-                "grid size-8 place-items-center rounded-full text-xs font-black",
+                "grid size-8 shrink-0 place-items-center rounded-full text-xs font-black",
                 profileActive ? "bg-black text-lime-200" : "bg-lime-200 text-black",
               )}
             >
               {initial}
             </div>
           )}
-          <span className="max-w-[8rem] truncate text-xs font-black uppercase">
+          <span className="hidden max-w-[8rem] truncate text-xs font-black uppercase sm:block">
             {user.displayName}
           </span>
         </button>
@@ -86,25 +87,26 @@ export function UserMenu({ user }: { user: ViewerPresentation }) {
         <DropdownMenu.Content
           align="end"
           sideOffset={8}
-          className="z-50 min-w-[10rem] overflow-hidden rounded-md border border-white/10 bg-[#141414] p-1 text-white shadow-lg"
+          collisionPadding={12}
+          className="z-50 max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-[12rem] max-w-[calc(100vw-1.5rem)] overflow-y-auto rounded-md border border-white/10 bg-[#141414] p-1 text-white shadow-lg"
         >
           <DropdownMenu.Item asChild>
             <Link
               href="/favorites"
-              className="flex cursor-pointer items-center gap-2 rounded-sm px-2.5 py-2 text-xs font-bold outline-none hover:bg-white/10 focus:bg-white/10"
+              className="flex min-h-11 cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-sm font-bold outline-none hover:bg-white/10 focus:bg-white/10 lg:min-h-0 lg:px-2.5 lg:text-xs"
             >
               <User className="size-3.5" />
               个人中心
             </Link>
           </DropdownMenu.Item>
           {localMockViewerEnabled ? (
-            <DropdownMenu.Item className="flex items-center gap-2 rounded-sm px-2.5 py-2 text-xs font-bold text-white/45 outline-none">
+            <DropdownMenu.Item className="flex min-h-11 items-center gap-2 rounded-sm px-3 py-2 text-sm font-bold text-white/45 outline-none lg:min-h-0 lg:px-2.5 lg:text-xs">
               <LogOut className="size-3.5" />
               Local demo user
             </DropdownMenu.Item>
           ) : (
             <DropdownMenu.Item
-              className="flex cursor-pointer items-center gap-2 rounded-sm px-2.5 py-2 text-xs font-bold outline-none hover:bg-white/10 focus:bg-white/10 disabled:opacity-50"
+              className="flex min-h-11 cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-sm font-bold outline-none hover:bg-white/10 focus:bg-white/10 disabled:opacity-50 lg:min-h-0 lg:px-2.5 lg:text-xs"
               disabled={loggingOut}
               onSelect={(event) => {
                 event.preventDefault();

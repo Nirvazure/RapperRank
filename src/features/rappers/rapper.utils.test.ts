@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getRandomRapper, sortRappersByScore, sortRappersForCommunity } from "@/features/rappers/rapper.utils";
+import { sortRappersForCommunity } from "@/features/rappers/rapper.utils";
 import type { Rapper } from "@/features/rappers/rapper.types";
 
 const emptyRatings = {
@@ -45,7 +45,7 @@ describe("rapper utils", () => {
       toRapper("id-mid", "Mid", { ...emptyRatings, flow: 4, lyrics: 4, voice: 4, technique: 4, melody: 4, stage: 4 }),
     ];
 
-    const sorted = sortRappersByScore(rappers);
+    const sorted = sortRappersForCommunity(rappers, "score");
 
     expect(sorted[0]?.id).toBe("id-high");
   });
@@ -85,18 +85,4 @@ describe("rapper utils", () => {
     expect(sorted[0]?.id).toBe("id-higher-score");
   });
 
-  it("returns undefined when selecting a random rapper from an empty list", () => {
-    expect(getRandomRapper([])).toBeUndefined();
-  });
-
-  it("returns a random rapper from the provided list", () => {
-    const list = [
-      toRapper("id-0", "A", emptyRatings),
-      toRapper("id-1", "B", emptyRatings),
-    ];
-    const selected = getRandomRapper(list);
-
-    expect(selected).toBeDefined();
-    expect(list.map((rapper) => rapper.id)).toContain(selected?.id);
-  });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StorageImage as Image } from "@/components/rapper/StorageImage";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -55,7 +55,7 @@ export function ArtSpiralGallery({ albums }: { albums: ArtWallAlbum[] }) {
   const [radiusScale, setRadiusScale] = useState(1);
 
   const scheduleRefresh = useCallback(() => {
-    if (refreshTimerRef.current !== null) {
+    if (window.matchMedia("(max-width: 767px)").matches || refreshTimerRef.current !== null) {
       return;
     }
 
@@ -66,7 +66,7 @@ export function ArtSpiralGallery({ albums }: { albums: ArtWallAlbum[] }) {
   }, []);
 
   useEffect(() => {
-    const mm = window.matchMedia("(max-width: 640px)");
+    const mm = window.matchMedia("(max-width: 767px)");
     const apply = () => setRadiusScale(mm.matches ? 0.92 : 1);
     apply();
     mm.addEventListener("change", apply);
@@ -81,7 +81,7 @@ export function ArtSpiralGallery({ albums }: { albums: ArtWallAlbum[] }) {
   useEffect(() => {
     const track = trackRef.current;
     const spiral = spiralRef.current;
-    if (!track || !spiral) {
+    if (!track || !spiral || window.matchMedia("(max-width: 767px)").matches) {
       return;
     }
 
@@ -195,7 +195,32 @@ export function ArtSpiralGallery({ albums }: { albums: ArtWallAlbum[] }) {
 
   return (
     <>
-      <div ref={trackRef} className="relative w-full pt-2">
+      <section className="mt-5 md:hidden" aria-label="专辑封面画廊">
+        <div className="mb-3 flex items-baseline justify-between gap-3">
+          <p className="text-sm font-bold text-white/80">封面收藏</p>
+          <span className="text-xs text-white/50">点击查看大图</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {albums.map((album) => (
+            <button
+              key={album.id}
+              type="button"
+              onClick={() => setSelected(album)}
+              aria-label={`查看 ${album.title}，${album.artist}`}
+              className="min-w-0 overflow-hidden rounded-lg border border-white/15 bg-white/[0.04] text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-200"
+            >
+              <span className="relative block aspect-square w-full">
+                <Image src={album.coverUrl} alt="" fill sizes="(max-width: 767px) 50vw, 160px" className="object-cover" unoptimized={shouldBypassNextImageOptimization(album.coverUrl)} />
+              </span>
+              <span className="block px-2.5 py-3">
+                <span className="block truncate text-sm font-bold text-white">{album.title}</span>
+                <span className="mt-1 block truncate text-xs text-white/55">{album.artist}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+      <div ref={trackRef} className="relative hidden w-full pt-2 md:block">
         <div
           className="relative mx-auto h-[min(calc(78dvh-var(--rr-chrome-offset,0px)),720px)] w-full max-w-screen-2xl overflow-visible px-1 pb-2 pt-5 sm:px-3 md:px-5 md:pt-7"
           style={{ perspective: "1200px" }}
@@ -244,7 +269,7 @@ export function ArtSpiralGallery({ albums }: { albums: ArtWallAlbum[] }) {
       {selected && (
         <div
           ref={overlayRef}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]"
           role="presentation"
           onClick={closeModal}
         >
@@ -253,19 +278,19 @@ export function ArtSpiralGallery({ albums }: { albums: ArtWallAlbum[] }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="art-wall-dialog-title"
-            className="relative max-h-[90vh] w-full max-w-md overflow-auto rounded-xl border border-white/10 bg-[#0a0a0a] p-5 shadow-2xl"
+            className="relative max-h-[calc(100dvh-2rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] w-full max-w-md overflow-auto overscroll-contain rounded-xl border border-white/10 bg-[#0a0a0a] p-4 shadow-2xl sm:p-5"
             onClick={(event) => event.stopPropagation()}
           >
             <button
               ref={closeBtnRef}
               type="button"
-              className="absolute right-3 top-3 rounded-md p-2 text-white/50 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-lime-200"
+              className="absolute right-2 top-2 flex size-12 items-center justify-center rounded-md text-2xl text-white/70 hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-lime-200"
               aria-label="关闭"
               onClick={closeModal}
             >
               ×
             </button>
-            <div className="relative mx-auto mt-6 aspect-square w-[min(100%,280px)] overflow-hidden rounded-lg border border-white/10">
+            <div className="relative mx-auto mt-10 aspect-square w-[min(100%,280px)] overflow-hidden rounded-lg border border-white/10">
               <Image
                 src={selected.coverUrl}
                 alt={selected.title}
@@ -276,7 +301,7 @@ export function ArtSpiralGallery({ albums }: { albums: ArtWallAlbum[] }) {
                 unoptimized={shouldBypassNextImageOptimization(selected.coverUrl)}
               />
             </div>
-            <h2 id="art-wall-dialog-title" className="mt-4 text-lg font-black uppercase text-white">
+            <h2 id="art-wall-dialog-title" className="mt-4 break-words text-lg font-black uppercase text-white">
               {selected.title}
             </h2>
             <p className="text-sm font-bold uppercase tracking-[0.1em] text-white/50">

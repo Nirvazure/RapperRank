@@ -35,15 +35,18 @@ export function RapperRadarChart({
       textStyle: { color: "#fff" },
     },
     radar: {
-      radius: "62%",
-      center: ["50%", "54%"],
+      radius: "66%",
+      center: ["50%", "52%"],
       splitNumber: 5,
+      axisNameGap: 16,
       indicator: RATING_KEYS.map((key) => ({
         name: RATING_LABELS[key],
         max: 5,
       })),
       axisName: {
         color: "rgba(255,255,255,0.78)",
+        fontSize: 18,
+        lineHeight: 26,
         fontWeight: 800,
       },
       axisLine: { lineStyle: { color: "rgba(255,255,255,0.18)" } },
@@ -73,8 +76,8 @@ export function RapperRadarChart({
   };
 
   return (
-    <section className="flex h-auto min-h-0 flex-col rounded-lg border border-white/10 bg-black/70 p-3 md:h-full">
-      <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
+    <section className="flex h-full min-h-0 flex-col rounded-lg border border-white/10 bg-black/70 p-3">
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3 sm:mb-2">
         <div className="min-w-0 flex-1 basis-full sm:basis-[12rem]">
           <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             <span className="w-fit rounded-md border border-lime-200/20 bg-lime-200/10 px-3 py-1.5 text-sm font-black tracking-[0.12em] text-lime-200">
@@ -85,9 +88,9 @@ export function RapperRadarChart({
             </span>
           </div>
         </div>
-        <div className="flex max-w-full shrink-0 flex-wrap items-start justify-end gap-2">
-          <div className="text-right">
-            <div className="flex items-end justify-end gap-1">
+        <div className="flex w-full max-w-full shrink-0 flex-wrap items-center justify-between gap-2 sm:w-auto sm:items-start sm:justify-end">
+          <div className="text-left sm:text-right">
+            <div className="flex items-end justify-start gap-1 sm:justify-end">
               <span className="font-mono text-2xl font-black leading-none text-lime-200 sm:text-3xl md:text-3xl xl:text-4xl">
                 {formatScore(rapper.overallScore ?? calculateOverallScore(rapper.averageRatings))}
               </span>
@@ -95,25 +98,20 @@ export function RapperRadarChart({
                 /5.0
               </span>
             </div>
-            <div className="mt-1 flex flex-wrap justify-end gap-1.5">
-              <span className="rounded-md border border-white/10 bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] font-black uppercase text-white/55">
-                {rapper.ratingCount.toLocaleString()} ratings
-              </span>
-              <span className="rounded-md border border-white/10 bg-white/[0.06] px-2 py-0.5 font-mono text-[10px] font-black uppercase text-white/55">
-                scale 1-5
-              </span>
-            </div>
+            <p className="mt-1.5 text-xs text-white/55">
+              {rapper.ratingCount > 0 ? `已有 ${rapper.ratingCount.toLocaleString("zh-CN")} 人评分` : "暂无评分"}
+            </p>
           </div>
           {actionSlot}
         </div>
       </div>
-      <div className="min-h-[220px] flex-1 md:min-h-[200px] xl:min-h-[200px]">
+      <div className="relative min-h-[300px] flex-1 xl:min-h-[240px]">
         <ReactECharts
           key={rapper.id}
           option={option}
           notMerge
           lazyUpdate
-          style={{ height: "100%", minHeight: 200, width: "100%" }}
+          style={{ position: "absolute", inset: 0, height: "100%", width: "100%" }}
         />
       </div>
     </section>

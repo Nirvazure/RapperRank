@@ -34,7 +34,7 @@ export function EditableRatingsList({
   const isLastPage = ratingsPage.page >= ratingsPage.totalPages;
 
   return (
-    <section className="flex max-h-[36rem] min-h-[28rem] flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] xl:h-[calc(100dvh-var(--rr-chrome-offset,5rem)-5.5rem)] xl:max-h-[calc(100dvh-var(--rr-chrome-offset,5rem)-5.5rem)]">
+    <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] xl:h-[calc(100dvh-var(--rr-chrome-offset,5rem)-5.5rem)] xl:min-h-[28rem] xl:max-h-[calc(100dvh-var(--rr-chrome-offset,5rem)-5.5rem)]">
       <div className="border-b border-white/10 px-4 py-4">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -59,14 +59,14 @@ export function EditableRatingsList({
 
       <div
         className={cn(
-          "min-h-0 flex-1 overflow-hidden px-4 py-4",
+          "min-h-0 flex-1 px-4 py-4 xl:overflow-y-auto xl:overscroll-contain",
           isLoading ? "opacity-70 transition-opacity" : "",
         )}
       >
         {!hasItems ? (
           <div className="rounded-lg border border-white/10 bg-black/30 p-4">
             <p className="text-sm font-bold text-white/60">No ratings yet.</p>
-            <Button asChild className="mt-4 bg-lime-200 text-black hover:bg-lime-100">
+            <Button asChild className="mt-4 min-h-11 bg-lime-200 text-black hover:bg-lime-100 sm:min-h-0">
               <Link href="/">Start rating</Link>
             </Button>
           </div>
@@ -93,7 +93,7 @@ export function EditableRatingsList({
                         {formatScore(calculateOverallScore(rating.ratings))}
                       </span>
                     </div>
-                    <div className="mt-3 flex items-center justify-between gap-3">
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                       <p className="text-[11px] text-white/45">
                         Updated {formatUpdatedAt(rating.updatedAt)}
                       </p>
@@ -102,7 +102,7 @@ export function EditableRatingsList({
                         value={rating.ratings}
                         fondness={rating.fondness}
                         triggerLabel="编辑"
-                        triggerClassName="h-8 px-3 text-[11px]"
+                        triggerClassName="h-11 px-4 text-xs sm:h-8 sm:px-3 sm:text-[11px]"
                         onSubmit={(submission) => onChangeRating(rapper.id, submission)}
                       />
                     </div>
@@ -120,20 +120,20 @@ export function EditableRatingsList({
             type="button"
             variant="outline"
             disabled={isLoading || isFirstPage}
-            className="border-white/15 bg-black/30 text-white hover:bg-white/10 hover:text-white disabled:opacity-40"
+            className="min-h-11 border-white/15 bg-black/30 text-white hover:bg-white/10 hover:text-white disabled:opacity-40 sm:min-h-0"
             onClick={() => onPageChange(ratingsPage.page - 1)}
           >
             <ChevronLeft className="size-4" />
             Previous
           </Button>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/40">
+          <p className="hidden text-[11px] font-bold uppercase tracking-[0.14em] text-white/40 min-[380px]:block">
             {hasItems ? `${ratingsPage.items.length} in view` : "Empty page"}
           </p>
           <Button
             type="button"
             variant="outline"
             disabled={isLoading || isLastPage}
-            className="border-white/15 bg-black/30 text-white hover:bg-white/10 hover:text-white disabled:opacity-40"
+            className="min-h-11 border-white/15 bg-black/30 text-white hover:bg-white/10 hover:text-white disabled:opacity-40 sm:min-h-0"
             onClick={() => onPageChange(ratingsPage.page + 1)}
           >
             Next

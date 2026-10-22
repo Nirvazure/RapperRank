@@ -20,7 +20,7 @@ export function FondnessHeartPicker({
   }
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-1 sm:gap-1.5">
       {Array.from({ length: MAX_FONDNESS }, (_, index) => {
         const score = index + 1;
         const active = value != null && score <= value;
@@ -30,7 +30,7 @@ export function FondnessHeartPicker({
             key={score}
             type="button"
             aria-label={`喜爱度 ${score} 分`}
-            className="rounded-md p-1 transition hover:scale-110"
+            className="flex size-11 shrink-0 items-center justify-center rounded-md transition hover:scale-110 focus-visible:outline-2 focus-visible:outline-lime-200 sm:size-9"
             onClick={() => handleSelect(score)}
           >
             <Heart

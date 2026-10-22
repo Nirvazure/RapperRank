@@ -27,12 +27,6 @@ export async function findRapperById(id: string) {
   });
 }
 
-export async function findRapperBySeedKey(seedKey: string) {
-  return prisma.rapper.findUnique({
-    where: { seedKey },
-  });
-}
-
 export async function updateRapperAggregate(input: {
   rapperId: string;
   ratingCount: number;

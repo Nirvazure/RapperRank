@@ -9,8 +9,6 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { RatingDialog } from "@/components/ratings/RatingDialog";
 import { Button } from "@/components/ui/button";
 import { RapperMediaPanel } from "@/components/rapper/RapperMediaPanel";
-import { RapperMobileDetailTabs } from "@/components/rapper/RapperMobileDetailTabs";
-import { RapperProfilePanel } from "@/components/rapper/RapperProfilePanel";
 import { RapperRadarChartLazy } from "@/components/rapper/RapperRadarChartLazy";
 import type { Rapper } from "@/features/rappers/rapper.types";
 import type { RatingSubmission, UserRating } from "@/features/ratings/rating.types";
@@ -30,13 +28,35 @@ export function AppShell({
 }) {
   const shellRef = useRef<HTMLElement>(null);
   const router = useRouter();
-  const { stopPlayback } = useRapperPlayer();
+  const { playRapperTrack, stopPlayback } = useRapperPlayer();
   const [pendingFavorite, setPendingFavorite] = useState(isFavorite);
   const [pendingRating, setPendingRating] = useState<UserRating | null>(myRating);
 
   useEffect(() => {
-    return () => stopPlayback();
-  }, [rapper.id, stopPlayback]);
+    if (!rapper.backgroundAudioUrl) {
+      return;
+    }
+
+    const track = {
+      rapperId: rapper.id,
+      src: rapper.backgroundAudioUrl,
+    };
+    const startPlayback = () => playRapperTrack(track);
+
+    if (typeof window.requestIdleCallback === "function") {
+      const idleId = window.requestIdleCallback(startPlayback, { timeout: 1500 });
+      return () => {
+        window.cancelIdleCallback(idleId);
+        stopPlayback();
+      };
+    }
+
+    const timeoutId = window.setTimeout(startPlayback, 1500);
+    return () => {
+      window.clearTimeout(timeoutId);
+      stopPlayback();
+    };
+  }, [playRapperTrack, stopPlayback, rapper.backgroundAudioUrl, rapper.id]);
 
   async function toggleFavorite() {
     const wasFavorite = pendingFavorite;
@@ -104,6 +124,9 @@ export function AppShell({
     if (!root) {
       return;
     }
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
 
     const context = gsap.context(() => {
       gsap.fromTo(
@@ -125,7 +148,7 @@ export function AppShell({
   return (
     <main
       ref={shellRef}
-      className="flex h-[calc(100dvh-var(--rr-chrome-offset,5rem))] max-h-[calc(100dvh-var(--rr-chrome-offset,5rem))] flex-col overflow-hidden bg-[#050505] px-4 py-3 text-white max-xl:overflow-y-auto sm:px-6 lg:px-8"
+      className="flex min-h-[calc(100dvh-var(--rr-chrome-offset,5rem))] flex-col bg-[#050505] px-4 py-4 text-white sm:px-6 lg:px-8 xl:h-[calc(100dvh-var(--rr-chrome-offset,5rem))] xl:max-h-[calc(100dvh-var(--rr-chrome-offset,5rem))] xl:overflow-hidden xl:py-3"
     >
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:54px_54px]" />
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(217,255,0,0.14),transparent_26%),radial-gradient(circle_at_82%_12%,rgba(255,46,91,0.16),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(0,190,255,0.12),transparent_32%)]" />
@@ -141,7 +164,7 @@ export function AppShell({
         </div>
 
         <div
-          className="grid min-h-0 flex-1 grid-cols-1 gap-3 [grid-template-areas:'media'_'detail'] md:grid-cols-2 md:[grid-template-areas:'media_media'_'radar_hits'] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)] xl:grid-rows-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:[grid-template-areas:'media_radar'_'media_hits']"
+          className="grid min-h-0 flex-1 grid-cols-1 gap-3 [grid-template-areas:'media'_'radar'] xl:grid-cols-[minmax(360px,0.88fr)_minmax(520px,1.12fr)] xl:grid-rows-[minmax(0,1fr)] xl:[grid-template-areas:'media_radar']"
         >
           <div className="hero-enter [grid-area:media] w-full self-start xl:h-full xl:min-h-0 xl:self-stretch">
             <RapperMediaPanel
@@ -153,7 +176,7 @@ export function AppShell({
                   type="button"
                   variant="outline"
                   aria-label="换一个"
-                  className="h-10 border-white/20 bg-black/35 px-3 text-xs font-black text-white backdrop-blur hover:bg-white/15 hover:text-white"
+                  className="h-11 border-white/20 bg-black/35 px-3 text-sm font-black text-white backdrop-blur hover:bg-white/15 hover:text-white sm:h-10 sm:text-xs"
                   onClick={openRandomRapper}
                 >
                   <Shuffle className="size-4" />
@@ -162,21 +185,7 @@ export function AppShell({
               }
             />
           </div>
-          <div className="hero-enter relative z-10 [grid-area:detail] md:hidden">
-            <RapperMobileDetailTabs
-              rapper={rapper}
-              actionSlot={
-                <RatingDialog
-                  rapper={rapper}
-                  value={pendingRating?.ratings}
-                  fondness={pendingRating?.fondness}
-                  triggerLabel="评分"
-                  onSubmit={submitRating}
-                />
-              }
-            />
-          </div>
-          <div className="hero-enter relative z-10 hidden [grid-area:radar] md:block md:min-h-[300px] xl:min-h-0 xl:h-full">
+          <div className="hero-enter relative z-10 min-h-[380px] [grid-area:radar] sm:min-h-[440px] xl:h-full xl:min-h-0">
             <RapperRadarChartLazy
               rapper={rapper}
               actionSlot={
@@ -189,9 +198,6 @@ export function AppShell({
                 />
               }
             />
-          </div>
-          <div className="hero-enter relative z-10 hidden min-h-0 [grid-area:hits] md:block md:h-full">
-            <RapperProfilePanel rapper={rapper} />
           </div>
         </div>
       </div>

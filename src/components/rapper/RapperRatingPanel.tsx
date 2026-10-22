@@ -40,7 +40,7 @@ export function RapperRatingPanel({
   }
 
   return (
-    <section className="rounded-lg border border-white/10 bg-white/[0.06] p-5 text-white">
+    <section className="rounded-lg border border-white/10 bg-white/[0.06] p-4 text-white sm:p-5">
       <div className="mb-5 flex items-end justify-between gap-4">
         <div>
           <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-red-300">
@@ -62,12 +62,13 @@ export function RapperRatingPanel({
                     type="button"
                     aria-label={`查看 ${RATING_LABELS[key]} 评分说明`}
                     onClick={() => setActiveInfoKey(activeInfoKey === key ? null : key)}
-                    className="flex size-5 items-center justify-center rounded-full border border-white/10 bg-black/35 text-white/55 transition hover:border-lime-200 hover:text-lime-200"
+                    aria-expanded={activeInfoKey === key}
+                    className="flex size-11 items-center justify-center rounded-full border border-white/10 bg-black/35 text-white/55 transition hover:border-lime-200 hover:text-lime-200 sm:size-5"
                   >
                     <Info className="size-3" />
                   </button>
                   {activeInfoKey === key ? (
-                    <div className="absolute left-0 top-7 z-20 w-72 rounded-md border border-lime-200/20 bg-zinc-950 p-3 shadow-xl shadow-black/40">
+                    <div className="absolute left-0 top-full z-20 mt-2 w-[min(18rem,calc(100vw-6rem))] rounded-md border border-lime-200/20 bg-zinc-950 p-3 shadow-xl shadow-black/40">
                       <div className="mb-2 text-xs font-black text-lime-200">
                         {RATING_LABELS[key]} 评分档位
                       </div>
@@ -97,7 +98,8 @@ export function RapperRatingPanel({
                     type="button"
                     aria-label={`${RATING_LABELS[key]} ${score} 分`}
                     onClick={() => updateRating(key, score)}
-                    className="flex size-8 items-center justify-center rounded-md border border-white/10 bg-black/40 text-white transition hover:border-lime-200 hover:text-lime-200 focus-visible:border-lime-200 focus-visible:text-lime-200 focus-visible:outline-none"
+                    aria-pressed={score === value[key]}
+                    className="flex size-11 items-center justify-center rounded-md border border-white/10 bg-black/40 text-white transition hover:border-lime-200 hover:text-lime-200 focus-visible:border-lime-200 focus-visible:text-lime-200 focus-visible:outline-none sm:size-8"
                   >
                     <Star
                       className={
@@ -107,7 +109,7 @@ export function RapperRatingPanel({
                       }
                     />
                   </button>
-                  <span className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-2 w-56 -translate-x-1/2 rounded-md border border-white/10 bg-zinc-950 px-3 py-2 text-xs leading-5 text-white/75 opacity-0 shadow-xl shadow-black/40 transition group-focus-within:opacity-100 group-hover:opacity-100">
+                  <span className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-2 hidden w-56 -translate-x-1/2 rounded-md border border-white/10 bg-zinc-950 px-3 py-2 text-xs leading-5 text-white/75 opacity-0 shadow-xl shadow-black/40 transition group-focus-within:opacity-100 group-hover:opacity-100 sm:block">
                     {RATING_LEVEL_DESCRIPTIONS[key][score]}
                   </span>
                 </span>
@@ -125,7 +127,7 @@ export function RapperRatingPanel({
               根据六维评分自动推荐，也可以手动调整。
             </p>
           </div>
-          <span className="text-sm font-black text-red-300">
+          <span className="shrink-0 text-xs font-black text-red-300 sm:text-sm">
             {hasManualOrientation ? "已手动调整" : "自动推荐"}
           </span>
         </div>

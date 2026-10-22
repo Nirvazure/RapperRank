@@ -66,7 +66,9 @@ export function RapperGallery({
                   <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-white/45">
                     {rapper.region}
                   </p>
-                  <RapperLabelStrip rapper={rapper} variant="compact" />
+                  <div className="mt-1.5 min-h-[30px]">
+                    <RapperLabelStrip rapper={rapper} variant="compact" className="mt-0" />
+                  </div>
                   <div className="mt-2">
                     <FondnessStat
                       avgFondness={rapper.avgFondness}

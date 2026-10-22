@@ -2,14 +2,6 @@ import type { Rapper } from "@/features/rappers/rapper.types";
 import type { CommunitySortMode } from "@/features/ratings/rating.types";
 import { calculateOverallScore } from "@/features/ratings/rating.utils";
 
-export function getRapperById(rappers: Rapper[], rapperId: string): Rapper | undefined {
-  return rappers.find((rapper) => rapper.id === rapperId);
-}
-
-export function sortRappersByScore(rappers: Rapper[]): Rapper[] {
-  return sortRappersForCommunity(rappers, "score");
-}
-
 export function sortRappersForCommunity(
   rappers: Rapper[],
   mode: CommunitySortMode,
@@ -40,14 +32,4 @@ export function sortRappersForCommunity(
 
     return first.name.localeCompare(second.name, "zh-CN");
   });
-}
-
-export function getRandomRapper(rappers: Rapper[]): Rapper | undefined {
-  if (rappers.length === 0) {
-    return undefined;
-  }
-
-  const index = Math.floor(Math.random() * rappers.length);
-
-  return rappers[index];
 }
