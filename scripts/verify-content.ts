@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { playbackEvidenceSchema } from "./content/assets";
 import { isCheckedSource, safePlaybackUrl } from "../src/features/content/content.policy";
-import { safeError } from "./storage-migration/transport";
+import { safeError } from "./content/safe-error";
 
 loadEnvConfig(process.cwd());
 const db = new PrismaClient();
